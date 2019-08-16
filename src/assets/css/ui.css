@@ -11,8 +11,12 @@ body {
 
 .chat {
   display: grid;
-  grid-template-rows: 20px 1fr auto;
+  grid-template-rows: auto 1fr auto;
   height: 100%;
+}
+
+.chat .header {
+  border-bottom: 1px solid #e9e9e9;
 }
 
 .messages {
@@ -97,4 +101,33 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background-color: #000000;
+}
+
+/*
+  SETTINGS
+*/
+.settings {
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+.settings .fields {
+  margin-bottom: 20px;
+}
+.settings .footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.connection {
+  display: grid;
+  text-align: center;
+  height: 100%;
+  font-size: 14px;
+}
+.connection div {
+  align-self: center;
 }

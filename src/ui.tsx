@@ -3,8 +3,10 @@ import { useState, useEffect, useRef } from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as io from 'socket.io-client';
-import './figma-ui/main.min.css';
-import './ui.css';
+import './assets/figma-ui/main.min.css';
+import './assets/css/ui.css';
+
+import Settings from './components/settings';
 
 import { sendMainMessage } from './helpers';
 
@@ -19,11 +21,12 @@ const colors = {
   yellow: '#FFEB00'
 };
 
-const IS_PROD = true;
+const IS_PROD = false;
+const SERVER_URL = IS_PROD
+  ? 'https://figma-chat.ph1p.dev/'
+  : 'http://127.0.0.1:3000';
 
-const socket = io(
-  IS_PROD ? 'https://figma-chat.ph1p.dev/' : 'http://127.0.0.1:3000'
-);
+const socket = io(SERVER_URL);
 
 const Message = ({ data }) => {
   return (
@@ -49,15 +52,19 @@ const Message = ({ data }) => {
 let encryptor;
 
 const App = function() {
+  const [isSettingsView, setSettingsView] = useState(false);
   const [isMainReady, setMainReady] = useState(false);
   const [selectionStatus, setSelectionStatus] = useState('NONE'); // READY, NONE, LOADING
 
+  const [connection, setConnection] = useState('CONNECTING'); // CONNECTED, ERROR, CONNECTING
   const [roomName, setRoomName] = useState('');
   const [secret, setSecret] = useState('');
   const [textMessage, setTextMessage] = useState('');
 
   const [messages, setMessages] = useState([]);
   const [selection, setSelection] = useState([]);
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   const messagesEndRef = useRef(null);
 
@@ -136,6 +143,15 @@ const App = function() {
       sendMainMessage('get-root-data');
     }
 
+    socket.on('connect_error', () => {
+      setConnection('ERROR');
+    });
+
+    socket.on('connected', user => {
+      setCurrentUser(user);
+      setConnection('CONNECTED');
+    });
+
     socket.on('chat message', appendMessage);
     socket.on('user reconnected', () => {
       sendMainMessage('get-root-data');
@@ -149,14 +165,14 @@ const App = function() {
     return () => {
       socket.removeAllListeners();
     };
-  }, [messages, isMainReady]);
+  }, [messages, isMainReady, connection]);
 
   // join room
   useEffect(() => {
-    if (isMainReady && roomName) {
+    if (isMainReady && connection === 'CONNECTED' && roomName) {
       socket.emit('join room', roomName);
     }
-  }, [roomName]);
+  }, [roomName, connection]);
 
   // All messages from main
   onmessage = message => {
@@ -192,35 +208,72 @@ const App = function() {
     }
   };
 
+  if (isSettingsView) {
+    return (
+      <Settings setSettingsView={setSettingsView} currentUser={currentUser} />
+    );
+  }
+
+  if (connection == 'CONNECTING') {
+    return (
+      <div className="connection">
+        <div>connecting...</div>
+      </div>
+    );
+  }
+
+  if (connection == 'ERROR') {
+    return (
+      <div className="connection">
+        <div>
+          connection error :( <br />
+          <br />
+          <button
+            className="button button--secondary"
+            onClick={() => setConnection('CONNECTING')}
+          >
+            retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="main">
-      {roomName ? (
-        <div className="chat">
-          <div className="room-name">
-            Room: {roomName} - {secret}
+      <div className="chat">
+        <div className="header">
+          <div className="onboarding-tip">
+            <div
+              className="onboarding-tip__icon"
+              onClick={() => setSettingsView(true)}
+            >
+              <div className="icon icon--adjust icon--button" />
+            </div>
+            <div className="onboarding-tip__msg">
+              {currentUser.name}
+            </div>
           </div>
-          <div className="messages" ref={messagesEndRef}>
-            {messages.map((m, i) => (
-              <Message key={i} data={m} />
-            ))}
-          </div>
-          <form className="footer" onSubmit={e => sendMessage(e)}>
-            <input
-              type="input"
-              className="input"
-              value={textMessage}
-              onChange={e => setTextMessage(e.target.value)}
-              placeholder="Write something ..."
-            />
-
-            <button type="submit">
-              <div className="icon icon--play icon--button" />
-            </button>
-          </form>
         </div>
-      ) : (
-        <div>connecting...</div>
-      )}
+        <div className="messages" ref={messagesEndRef}>
+          {messages.map((m, i) => (
+            <Message key={i} data={m} />
+          ))}
+        </div>
+        <form className="footer" onSubmit={e => sendMessage(e)}>
+          <input
+            type="input"
+            className="input"
+            value={textMessage}
+            onChange={e => setTextMessage(e.target.value)}
+            placeholder="Write something ..."
+          />
+
+          <button type="submit">
+            <div className="icon icon--play icon--button" />
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
