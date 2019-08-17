@@ -7,51 +7,23 @@ import './assets/figma-ui/main.min.css';
 import './assets/css/ui.css';
 
 import Settings from './components/settings';
+import Message from './components/message';
 
 import { sendMainMessage } from './helpers';
 
 declare function require(path: string): any;
 
-const colors = {
-  blue: '#18A0FB',
-  purple: '#7B61FF',
-  hotPink: '#FF00FF',
-  green: '#1BC47D',
-  red: '#F24822',
-  yellow: '#FFEB00'
-};
-
-const IS_PROD = false;
+const IS_PROD = true;
 const SERVER_URL = IS_PROD
   ? 'https://figma-chat.ph1p.dev/'
   : 'http://127.0.0.1:3000';
 
 const socket = io(SERVER_URL);
 
-const Message = ({ data }) => {
-  return (
-    <div className={`message ${data.id === 'me' ? 'me' : 'blue'}`}>
-      {data.message.selection ? (
-        <span
-          onClick={() =>
-            sendMainMessage('focus-nodes', {
-              ids: data.message.selection
-            })
-          }
-        >
-          {data.message.text}
-          <p className="selection">Focus selection</p>
-        </span>
-      ) : (
-        <span>{data.message.text}</span>
-      )}
-    </div>
-  );
-};
-
 let encryptor;
 
 const App = function() {
+  const [online, setOnline] = useState([]);
   const [isSettingsView, setSettingsView] = useState(false);
   const [isMainReady, setMainReady] = useState(false);
   const [selectionStatus, setSelectionStatus] = useState('NONE'); // READY, NONE, LOADING
@@ -60,17 +32,65 @@ const App = function() {
   const [roomName, setRoomName] = useState('');
   const [secret, setSecret] = useState('');
   const [textMessage, setTextMessage] = useState('');
+  const [settings, setSettings] = useState({
+    url: SERVER_URL,
+    user: {
+      id: '',
+      color: '',
+      name: ''
+    }
+  });
 
   const [messages, setMessages] = useState([]);
   const [selection, setSelection] = useState([]);
 
-  const [currentUser, setCurrentUser] = useState(null);
-
   const messagesEndRef = useRef(null);
+
+  // All messages from main
+  onmessage = message => {
+    const pmessage = message.data.pluginMessage;
+
+    if (pmessage) {
+      if (pmessage.type === 'main-ready') {
+        setMainReady(true);
+        sendMainMessage('get-settings');
+      }
+
+      if (pmessage.type === 'settings') {
+        setSettings(pmessage.settings);
+        if (socket) {
+          socket.emit('set user', pmessage.settings.user);
+        }
+      }
+
+      // set selection
+      if (pmessage.type === 'selection') {
+        setSelection(pmessage.selection);
+        setSelectionStatus(pmessage.selection.length > 0 ? 'READY' : 'NONE');
+      }
+
+      if (isMainReady && pmessage.type === 'root-data') {
+        const { roomName: dataRoomName = '', secret: dataSecret = '' } = {
+          ...pmessage,
+          ...(!IS_PROD
+            ? {
+                secret: 'thisismysecretkey',
+                roomName: 'dev'
+              }
+            : {})
+        };
+
+        encryptor = SimpleEncryptor(dataSecret);
+
+        setSecret(dataSecret);
+        setRoomName(dataRoomName);
+      }
+    }
+  };
 
   /**
    * Append message
-   * @param param0
+   * @param data
    */
   function appendMessage({ message, user = {}, id }) {
     const decryptedMessage = encryptor.decrypt(message);
@@ -82,6 +102,7 @@ const App = function() {
       setMessages(
         messages.concat({
           id,
+          user,
           message: {
             ...data
           }
@@ -147,11 +168,11 @@ const App = function() {
       setConnection('ERROR');
     });
 
-    socket.on('connected', user => {
-      setCurrentUser(user);
+    socket.on('connected', () => {
       setConnection('CONNECTED');
     });
 
+    socket.on('online', setOnline);
     socket.on('chat message', appendMessage);
     socket.on('user reconnected', () => {
       sendMainMessage('get-root-data');
@@ -174,44 +195,8 @@ const App = function() {
     }
   }, [roomName, connection]);
 
-  // All messages from main
-  onmessage = message => {
-    const pmessage = message.data.pluginMessage;
-
-    if (pmessage) {
-      if (pmessage.type === 'main-ready') {
-        setMainReady(true);
-      }
-
-      // set selection
-      if (pmessage.type === 'selection') {
-        setSelection(pmessage.selection);
-        setSelectionStatus(pmessage.selection.length > 0 ? 'READY' : 'NONE');
-      }
-
-      if (isMainReady && pmessage.type === 'root-data') {
-        const { roomName: dataRoomName = '', secret: dataSecret = '' } = {
-          ...pmessage,
-          ...(!IS_PROD
-            ? {
-                secret: 'thisismysecretkey',
-                roomName: 'dev'
-              }
-            : {})
-        };
-
-        encryptor = SimpleEncryptor(dataSecret);
-
-        setSecret(dataSecret);
-        setRoomName(dataRoomName);
-      }
-    }
-  };
-
   if (isSettingsView) {
-    return (
-      <Settings setSettingsView={setSettingsView} currentUser={currentUser} />
-    );
+    return <Settings setSettingsView={setSettingsView} settings={settings} />;
   }
 
   if (connection == 'CONNECTING') {
@@ -251,7 +236,13 @@ const App = function() {
               <div className="icon icon--adjust icon--button" />
             </div>
             <div className="onboarding-tip__msg">
-              {currentUser.name}
+              <span>
+                {settings.user.name && <strong>{settings.user.name}</strong>}
+              </span>
+
+              <span>
+                online: <strong>{online.length}</strong>
+              </span>
             </div>
           </div>
         </div>

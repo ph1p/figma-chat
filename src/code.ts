@@ -43,6 +43,23 @@ main().then(({ roomName, secret }) => {
   });
 
   figma.ui.onmessage = async message => {
+    if (message.action === 'save-settings') {
+      await figma.clientStorage.setAsync('settings', message.options);
+
+      figma.ui.postMessage({
+        type: 'settings',
+        settings: message.options
+      });
+    }
+
+    if (message.action === 'get-settings') {
+      const settings = await figma.clientStorage.getAsync('settings');
+      figma.ui.postMessage({
+        type: 'settings',
+        settings
+      });
+    }
+
     if (message.action === 'message') {
       throw 'Neue Nachricht!';
     }

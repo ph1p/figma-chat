@@ -19,6 +19,16 @@ body {
   border-bottom: 1px solid #e9e9e9;
 }
 
+.chat .header .onboarding-tip__msg {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.chat .header .onboarding-tip__icon {
+  border-right: 1px solid #e9e9e9;
+}
+
 .messages {
   margin: 0;
   overflow: auto;
@@ -36,10 +46,37 @@ body {
   padding: 12px 15px;
   margin: 0 30% 15px 0;
 }
+
 .messages .message.me {
   color: #000;
   margin: 0 0 15px 30%;
   background-color: #ebebeb;
+}
+
+.messages .message .user {
+  font-size: 9px;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.messages .message .selection {
+  margin: 5px 0 0 0;
+  cursor: pointer;
+  width: 100%;
+  background-color: transparent;
+  border-color: #fff;
+  color: #fff;
+}
+
+.messages .message.me .user,
+.messages .message.yellow .user {
+  color: #000;
+}
+
+.messages .message.me .selection,
+.messages .message.yellow .selection {
+  border-color: #000;
+  color: #000;
 }
 
 .messages .message.blue {
@@ -50,7 +87,7 @@ body {
   background-color: #7b61ff;
 }
 
-.messages .message.hotPink {
+.messages .message.hot-pink {
   background-color: #ff00ff;
 }
 
@@ -64,14 +101,7 @@ body {
 
 .messages .message.yellow {
   background-color: #ffeb00;
-}
-
-.messages .message .selection {
-  font-weight: normal;
-  color: #999;
-  margin: 5px 0 0 0;
-  font-size: 11px;
-  cursor: pointer;
+  color: #000;
 }
 
 .chat .footer {
@@ -120,6 +150,27 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
+}
+.settings .colors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 32px;
+}
+.settings .colors .color {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+}
+.settings .colors .color.active::after {
+  content: '';
+  left: -6px;
+  top: -6px;
+  position: absolute;
+  border-radius: 100%;
+  width: 70px;
+  height: 70px;
+  border: 1px solid #000;
 }
 
 .connection {
