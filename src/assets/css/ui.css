@@ -60,7 +60,7 @@ body {
 }
 
 .messages .message .selection {
-  margin: 5px 0 0 0;
+  margin: 8px 0 0 0;
   cursor: pointer;
   width: 100%;
   background-color: transparent;
@@ -142,6 +142,9 @@ body {
   height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
+}
+.settings h4 {
+  margin: 0 0 15px;
 }
 .settings .fields {
   margin-bottom: 20px;

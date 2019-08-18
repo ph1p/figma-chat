@@ -23,6 +23,7 @@ const socket = io(SERVER_URL);
 let encryptor;
 
 const App = function() {
+  const [socketId, setSocketId] = useState('');
   const [online, setOnline] = useState([]);
   const [isSettingsView, setSettingsView] = useState(false);
   const [isMainReady, setMainReady] = useState(false);
@@ -35,7 +36,6 @@ const App = function() {
   const [settings, setSettings] = useState({
     url: SERVER_URL,
     user: {
-      id: '',
       color: '',
       name: ''
     }
@@ -51,16 +51,16 @@ const App = function() {
     const pmessage = message.data.pluginMessage;
 
     if (pmessage) {
-      if (pmessage.type === 'main-ready') {
-        setMainReady(true);
-        sendMainMessage('get-settings');
-      }
-
       if (pmessage.type === 'settings') {
-        setSettings(pmessage.settings);
-        if (socket) {
-          socket.emit('set user', pmessage.settings.user);
-        }
+        setMainReady(true);
+        setSettings({
+          ...pmessage.settings,
+          user: {
+            ...pmessage.settings.user
+          }
+        });
+
+        socket.emit('set user', pmessage.settings.user);
       }
 
       // set selection
@@ -162,14 +162,17 @@ const App = function() {
   useEffect(() => {
     if (isMainReady && !roomName) {
       sendMainMessage('get-root-data');
+    } else {
+      sendMainMessage('get-settings');
     }
 
     socket.on('connect_error', () => {
       setConnection('ERROR');
     });
 
-    socket.on('connected', () => {
+    socket.on('connected', user => {
       setConnection('CONNECTED');
+      setSocketId(user.id);
     });
 
     socket.on('online', setOnline);
@@ -236,7 +239,7 @@ const App = function() {
               <div className="icon icon--adjust icon--button" />
             </div>
             <div className="onboarding-tip__msg">
-              <span>
+              <span style={{ color: settings.user.color || '#000' }}>
                 {settings.user.name && <strong>{settings.user.name}</strong>}
               </span>
 

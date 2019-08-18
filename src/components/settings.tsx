@@ -21,6 +21,7 @@ export default function Settings(props) {
   return (
     <div className="settings">
       <div className="fields">
+        <h4>Name</h4>
         <input
           type="input"
           value={settings.user.name}
@@ -38,6 +39,7 @@ export default function Settings(props) {
         />
         <br />
 
+        <h4>Color</h4>
         <div className="colors">
           {Object.keys(colors).map(color => (
             <div

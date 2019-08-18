@@ -38,10 +38,6 @@ async function main() {
 }
 
 main().then(({ roomName, secret }) => {
-  figma.ui.postMessage({
-    type: 'main-ready'
-  });
-
   figma.ui.onmessage = async message => {
     if (message.action === 'save-settings') {
       await figma.clientStorage.setAsync('settings', message.options);
