@@ -7,14 +7,6 @@ A plugin to chat in figma files. Fully **encrypted**! (https://github.com/sehrop
 ![](./assets/chat.png)
 ![](./assets/chat-settings.png)
 
-### How to use?
-
-* Open Figma
-* Go to **Plugins**
-* Click on **Browse all plugins**.
-* Search for **Figma chat** and click install
-* Ready!
-
 ### Encrypted? No login?
 
 Yes. When opening the plugin a **room** name and a **secret key** are randomly generated once

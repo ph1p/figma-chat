@@ -27,6 +27,7 @@ body {
 
 .chat .header .onboarding-tip__icon {
   border-right: 1px solid #e9e9e9;
+  cursor: pointer;
 }
 
 .messages {
@@ -146,6 +147,11 @@ body {
 .settings h4 {
   margin: 0 0 15px;
 }
+.settings p {
+  color: #999;
+  margin: 0;
+  font-size: 10px;
+}
 .settings .fields {
   margin-bottom: 20px;
 }
@@ -158,12 +164,14 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 32px;
+  margin-bottom: 30px;
 }
 .settings .colors .color {
   position: relative;
   width: 60px;
   height: 60px;
   border-radius: 100%;
+  cursor: pointer;
 }
 .settings .colors .color.active::after {
   content: '';

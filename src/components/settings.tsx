@@ -59,6 +59,8 @@ export default function Settings(props) {
           ))}
         </div>
 
+        <strong>Current Server</strong><p>{settings.url}</p>
+
         {/* <input
           type="input"
           value={settings.url}
