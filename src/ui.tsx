@@ -14,6 +14,18 @@ import { sendMainMessage } from './helpers';
 declare function require(path: string): any;
 const IS_PROD = true;
 
+enum ConnectionEnum {
+  CONNECTED = 'CONNECTED',
+  ERROR = 'ERROR',
+  CONNECTING = 'CONNECTING'
+}
+
+enum SelectionStateEnum {
+  READY = 'READY',
+  NONE = 'NONE',
+  LOADING = 'LOADING'
+}
+
 // initialize
 sendMainMessage('initialize');
 onmessage = message => {
@@ -38,9 +50,11 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
     const [online, setOnline] = useState([]);
     const [isSettingsView, setSettingsView] = useState(false);
     const [isMainReady, setMainReady] = useState(false);
-    const [selectionStatus, setSelectionStatus] = useState('NONE'); // READY, NONE, LOADING
+    const [selectionStatus, setSelectionStatus] = useState(
+      SelectionStateEnum.NONE
+    ); // READY, NONE, LOADING
 
-    const [connection, setConnection] = useState('CONNECTING'); // CONNECTED, ERROR, CONNECTING
+    const [connection, setConnection] = useState(ConnectionEnum.CONNECTING); // CONNECTED, ERROR, CONNECTING
     const [roomName, setRoomName] = useState('');
     const [secret, setSecret] = useState('');
     const [textMessage, setTextMessage] = useState('');
@@ -72,7 +86,11 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
         // set selection
         if (pmessage.type === 'selection') {
           setSelection(pmessage.selection);
-          setSelectionStatus(pmessage.selection.length > 0 ? 'READY' : 'NONE');
+          setSelectionStatus(
+            pmessage.selection.length > 0
+              ? SelectionStateEnum.READY
+              : SelectionStateEnum.NONE
+          );
         }
 
         if (isMainReady && pmessage.type === 'root-data') {
@@ -126,17 +144,17 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
         e.preventDefault();
       }
 
-      setSelectionStatus('LOADING');
+      setSelectionStatus(SelectionStateEnum.LOADING);
       sendMainMessage('get-selection');
     }
 
     useEffect(() => {
-      if (roomName && selectionStatus !== 'LOADING') {
+      if (roomName && selectionStatus !== SelectionStateEnum.LOADING) {
         let data = {
           text: textMessage
         };
 
-        if (selectionStatus === 'READY') {
+        if (selectionStatus === SelectionStateEnum.READY) {
           if (confirm('Include current selection?')) {
             data = {
               ...data,
@@ -145,7 +163,7 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
               }
             };
           }
-        } else if (selectionStatus === 'NONE') {
+        } else if (selectionStatus === SelectionStateEnum.NONE) {
           // nothing selected
         }
 
@@ -175,11 +193,11 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
       }
 
       socket.on('connect_error', () => {
-        setConnection('ERROR');
+        setConnection(ConnectionEnum.ERROR);
       });
 
       socket.on('connected', user => {
-        setConnection('CONNECTED');
+        setConnection(ConnectionEnum.CONNECTED);
         setSocketId(user.id);
       });
 
@@ -201,10 +219,10 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
 
     // join room
     useEffect(() => {
-      if (isMainReady && connection === 'CONNECTED' && roomName) {
+      if (isMainReady && connection === ConnectionEnum.CONNECTED && roomName) {
         socket.emit('join room', roomName);
       }
-    }, [roomName, connection]);
+    }, [isMainReady, roomName, connection]);
 
     if (isSettingsView) {
       return (
@@ -216,7 +234,7 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
       );
     }
 
-    if (connection == 'CONNECTING') {
+    if (connection === ConnectionEnum.CONNECTING) {
       return (
         <div className="connection">
           <div>connecting...</div>
@@ -224,7 +242,7 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
       );
     }
 
-    if (connection == 'ERROR') {
+    if (connection === ConnectionEnum.ERROR) {
       return (
         <div className="connection">
           <div>
@@ -232,7 +250,7 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
             <br />
             <button
               className="button button--secondary"
-              onClick={() => setConnection('CONNECTING')}
+              onClick={() => setConnection(ConnectionEnum.CONNECTING)}
             >
               retry
             </button>
