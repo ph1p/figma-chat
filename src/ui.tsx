@@ -143,19 +143,21 @@ const App = function() {
         // nothing selected
       }
 
-      const message = encryptor.encrypt(JSON.stringify(data));
+      if (textMessage) {
+        const message = encryptor.encrypt(JSON.stringify(data));
 
-      socket.emit('chat message', {
-        roomName,
-        message
-      });
+        socket.emit('chat message', {
+          roomName,
+          message
+        });
 
-      appendMessage({
-        id: 'me',
-        message
-      });
+        appendMessage({
+          id: 'me',
+          message
+        });
 
-      setTextMessage('');
+        setTextMessage('');
+      }
     }
   }, [selectionStatus]);
 
