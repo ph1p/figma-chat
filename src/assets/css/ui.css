@@ -69,40 +69,79 @@ body {
   color: #fff;
 }
 
-.messages .message.me .user,
-.messages .message.yellow .user {
+.messages .message.me .user {
   color: #000;
 }
 
-.messages .message.me .selection,
-.messages .message.yellow .selection {
+.messages .message.me .selection {
   border-color: #000;
   color: #000;
 }
 
+.messages .message.lightblue .user {
+  color: #357d94;
+}
+.messages .message.lightblue .selection {
+  border-color: #357d94;
+  color: #357d94;
+}
+
+.messages .message.lightgreen .user {
+  color: #3a8459;
+}
+.messages .message.lightgreen .selection {
+  border-color: #3a8459;
+  color: #3a8459;
+}
+
+.messages .message.purple .user {
+  color: #433688;
+}
+.messages .message.purple .selection {
+  border-color: #433688;
+  color: #433688;
+}
+
+.messages .message.red .user {
+  color: #842713;
+}
+.messages .message.red .selection {
+  border-color: #842713;
+  color: #842713;
+}
+
+.messages .message.green .user {
+  color: #0d6540;
+}
+.messages .message.green .selection {
+  border-color: #0d6540;
+  color: #0d6540;
+}
+
+.messages .message.gray {
+  background-color: #4f4f4f;
+}
 .messages .message.blue {
   background-color: #18a0fb;
 }
-
+.messages .message.lightblue {
+  background-color: #56ccf2;
+  color: #357d94;
+}
 .messages .message.purple {
   background-color: #7b61ff;
 }
-
-.messages .message.hot-pink {
-  background-color: #ff00ff;
-}
-
 .messages .message.green {
   background-color: #1bc47d;
 }
-
+.messages .message.lightgreen {
+  background-color: #6fcf97;
+}
 .messages .message.red {
   background-color: #f24822;
 }
-
-.messages .message.yellow {
-  background-color: #ffeb00;
-  color: #000;
+.messages .message.orange {
+  background-color: #f2994a;
 }
 
 .chat .footer {
@@ -162,14 +201,14 @@ body {
 }
 .settings .colors {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 32px;
   margin-bottom: 30px;
 }
 .settings .colors .color {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 100%;
   cursor: pointer;
 }
@@ -179,8 +218,8 @@ body {
   top: -6px;
   position: absolute;
   border-radius: 100%;
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   border: 1px solid #000;
 }
 

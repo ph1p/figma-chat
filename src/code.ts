@@ -39,25 +39,37 @@ async function main() {
 
 main().then(({ roomName, secret }) => {
   figma.ui.onmessage = async message => {
-    if (message.action === 'save-settings') {
-      await figma.clientStorage.setAsync('settings', message.options);
+    if (message.action === 'save-user-settings') {
+      await figma.clientStorage.setAsync('user-settings', message.options);
 
       figma.ui.postMessage({
-        type: 'settings',
+        type: 'user-settings',
         settings: message.options
       });
     }
 
-    if (message.action === 'get-settings') {
-      const settings = await figma.clientStorage.getAsync('settings');
+    if (message.action === 'get-user-settings') {
+      const settings = await figma.clientStorage.getAsync('user-settings');
       figma.ui.postMessage({
-        type: 'settings',
+        type: 'user-settings',
         settings
       });
     }
 
-    if (message.action === 'message') {
-      throw 'Neue Nachricht!';
+    if (message.action === 'set-server-url') {
+      await figma.clientStorage.setAsync('server-url', message.options);
+
+      alert('Please restart the plugin to connect to the new server.');
+      figma.closePlugin();
+    }
+
+    if (message.action === 'initialize') {
+      const url = await figma.clientStorage.getAsync('server-url');
+
+      figma.ui.postMessage({
+        type: 'initialize',
+        url: url || ''
+      });
     }
 
     if (message.action === 'get-selection') {
