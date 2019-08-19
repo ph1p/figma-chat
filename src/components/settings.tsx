@@ -6,14 +6,16 @@ export default function Settings(props) {
   const closeSettings = () => props.setSettingsView(false);
 
   const [settings, setSettings] = useState({
-    ...props.settings,
-    user: {
-      ...props.settings.user
-    }
+    ...props.settings
   });
+  const [url, setUrl] = useState(props.url);
 
   const saveSettings = () => {
-    sendMainMessage('save-settings', settings);
+    sendMainMessage('save-user-settings', settings);
+
+    if (url && url !== props.url) {
+      sendMainMessage('set-server-url', url);
+    }
 
     props.setSettingsView(false);
   };
@@ -24,14 +26,11 @@ export default function Settings(props) {
         <h4>Name</h4>
         <input
           type="input"
-          value={settings.user.name}
+          value={settings.name}
           onChange={e =>
             setSettings({
               ...settings,
-              user: {
-                ...settings.user,
-                name: e.target.value
-              }
+              name: e.target.value
             })
           }
           className="input"
@@ -47,32 +46,27 @@ export default function Settings(props) {
               onClick={() =>
                 setSettings({
                   ...settings,
-                  user: {
-                    ...settings.user,
-                    color
-                  }
+                  color
                 })
               }
-              className={`color ${settings.user.color === color && ' active'}`}
+              className={`color ${settings.color === color && ' active'}`}
               style={{ backgroundColor: color }}
             />
           ))}
         </div>
 
-        <strong>Current Server</strong><p>{settings.url}</p>
+        <h4>
+          Current Server (needs restart)
+          <p>{props.url}</p>
+        </h4>
 
-        {/* <input
+        <input
           type="input"
-          value={settings.url}
-          onChange={e =>
-            setSettings({
-              ...settings,
-              url: e.target.value
-            })
-          }
+          value={url}
+          onChange={e => setUrl(e.target.value)}
           className="input"
           placeholder="Server-URL ..."
-        /> */}
+        />
       </div>
 
       <div className="footer">

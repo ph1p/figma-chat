@@ -23,13 +23,15 @@ All messages are en- and decrypted with the stored secret key and send to the se
 This plugins needs a server ([https://github.com/ph1p/figma-chat-server](https://github.com/ph1p/figma-chat-server)).
 This is a simple websocket server. **Messages are only forwarded and not stored!**
 
-At first I thought about saving the messages in one element,
+---
+
+At first I thought about saving the messages in one element inside the figma-file,
 but the plugin can't  be notified when a new message arrives.
-The plugin must poll every n milliseconds.
+The plugin have to poll every n milliseconds.
 
 ### Todolist/Featurelist
 
-- [ ] set custom server URL ([https://github.com/ph1p/figma-chat-server](https://github.com/ph1p/figma-chat-server))
+- [x] set custom server URL ([https://github.com/ph1p/figma-chat-server](https://github.com/ph1p/figma-chat-server))
 - [ ] notifications
 - [ ] save local history
 - [ ] regenerate new room name and secret key

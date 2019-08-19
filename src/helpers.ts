@@ -10,10 +10,12 @@ export const sendMainMessage = (action, options = {}) =>
   );
 
 export const colors = {
+  '#4F4F4F': 'gray',
   '#18A0FB': 'blue',
+  '#56CCF2': 'lightblue',
   '#7B61FF': 'purple',
-  '#FF00FF': 'hot-pink',
   '#1BC47D': 'green',
+  '#6fcf97': 'lightgreen',
   '#F24822': 'red',
-  '#FFEB00': 'yellow'
+  '#F2994A': 'orange'
 };
