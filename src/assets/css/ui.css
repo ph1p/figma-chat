@@ -118,6 +118,14 @@ body {
   color: #0d6540;
 }
 
+.messages .message.orange .user {
+  color: #865427;
+}
+.messages .message.orange .selection {
+  border-color: #865427;
+  color: #865427;
+}
+
 .messages .message.gray {
   background-color: #4f4f4f;
 }
@@ -130,18 +138,23 @@ body {
 }
 .messages .message.purple {
   background-color: #7b61ff;
+  color: #433688;
 }
 .messages .message.green {
   background-color: #1bc47d;
+  color: #0d6540;
 }
 .messages .message.lightgreen {
   background-color: #6fcf97;
+  color: #3a8459;
 }
 .messages .message.red {
   background-color: #f24822;
+  color: #842713;
 }
 .messages .message.orange {
   background-color: #f2994a;
+  color: #865427;
 }
 
 .chat .footer {

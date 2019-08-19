@@ -61,7 +61,10 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
       if (pmessage) {
         if (pmessage.type === 'user-settings') {
           setMainReady(true);
-          setUserSettings(pmessage.settings);
+          setUserSettings({
+            ...userSettings,
+            ...pmessage.settings
+          });
 
           socket.emit('set user', pmessage.settings);
         }
