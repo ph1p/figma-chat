@@ -32,6 +32,7 @@ The plugin have to poll every n milliseconds.
 ### Todolist/Featurelist
 
 - [x] set custom server URL ([https://github.com/ph1p/figma-chat-server](https://github.com/ph1p/figma-chat-server))
+- [ ] add leave and join message
 - [ ] notifications
 - [ ] save local history
 - [ ] regenerate new room name and secret key
