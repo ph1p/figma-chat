@@ -7,7 +7,14 @@
     "build": "webpack --mode=production",
     "dev": "webpack --watch"
   },
-  "author": "",
+  "author": "Philip Stapelfeldt <phil@capshake.com>",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/ph1p/figma-chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ph1p/figma-chat/issues"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^16.9.2",
