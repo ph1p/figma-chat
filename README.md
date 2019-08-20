@@ -6,6 +6,7 @@ A plugin to chat in figma files. Fully **encrypted**! (https://github.com/sehrop
 
 ![](./assets/chat.png)
 ![](./assets/chat-settings.png)
+![](./assets/chat-user-list.png)
 
 ### Encrypted? No login?
 
@@ -26,8 +27,8 @@ This is a simple websocket server. **Messages are only forwarded and not stored!
 ---
 
 At first I thought about saving the messages in one element inside the figma-file,
-but the plugin can't  be notified when a new message arrives.
-The plugin have to poll every n milliseconds.
+but the plugin can't be notified when a new message arrives.
+The plugin must set an interval that asks for new updates every n milliseconds.
 
 ### Todolist/Featurelist
 
