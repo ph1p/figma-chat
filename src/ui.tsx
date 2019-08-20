@@ -7,9 +7,10 @@ import './assets/figma-ui/main.min.css';
 import './assets/css/ui.css';
 
 import Settings from './components/settings';
+import UserList from './components/user-list';
 import Message from './components/message';
 
-import { sendMainMessage } from './helpers';
+import { sendMainMessage } from './utils';
 
 declare function require(path: string): any;
 const IS_PROD = true;
@@ -30,17 +31,15 @@ enum SelectionStateEnum {
 sendMainMessage('initialize');
 onmessage = message => {
   if (message.data.pluginMessage) {
-    const { type, url } = message.data.pluginMessage;
+    const { type, payload } = message.data.pluginMessage;
 
     if (type === 'initialize') {
-      url !== '' ? init(url) : init();
+      payload !== '' ? init(payload) : init();
     }
   }
 };
 
-const init = (url = 'https://figma-chat.ph1p.dev/') => {
-  const SERVER_URL = url;
-
+const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
   const socket = io(SERVER_URL);
 
   let encryptor;
@@ -49,6 +48,7 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
     const [socketId, setSocketId] = useState('');
     const [online, setOnline] = useState([]);
     const [isSettingsView, setSettingsView] = useState(false);
+    const [isUserListView, setUserListView] = useState(false);
     const [isMainReady, setMainReady] = useState(false);
     const [selectionStatus, setSelectionStatus] = useState(
       SelectionStateEnum.NONE
@@ -77,17 +77,17 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
           setMainReady(true);
           setUserSettings({
             ...userSettings,
-            ...pmessage.settings
+            ...pmessage.payload
           });
 
-          socket.emit('set user', pmessage.settings);
+          socket.emit('set user', pmessage.payload);
         }
 
         // set selection
         if (pmessage.type === 'selection') {
-          setSelection(pmessage.selection);
+          setSelection(pmessage.payload);
           setSelectionStatus(
-            pmessage.selection.length > 0
+            pmessage.payload.length > 0
               ? SelectionStateEnum.READY
               : SelectionStateEnum.NONE
           );
@@ -95,7 +95,7 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
 
         if (isMainReady && pmessage.type === 'root-data') {
           const { roomName: dataRoomName = '', secret: dataSecret = '' } = {
-            ...pmessage,
+            ...pmessage.payload,
             ...(!IS_PROD
               ? {
                   secret: 'thisismysecretkey',
@@ -234,6 +234,20 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
       );
     }
 
+    if (isUserListView) {
+      return <UserList setUserListView={setUserListView} online={online} />;
+    }
+
+    if (isSettingsView) {
+      return (
+        <Settings
+          setSettingsView={setSettingsView}
+          settings={userSettings}
+          url={SERVER_URL}
+        />
+      );
+    }
+
     if (connection === ConnectionEnum.CONNECTING) {
       return (
         <div className="connection">
@@ -282,7 +296,10 @@ const init = (url = 'https://figma-chat.ph1p.dev/') => {
                   {userSettings.name && <strong>{userSettings.name}</strong>}
                 </span>
 
-                <span>
+                <span
+                  className="user-online"
+                  onClick={() => setUserListView(true)}
+                >
                   online: <strong>{online.length}</strong>
                 </span>
               </div>

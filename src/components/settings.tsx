@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import * as React from 'react';
-import { sendMainMessage, colors } from '../helpers';
+import { sendMainMessage, colors } from '../utils';
 
 export default function Settings(props) {
   const closeSettings = () => props.setSettingsView(false);
 
+  const [url, setUrl] = useState(props.url);
   const [settings, setSettings] = useState({
     ...props.settings
   });
-  const [url, setUrl] = useState(props.url);
 
   const saveSettings = () => {
     sendMainMessage('save-user-settings', settings);
@@ -56,7 +56,7 @@ export default function Settings(props) {
         </div>
 
         <h4>
-          Current Server (needs restart)
+          Current Server (requires restart)
           <p>{props.url}</p>
         </h4>
 

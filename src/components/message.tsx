@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { sendMainMessage, colors } from '../helpers';
+import { sendMainMessage, colors } from '../utils';
 
 export default function Message({ data }) {
   const username = data.user.name || '';
