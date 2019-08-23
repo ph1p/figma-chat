@@ -1,6 +1,6 @@
 {
   "name": "figma-chat",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "code.js",
   "scripts": {
@@ -9,8 +9,8 @@
   },
   "author": "Philip Stapelfeldt <phil@capshake.com>",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/ph1p/figma-chat.git"
+    "type": "git",
+    "url": "https://github.com/ph1p/figma-chat.git"
   },
   "bugs": {
     "url": "https://github.com/ph1p/figma-chat/issues"
