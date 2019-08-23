@@ -7,6 +7,7 @@ figma.showUI(__html__, {
 });
 
 async function main() {
+  let history = figma.root.getPluginData('history');
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
 
@@ -21,9 +22,15 @@ async function main() {
     figma.root.setPluginData('secret', secret);
   }
 
+  if (!history) {
+    history = '[]';
+    figma.root.setPluginData('history', history);
+  }
+
   return {
     roomName,
-    secret
+    secret,
+    history
   };
 }
 
@@ -33,12 +40,27 @@ const postMessage = (type = '', payload = {}) =>
     payload
   });
 
-main().then(({ roomName, secret }) => {
+main().then(({ roomName, secret, history }) => {
   figma.ui.onmessage = async message => {
     if (message.action === 'save-user-settings') {
       await figma.clientStorage.setAsync('user-settings', message.options);
 
       postMessage('user-settings', message.options);
+    }
+
+    if (message.action === 'add-message-to-history') {
+      const history = JSON.parse(figma.root.getPluginData('history'));
+
+      figma.root.setPluginData(
+        'history',
+        JSON.stringify(history.concat(message.options))
+      );
+    }
+
+    if (message.action === 'get-history') {
+      const history = figma.root.getPluginData('history');
+
+      postMessage('history', history);
     }
 
     if (message.action === 'get-user-settings') {
@@ -73,7 +95,7 @@ main().then(({ roomName, secret }) => {
     }
 
     if (message.action === 'get-root-data') {
-      postMessage('root-data', { roomName, secret });
+      postMessage('root-data', { roomName, secret, history });
     }
 
     if (message.action === 'cancel') {

@@ -94,7 +94,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         }
 
         if (isMainReady && pmessage.type === 'root-data') {
-          const { roomName: dataRoomName = '', secret: dataSecret = '' } = {
+          const { roomName: dataRoomName = '', secret: dataSecret = '', history = [] } = {
             ...pmessage.payload,
             ...(!IS_PROD
               ? {
@@ -108,6 +108,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
 
           setSecret(dataSecret);
           setRoomName(dataRoomName);
+          setMessages(JSON.parse(history));
         }
       }
     };
@@ -123,15 +124,16 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
       try {
         const data = JSON.parse(decryptedMessage);
 
-        setMessages(
-          messages.concat({
-            id,
-            user,
-            message: {
-              ...data
-            }
-          })
-        );
+        const newMessage = {
+          id,
+          user,
+          message: {
+            ...data
+          }
+        };
+
+        setMessages(messages.concat(newMessage));
+        sendMainMessage('add-message-to-history', newMessage);
       } catch (e) {}
     }
 
