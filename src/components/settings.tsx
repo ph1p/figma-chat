@@ -30,7 +30,7 @@ export default function Settings(props) {
           onChange={e =>
             setSettings({
               ...settings,
-              name: e.target.value
+              name: e.target.value.substr(0,20)
             })
           }
           className="input"
@@ -63,7 +63,7 @@ export default function Settings(props) {
         <input
           type="input"
           value={url}
-          onChange={e => setUrl(e.target.value)}
+          onChange={e => setUrl(e.target.value.substr(0,255))}
           className="input"
           placeholder="Server-URL ..."
         />

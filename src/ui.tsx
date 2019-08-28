@@ -317,7 +317,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
               type="input"
               className="input"
               value={textMessage}
-              onChange={e => setTextMessage(e.target.value)}
+              onChange={e => setTextMessage(e.target.value.substr(0, 1000))}
               placeholder="Write something ..."
             />
 
