@@ -108,7 +108,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
 
           setSecret(dataSecret);
           setRoomName(dataRoomName);
-          setMessages(JSON.parse(history));
+          setMessages(history);
         }
       }
     };

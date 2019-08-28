@@ -7,7 +7,7 @@ figma.showUI(__html__, {
 });
 
 async function main() {
-  let history = figma.root.getPluginData('history');
+  let history = await figma.clientStorage.getAsync('history');
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
 
@@ -23,8 +23,8 @@ async function main() {
   }
 
   if (!history) {
-    history = '[]';
-    figma.root.setPluginData('history', history);
+    history = [];
+    await figma.clientStorage.setAsync('history', history);
   }
 
   return {
@@ -49,18 +49,18 @@ main().then(({ roomName, secret, history }) => {
     }
 
     if (message.action === 'add-message-to-history') {
-      const history = JSON.parse(figma.root.getPluginData('history'));
+      const history = await figma.clientStorage.getAsync('history');
 
-      figma.root.setPluginData(
+      await figma.clientStorage.setAsync(
         'history',
-        JSON.stringify(history.concat(message.options))
+        (history || []).concat(message.options)
       );
     }
 
     if (message.action === 'get-history') {
-      const history = figma.root.getPluginData('history');
+      const history = await figma.clientStorage.getAsync('history');
 
-      postMessage('history', history);
+      postMessage('history', history || []);
     }
 
     if (message.action === 'get-user-settings') {

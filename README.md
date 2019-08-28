@@ -37,7 +37,10 @@ The plugin must set an interval that asks for new updates every n milliseconds.
 - [ ] add typing info
 - [ ] notifications
 - [x] save local history
+- [ ] create a shared history
+- [ ] users can delet messages
 - [ ] regenerate new room name and secret key
+- [ ] create a random unique user name to detect returning users on server and inside a figma file
 
 Feel free to open a feature request: https://github.com/ph1p/figma-chat/issues
 
