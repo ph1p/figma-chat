@@ -4,6 +4,13 @@
 
 A plugin to chat in figma files. Fully **encrypted**! (https://github.com/sehrope/node-simple-encryptor)
 
+### Installation
+
+There is no special installation process. Just install the plugin in figma.
+You can find it [**here**](https://www.figma.com/c/plugin/742073255743594050/Figma-Chat)
+
+### Screenshots
+
 ![](./assets/chat.png)
 ![](./assets/chat-settings.png)
 ![](./assets/chat-user-list.png)
