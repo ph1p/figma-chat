@@ -47,6 +47,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
   const App = function() {
     const [socketId, setSocketId] = useState('');
     const [online, setOnline] = useState([]);
+    const [instanceId, setInstanceId] = useState('');
     const [isSettingsView, setSettingsView] = useState(false);
     const [isUserListView, setUserListView] = useState(false);
     const [isMainReady, setMainReady] = useState(false);
@@ -94,7 +95,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         }
 
         if (isMainReady && pmessage.type === 'root-data') {
-          const { roomName: dataRoomName = '', secret: dataSecret = '', history = [] } = {
+          const { roomName: dataRoomName = '', secret: dataSecret = '', history = [], instanceId = '' } = {
             ...pmessage.payload,
             ...(!IS_PROD
               ? {
@@ -109,6 +110,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
           setSecret(dataSecret);
           setRoomName(dataRoomName);
           setMessages(history);
+          setInstanceId(instanceId);
         }
       }
     };
@@ -127,6 +129,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         const newMessage = {
           id,
           user,
+          instanceId,
           message: {
             ...data
           }
@@ -178,7 +181,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
           });
 
           appendMessage({
-            id: 'me',
+            id: instanceId,
             message
           });
 
@@ -309,7 +312,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
           </div>
           <div className="messages" ref={messagesEndRef}>
             {messages.map((m, i) => (
-              <Message key={i} data={m} />
+              <Message key={i} data={m} instanceId={instanceId} />
             ))}
           </div>
           <form className="footer" onSubmit={e => sendMessage(e)}>
@@ -317,7 +320,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
               type="input"
               className="input"
               value={textMessage}
-              onChange={e => setTextMessage(e.target.value.substr(0, 1000))}
+              onChange={e => setTextMessage(e.target.value.substr(0,1000))}
               placeholder="Write something ..."
             />
 

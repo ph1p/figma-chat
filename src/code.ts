@@ -7,7 +7,9 @@ figma.showUI(__html__, {
 });
 
 async function main() {
-  let history = await figma.clientStorage.getAsync('history');
+  // random user id for current user
+  let instanceId = await figma.clientStorage.getAsync('id');
+  let history = figma.root.getPluginData('history');
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
 
@@ -23,14 +25,20 @@ async function main() {
   }
 
   if (!history) {
-    history = [];
-    await figma.clientStorage.setAsync('history', history);
+    history = '[]';
+    figma.root.setPluginData('history', history);
+  }
+
+  if (!instanceId) {
+    instanceId = 'user-' + uniqid() + '-' + generateString(15);
+    await figma.clientStorage.setAsync('id', instanceId);
   }
 
   return {
     roomName,
     secret,
-    history
+    history: typeof history === 'string' ? JSON.parse(history) : [],
+    instanceId
   };
 }
 
@@ -40,7 +48,7 @@ const postMessage = (type = '', payload = {}) =>
     payload
   });
 
-main().then(({ roomName, secret, history }) => {
+main().then(({ roomName, secret, history, instanceId }) => {
   figma.ui.onmessage = async message => {
     if (message.action === 'save-user-settings') {
       await figma.clientStorage.setAsync('user-settings', message.options);
@@ -49,18 +57,19 @@ main().then(({ roomName, secret, history }) => {
     }
 
     if (message.action === 'add-message-to-history') {
-      const history = await figma.clientStorage.getAsync('history');
+      const history = JSON.parse(figma.root.getPluginData('history'));
 
-      await figma.clientStorage.setAsync(
+      figma.root.setPluginData(
         'history',
-        (history || []).concat(message.options)
+        JSON.stringify(history.concat(message.options))
+        //(history || []).concat(message.options)
       );
     }
 
     if (message.action === 'get-history') {
-      const history = await figma.clientStorage.getAsync('history');
+      const history = figma.root.getPluginData('history');
 
-      postMessage('history', history || []);
+      postMessage('history', JSON.parse(history));
     }
 
     if (message.action === 'get-user-settings') {
@@ -95,7 +104,7 @@ main().then(({ roomName, secret, history }) => {
     }
 
     if (message.action === 'get-root-data') {
-      postMessage('root-data', { roomName, secret, history });
+      postMessage('root-data', { roomName, secret, history, instanceId });
     }
 
     if (message.action === 'cancel') {
