@@ -95,7 +95,12 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         }
 
         if (isMainReady && pmessage.type === 'root-data') {
-          const { roomName: dataRoomName = '', secret: dataSecret = '', history = [], instanceId = '' } = {
+          const {
+            roomName: dataRoomName = '',
+            secret: dataSecret = '',
+            history = [],
+            instanceId = ''
+          } = {
             ...pmessage.payload,
             ...(!IS_PROD
               ? {
@@ -119,7 +124,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
      * Append message
      * @param data
      */
-    function appendMessage({ message, user = {}, id }) {
+    function appendMessage({ message, user = {}, id }, sender = false) {
       const decryptedMessage = encryptor.decrypt(message);
 
       // silent on error
@@ -129,14 +134,15 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         const newMessage = {
           id,
           user,
-          instanceId,
           message: {
             ...data
           }
         };
 
         setMessages(messages.concat(newMessage));
-        sendMainMessage('add-message-to-history', newMessage);
+        if (sender) {
+          sendMainMessage('add-message-to-history', newMessage);
+        }
       } catch (e) {}
     }
 
@@ -180,10 +186,19 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
             message
           });
 
-          appendMessage({
-            id: instanceId,
-            message
-          });
+          appendMessage(
+            {
+              id: instanceId,
+              message,
+              user: {
+                id: socketId,
+                color: userSettings.color,
+                name: userSettings.name,
+                room: roomName
+              }
+            },
+            true
+          );
 
           setTextMessage('');
         }
@@ -224,10 +239,15 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
 
     // join room
     useEffect(() => {
-      if (isMainReady && connection === ConnectionEnum.CONNECTED && roomName) {
+      if (
+        isMainReady &&
+        connection === ConnectionEnum.CONNECTED &&
+        roomName &&
+        instanceId
+      ) {
         socket.emit('join room', roomName);
       }
-    }, [isMainReady, roomName, connection]);
+    }, [isMainReady, roomName, connection, instanceId]);
 
     if (isSettingsView) {
       return (
@@ -320,7 +340,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
               type="input"
               className="input"
               value={textMessage}
-              onChange={e => setTextMessage(e.target.value.substr(0,1000))}
+              onChange={e => setTextMessage(e.target.value.substr(0, 1000))}
               placeholder="Write something ..."
             />
 

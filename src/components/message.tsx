@@ -6,8 +6,14 @@ export default function Message({ data, instanceId }) {
   const colorClass = colors[data.user.color] || 'blue';
 
   return (
-    <div className={`message ${data.id === instanceId ? 'me' : colorClass}`}>
-      {username ? <div className="user">{username}</div> : ''}
+    <div
+      className={`message ${
+        data.id === instanceId
+          ? 'me'
+          : colorClass
+      }`}
+    >
+      {data.id !== instanceId ? <div className="user">{username}</div> : ''}
       {data.message.selection ? (
         <span
           onClick={() =>

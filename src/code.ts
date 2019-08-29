@@ -9,6 +9,7 @@ figma.showUI(__html__, {
 async function main() {
   // random user id for current user
   let instanceId = await figma.clientStorage.getAsync('id');
+  // figma.root.setPluginData('history', '');
   let history = figma.root.getPluginData('history');
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
