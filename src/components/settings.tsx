@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as React from 'react';
-import { sendMainMessage, colors } from '../utils';
+import { sendMainMessage, colors, DEFAULT_SERVER_URL } from '../utils';
 
 export default function Settings(props) {
   const closeSettings = () => props.setSettingsView(false);
@@ -20,6 +20,13 @@ export default function Settings(props) {
     props.setSettingsView(false);
   };
 
+  const removeAllMessages = () => {
+    if (confirm('Remove all messages? (This cannot be undone)')) {
+      sendMainMessage('remove-all-messages');
+      alert('Messages successfully removed');
+    }
+  };
+
   return (
     <div className="settings">
       <div className="fields">
@@ -30,7 +37,7 @@ export default function Settings(props) {
           onChange={e =>
             setSettings({
               ...settings,
-              name: e.target.value.substr(0,20)
+              name: e.target.value.substr(0, 20)
             })
           }
           className="input"
@@ -56,20 +63,29 @@ export default function Settings(props) {
         </div>
 
         <h4>
-          Current Server (requires restart)
-          <p>{props.url}</p>
+          Server URL (requires restart)
+          <p onClick={() => setUrl(DEFAULT_SERVER_URL)}>
+            default: {DEFAULT_SERVER_URL}
+          </p>
         </h4>
 
         <input
           type="input"
           value={url}
-          onChange={e => setUrl(e.target.value.substr(0,255))}
+          onChange={e => setUrl(e.target.value.substr(0, 255))}
           className="input"
           placeholder="Server-URL ..."
         />
       </div>
 
       <div className="footer">
+        <button
+          type="button"
+          onClick={removeAllMessages}
+          className="remove-all-messages button button--secondary-destructive"
+        >
+          remove all messages
+        </button>
         <button
           type="submit"
           onClick={saveSettings}

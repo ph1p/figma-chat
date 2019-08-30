@@ -3,7 +3,7 @@ import { generateString } from './utils';
 
 figma.showUI(__html__, {
   width: 300,
-  height: 410
+  height: 415
 });
 
 async function main() {
@@ -94,6 +94,12 @@ main().then(({ roomName, secret, history, instanceId }) => {
 
     if (message.action === 'get-selection') {
       postMessage('selection', figma.currentPage.selection.map(n => n.id));
+    }
+
+    if (message.action === 'remove-all-messages') {
+      figma.root.setPluginData('history', '[]');
+
+      postMessage('history', JSON.parse('[]'));
     }
 
     if (message.action === 'focus-nodes') {

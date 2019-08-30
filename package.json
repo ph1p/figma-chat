@@ -5,7 +5,7 @@
   "main": "code.js",
   "scripts": {
     "build": "webpack --mode=production",
-    "dev": "webpack --watch"
+    "dev": "DEBUG=* webpack --watch"
   },
   "author": "Philip Stapelfeldt <phil@capshake.com>",
   "repository": {

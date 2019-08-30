@@ -10,12 +10,13 @@ import Settings from './components/settings';
 import UserList from './components/user-list';
 import Message from './components/message';
 
-import { sendMainMessage } from './utils';
+import { sendMainMessage, DEFAULT_SERVER_URL } from './utils';
 
 declare function require(path: string): any;
 const IS_PROD = true;
 
 enum ConnectionEnum {
+  NONE = 'NONE',
   CONNECTED = 'CONNECTED',
   ERROR = 'ERROR',
   CONNECTING = 'CONNECTING'
@@ -27,6 +28,8 @@ enum SelectionStateEnum {
   LOADING = 'LOADING'
 }
 
+let CURRENT_SERVER_URL = DEFAULT_SERVER_URL;
+
 // initialize
 sendMainMessage('initialize');
 onmessage = message => {
@@ -34,13 +37,21 @@ onmessage = message => {
     const { type, payload } = message.data.pluginMessage;
 
     if (type === 'initialize') {
-      payload !== '' ? init(payload) : init();
+      if (payload !== '') {
+        CURRENT_SERVER_URL = payload;
+        init(payload);
+      } else {
+        init();
+      }
     }
   }
 };
 
 const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
-  const socket = io(SERVER_URL);
+  const socket = io(SERVER_URL, {
+    reconnectionAttempts: 3,
+    forceNew: true
+  });
 
   let encryptor;
 
@@ -55,7 +66,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
       SelectionStateEnum.NONE
     ); // READY, NONE, LOADING
 
-    const [connection, setConnection] = useState(ConnectionEnum.CONNECTING); // CONNECTED, ERROR, CONNECTING
+    const [connection, setConnection] = useState(ConnectionEnum.NONE); // CONNECTED, ERROR, CONNECTING
     const [roomName, setRoomName] = useState('');
     const [secret, setSecret] = useState('');
     const [textMessage, setTextMessage] = useState('');
@@ -93,7 +104,10 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
               : SelectionStateEnum.NONE
           );
         }
-
+        // set messages
+        if (pmessage.type === 'history') {
+          setMessages(pmessage.payload);
+        }
         if (isMainReady && pmessage.type === 'root-data') {
           const {
             roomName: dataRoomName = '',
@@ -124,7 +138,11 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
      * Append message
      * @param data
      */
-    function appendMessage({ message, user = {}, id }, sender = false) {
+    function appendMessage(
+      messages,
+      { message, user = {}, id },
+      sender = false
+    ) {
       const decryptedMessage = encryptor.decrypt(message);
 
       // silent on error
@@ -187,14 +205,13 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
           });
 
           appendMessage(
+            messages,
             {
               id: instanceId,
               message,
               user: {
-                id: socketId,
                 color: userSettings.color,
-                name: userSettings.name,
-                room: roomName
+                name: userSettings.name
               }
             },
             true
@@ -206,12 +223,26 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
     }, [selectionStatus]);
 
     useEffect(() => {
-      if (isMainReady && !roomName) {
-        sendMainMessage('get-root-data');
-      } else {
-        sendMainMessage('get-user-settings');
-      }
+      socket.on('online', data => setOnline(data));
+      socket.on('chat message', data => {
+        appendMessage(messages, data);
+      });
 
+      // scroll to bottom
+      setTimeout(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollTop =
+            messagesEndRef.current.scrollHeight;
+        }
+      }, 100);
+
+      return () => {
+        socket.off('online');
+        socket.off('chat message');
+      };
+    }, [messages]);
+
+    useEffect(() => {
       socket.on('connect_error', () => {
         setConnection(ConnectionEnum.ERROR);
       });
@@ -221,33 +252,28 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         setSocketId(user.id);
       });
 
-      socket.on('online', data => setOnline(data));
-      socket.on('chat message', appendMessage);
-      socket.on('user reconnected', () => {
-        sendMainMessage('get-root-data');
-      });
-
-      // scroll to bottom
-      if (messagesEndRef.current) {
-        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-      }
-
       return () => {
-        socket.removeAllListeners();
+        socket.off('connected');
+        socket.off('connect_error');
       };
-    }, [messages, isMainReady, connection]);
+    }, [connection]);
+
+    useEffect(() => setConnection(ConnectionEnum.CONNECTING), []);
+
+    useEffect(() => {
+      if (isMainReady && !roomName) {
+        sendMainMessage('get-root-data');
+      } else {
+        sendMainMessage('get-user-settings');
+      }
+    }, [isMainReady, connection]);
 
     // join room
     useEffect(() => {
-      if (
-        isMainReady &&
-        connection === ConnectionEnum.CONNECTED &&
-        roomName &&
-        instanceId
-      ) {
+      if (isMainReady && connection === ConnectionEnum.CONNECTED && roomName) {
         socket.emit('join room', roomName);
       }
-    }, [isMainReady, roomName, connection, instanceId]);
+    }, [isMainReady, roomName, connection]);
 
     if (isSettingsView) {
       return (
@@ -276,7 +302,25 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
     if (connection === ConnectionEnum.CONNECTING) {
       return (
         <div className="connection">
-          <div>connecting...</div>
+          <div>
+            connecting... <br />
+            <br />
+            <button
+              className="button button--secondary"
+              onClick={() => {
+                init(CURRENT_SERVER_URL);
+              }}
+            >
+              retry
+            </button>
+            <button
+              className="button button--secondary"
+              style={{ marginLeft: 10 }}
+              onClick={() => setSettingsView(true)}
+            >
+              settings
+            </button>
+          </div>
         </div>
       );
     }
@@ -289,7 +333,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
             <br />
             <button
               className="button button--secondary"
-              onClick={() => setConnection(ConnectionEnum.CONNECTING)}
+              onClick={() => init(CURRENT_SERVER_URL)}
             >
               retry
             </button>

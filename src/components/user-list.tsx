@@ -20,9 +20,9 @@ export default function UserList(props) {
           <div
             key={user.id}
             className="user"
-            style={{ color: user.color || '#000' }}
           >
-            {user.name}
+            <div className="color" style={{ backgroundColor: user.color || '#000' }}></div>
+            <div className="name">{user.name}</div>
           </div>
         ))}
       </div>
