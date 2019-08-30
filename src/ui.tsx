@@ -230,12 +230,9 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
       });
 
       // scroll to bottom
-      setTimeout(() => {
-        if (messagesEndRef.current) {
-          messagesEndRef.current.scrollTop =
-            messagesEndRef.current.scrollHeight;
-        }
-      }, 0);
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+      }
 
       return () => {
         socket.off('online');
@@ -266,6 +263,11 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         sendMainMessage('get-root-data');
       } else {
         sendMainMessage('get-user-settings');
+      }
+
+      // scroll to bottom
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
       }
     }, [isMainReady, connection]);
 
