@@ -50,7 +50,8 @@ onmessage = message => {
 const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
   const socket = io(SERVER_URL, {
     reconnectionAttempts: 3,
-    forceNew: true
+    forceNew: true,
+    transports: ['websocket']
   });
 
   let encryptor;
@@ -234,7 +235,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
           messagesEndRef.current.scrollTop =
             messagesEndRef.current.scrollHeight;
         }
-      }, 100);
+      }, 0);
 
       return () => {
         socket.off('online');
