@@ -11,9 +11,7 @@ You can find it [**here**](https://www.figma.com/c/plugin/742073255743594050/Fig
 
 ### Screenshots
 
-![](./assets/chat.png)
-![](./assets/chat-settings.png)
-![](./assets/chat-user-list.png)
+![](./assets/screenshots.png)
 
 ### Encrypted? No login?
 
