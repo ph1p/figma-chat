@@ -28,6 +28,17 @@ enum SelectionStateEnum {
   LOADING = 'LOADING'
 }
 
+interface MessageData {
+  message: string;
+  id: string;
+  user: {
+    name?: string;
+    id?: string;
+    color?: string;
+    room?: string;
+  };
+}
+
 let CURRENT_SERVER_URL = DEFAULT_SERVER_URL;
 
 // initialize
@@ -139,28 +150,34 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
      * Append message
      * @param data
      */
-    function appendMessage(
-      messages,
-      { message, user = {}, id },
-      sender = false
-    ) {
-      const decryptedMessage = encryptor.decrypt(message);
+    function appendMessage(messages, messageData: MessageData, sender = false) {
+      const decryptedMessage = encryptor.decrypt(messageData.message);
 
       // silent on error
       try {
         const data = JSON.parse(decryptedMessage);
 
         const newMessage = {
-          id,
-          user,
+          id: messageData.id,
+          user: messageData.user,
           message: {
             ...data
           }
         };
 
         setMessages(messages.concat(newMessage));
+
         if (sender) {
           sendMainMessage('add-message-to-history', newMessage);
+        } else {
+          sendMainMessage(
+            'notification',
+            messageData.user
+              ? `New chat message from ${messageData.user.name}`
+              : `New chat message`
+          );
+
+          figma.notify(`new message from ${data}`);
         }
       } catch (e) {}
     }

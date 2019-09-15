@@ -73,6 +73,10 @@ main().then(({ roomName, secret, history, instanceId }) => {
       postMessage('history', JSON.parse(history));
     }
 
+    if (message.action === 'notification') {
+      figma.notify(message.options);
+    }
+
     if (message.action === 'get-user-settings') {
       const settings = await figma.clientStorage.getAsync('user-settings');
 
