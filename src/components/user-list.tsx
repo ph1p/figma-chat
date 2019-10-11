@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { colors } from '../utils';
 
 export default function UserList(props) {
   const closeUserList = () => props.setUserListView(false);

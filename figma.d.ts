@@ -1,4 +1,4 @@
-// Figma Plugin API version 1, update 1
+// Figma Plugin API version 1, update 4
 
 // Global variable with Figma's plugin API.
 declare const figma: PluginAPI;
@@ -22,6 +22,10 @@ interface PluginAPI {
 
   readonly root: DocumentNode;
   currentPage: PageNode;
+
+  on(type: 'selectionchange' | 'currentpagechange', callback: () => void); // PROPOSED API ONLY
+  once(type: 'selectionchange' | 'currentpagechange', callback: () => void); // PROPOSED API ONLY
+  off(type: 'selectionchange' | 'currentpagechange', callback: () => void); // PROPOSED API ONLY
 
   readonly mixed: symbol;
 
@@ -125,6 +129,11 @@ interface OnMessageProperties {
   origin: string;
 }
 
+type MessageEventHandler = (
+  pluginMessage: any,
+  props: OnMessageProperties
+) => void;
+
 interface UIAPI {
   show(): void;
   hide(): void;
@@ -135,6 +144,9 @@ interface UIAPI {
   onmessage:
     | ((pluginMessage: any, props: OnMessageProperties) => void)
     | undefined;
+  on(type: 'message', callback: MessageEventHandler); // PROPOSED API ONLY
+  once(type: 'message', callback: MessageEventHandler); // PROPOSED API ONLY
+  off(type: 'message', callback: MessageEventHandler); // PROPOSED API ONLY
 }
 
 interface ViewportAPI {

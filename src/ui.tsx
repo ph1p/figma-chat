@@ -71,6 +71,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
     const [socketId, setSocketId] = useState('');
     const [online, setOnline] = useState([]);
     const [instanceId, setInstanceId] = useState('');
+    const [isMinimized, setMinimized] = useState(false);
     const [isSettingsView, setSettingsView] = useState(false);
     const [isUserListView, setUserListView] = useState(false);
     const [isMainReady, setMainReady] = useState(false);
@@ -273,7 +274,14 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
       };
     }, [connection]);
 
-    useEffect(() => setConnection(ConnectionEnum.CONNECTING), []);
+    useEffect(() => {
+      setConnection(ConnectionEnum.CONNECTING);
+
+      // scroll to bottom
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+      }
+    }, []);
 
     useEffect(() => {
       if (isMainReady && !roomName) {
@@ -374,14 +382,23 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         <div className="chat">
           <div className="header">
             <div className="onboarding-tip">
-              <div
-                className="onboarding-tip__icon"
-                onClick={() => setSettingsView(true)}
-              >
-                <div className="icon icon--adjust icon--button" />
-              </div>
+              {!isMinimized ? (
+                <div
+                  className="onboarding-tip__icon"
+                  onClick={() => setSettingsView(true)}
+                >
+                  <div className="icon icon--adjust icon--button" />
+                </div>
+              ) : (
+                ''
+              )}
               <div className="onboarding-tip__msg">
-                <span style={{ color: userSettings.color || '#000' }}>
+                <span
+                  style={{
+                    marginLeft: isMinimized ? 10 : 0,
+                    color: userSettings.color || '#000'
+                  }}
+                >
                   {userSettings.name && <strong>{userSettings.name}</strong>}
                 </span>
 
@@ -392,26 +409,47 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
                   online: <strong>{online.length}</strong>
                 </span>
               </div>
+              <div
+                className="minimize-chat"
+                onClick={() => {
+                  sendMainMessage('minimize', !isMinimized);
+                  setMinimized(!isMinimized);
+                }}
+              >
+                <div
+                  className={`icon icon--${
+                    isMinimized ? 'plus' : 'minus'
+                  } icon--button`}
+                />
+              </div>
             </div>
           </div>
-          <div className="messages" ref={messagesEndRef}>
-            {messages.map((m, i) => (
-              <Message key={i} data={m} instanceId={instanceId} />
-            ))}
-          </div>
-          <form className="footer" onSubmit={e => sendMessage(e)}>
-            <input
-              type="input"
-              className="input"
-              value={textMessage}
-              onChange={e => setTextMessage(e.target.value.substr(0, 1000))}
-              placeholder="Write something ..."
-            />
+          {!isMinimized ? (
+            <>
+              <div className="messages" ref={messagesEndRef}>
+                {messages.map((m, i) => (
+                  <Message key={i} data={m} instanceId={instanceId} />
+                ))}
+              </div>
+              <form className="footer" onSubmit={e => sendMessage(e)}>
+                <input
+                  type="input"
+                  className="input"
+                  value={textMessage}
+                  onChange={e => setTextMessage(e.target.value.substr(0, 1000))}
+                  placeholder="Write something ..."
+                />
 
-            <button type="submit">
-              <div className="icon icon--play icon--button" />
-            </button>
-          </form>
+                <button type="submit">
+                  <div className="icon icon--play icon--button" />
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="info-paragraph">
+              Click on "+" to show the Chat again.
+            </div>
+          )}
         </div>
       </div>
     );

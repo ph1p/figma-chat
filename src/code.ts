@@ -49,6 +49,14 @@ const postMessage = (type = '', payload = {}) =>
     payload
   });
 
+if (figma.command === 'hide') {
+  figma.ui.hide();
+}
+
+if (figma.command === 'show') {
+  figma.ui.show();
+}
+
 main().then(({ roomName, secret, history, instanceId }) => {
   figma.ui.onmessage = async message => {
     if (message.action === 'save-user-settings') {
@@ -104,6 +112,10 @@ main().then(({ roomName, secret, history, instanceId }) => {
       figma.root.setPluginData('history', '[]');
 
       postMessage('history', JSON.parse('[]'));
+    }
+
+    if (message.action === 'minimize') {
+      figma.ui.resize(message.options ? 180 : 300, message.options ? 1 : 415);
     }
 
     if (message.action === 'focus-nodes') {

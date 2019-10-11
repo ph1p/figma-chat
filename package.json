@@ -37,7 +37,17 @@
     "id": "742073255743594050",
     "api": "1.0.0",
     "main": "code.js",
-    "ui": "ui.html"
+    "ui": "ui.html",
+    "menu": [
+      {
+        "name": "Hide Chat",
+        "command": "hide"
+      },
+      {
+        "name": "Show Chat",
+        "command": "show"
+      }
+    ]
   },
   "dependencies": {
     "react": "^16.9.0",

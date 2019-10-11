@@ -23,6 +23,16 @@ body {
   cursor: pointer;
 }
 
+.chat .header .onboarding-tip {
+  padding: 0;
+}
+
+.chat .header .minimize-chat {
+  cursor: pointer;
+  border-left: 1px solid #e9e9e9;
+  margin-left: 10px;
+}
+
 .chat .header .onboarding-tip__msg {
   display: flex;
   justify-content: space-between;
@@ -305,4 +315,11 @@ body {
   width: 12px;
   height: 12px;
   margin-right: 10px;
+}
+
+
+.info-paragraph {
+  padding: 15px;
+  text-align: center;
+  color: #999;
 }
