@@ -72,6 +72,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
     const [online, setOnline] = useState([]);
     const [instanceId, setInstanceId] = useState('');
     const [isMinimized, setMinimized] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
     const [isSettingsView, setSettingsView] = useState(false);
     const [isUserListView, setUserListView] = useState(false);
     const [isMainReady, setMainReady] = useState(false);
@@ -81,7 +82,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
 
     const [connection, setConnection] = useState(ConnectionEnum.NONE); // CONNECTED, ERROR, CONNECTING
     const [roomName, setRoomName] = useState('');
-    const [secret, setSecret] = useState('');
+    const [_, setSecret] = useState('');
     const [textMessage, setTextMessage] = useState('');
     const [userSettings, setUserSettings] = useState({
       color: '',
@@ -92,6 +93,29 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
     const [selection, setSelection] = useState([]);
 
     const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+      // scroll to bottom
+      setTimeout(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollTop =
+            messagesEndRef.current.scrollHeight;
+        }
+      }, 0);
+    };
+
+    // check focus
+    window.addEventListener('focus', () => {
+      sendMainMessage('focus', true);
+      setIsFocused(true);
+      scrollToBottom();
+    });
+
+    window.addEventListener('blur', () => {
+      sendMainMessage('focus', false);
+      setIsFocused(false);
+      scrollToBottom();
+    });
 
     // All messages from main
     onmessage = message => {
@@ -173,7 +197,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
         } else {
           sendMainMessage(
             'notification',
-            messageData.user
+            messageData.user && messageData.user.name
               ? `New chat message from ${messageData.user.name}`
               : `New chat message`
           );
@@ -248,9 +272,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
       });
 
       // scroll to bottom
-      if (messagesEndRef.current) {
-        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-      }
+      scrollToBottom();
 
       return () => {
         socket.off('online');
@@ -278,9 +300,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
       setConnection(ConnectionEnum.CONNECTING);
 
       // scroll to bottom
-      if (messagesEndRef.current) {
-        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-      }
+      scrollToBottom();
     }, []);
 
     useEffect(() => {
@@ -291,9 +311,7 @@ const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
       }
 
       // scroll to bottom
-      if (messagesEndRef.current) {
-        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-      }
+      scrollToBottom();
     }, [isMainReady, connection]);
 
     // join room

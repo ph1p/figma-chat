@@ -1,9 +1,9 @@
-export const sendMainMessage = (action, options = {}) =>
+export const sendMainMessage = (action, payload = {}) =>
   parent.postMessage(
     {
       pluginMessage: {
         action,
-        options
+        payload
       }
     },
     '*'

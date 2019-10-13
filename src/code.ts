@@ -1,6 +1,10 @@
 import uniqid from 'uniqid';
 import { generateString } from './utils';
 
+let isMinimized = false;
+let isFocused = true;
+let sendNotifications = false;
+
 figma.showUI(__html__, {
   width: 300,
   height: 415
@@ -60,9 +64,9 @@ if (figma.command === 'show') {
 main().then(({ roomName, secret, history, instanceId }) => {
   figma.ui.onmessage = async message => {
     if (message.action === 'save-user-settings') {
-      await figma.clientStorage.setAsync('user-settings', message.options);
+      await figma.clientStorage.setAsync('user-settings', message.payload);
 
-      postMessage('user-settings', message.options);
+      postMessage('user-settings', message.payload);
     }
 
     if (message.action === 'add-message-to-history') {
@@ -70,8 +74,8 @@ main().then(({ roomName, secret, history, instanceId }) => {
 
       figma.root.setPluginData(
         'history',
-        JSON.stringify(history.concat(message.options))
-        //(history || []).concat(message.options)
+        JSON.stringify(history.concat(message.payload))
+        //(history || []).concat(message.payload)
       );
     }
 
@@ -82,7 +86,9 @@ main().then(({ roomName, secret, history, instanceId }) => {
     }
 
     if (message.action === 'notification') {
-      figma.notify(message.options);
+      if (sendNotifications) {
+        figma.notify(message.payload);
+      }
     }
 
     if (message.action === 'get-user-settings') {
@@ -92,7 +98,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
     }
 
     if (message.action === 'set-server-url') {
-      await figma.clientStorage.setAsync('server-url', message.options);
+      await figma.clientStorage.setAsync('server-url', message.payload);
 
       alert('Please restart the plugin to connect to the new server.');
       figma.closePlugin();
@@ -115,12 +121,24 @@ main().then(({ roomName, secret, history, instanceId }) => {
     }
 
     if (message.action === 'minimize') {
-      figma.ui.resize(message.options ? 180 : 300, message.options ? 1 : 415);
+      isMinimized = message.payload;
+      sendNotifications = isMinimized;
+
+      // resize window
+      figma.ui.resize(message.payload ? 180 : 300, message.payload ? 1 : 415);
+    }
+
+    if (message.action === 'focus' && !isMinimized) {
+      isFocused = message.payload;
+
+      if (!isFocused) {
+        sendNotifications = true;
+      }
     }
 
     if (message.action === 'focus-nodes') {
       const nodes = figma.currentPage.findAll(
-        n => message.options.ids.indexOf(n.id) !== -1
+        n => message.payload.ids.indexOf(n.id) !== -1
       );
 
       figma.viewport.scrollAndZoomIntoView(nodes);

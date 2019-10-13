@@ -40,12 +40,12 @@
     "ui": "ui.html",
     "menu": [
       {
-        "name": "Hide Chat",
-        "command": "hide"
+        "name": "Open Chat",
+        "command": "show"
       },
       {
-        "name": "Show Chat",
-        "command": "show"
+        "name": "Hide Chat",
+        "command": "hide"
       }
     ]
   },
