@@ -1,4 +1,4 @@
- # figma-chat
+ # figma-chat ![](https://github.com/ph1p/figma-chat/workflows/Build%20Figma-Chat/badge.svg)
 
 ![](./assets/header.png)
 
@@ -40,7 +40,7 @@ The plugin must set an interval that asks for new updates every n milliseconds.
 - [x] set custom server URL ([https://github.com/ph1p/figma-chat-server](https://github.com/ph1p/figma-chat-server))
 - [ ] add leave and join message
 - [ ] add typing info
-- [ ] notifications
+- [x] notifications (first version)
 - [x] save local history
 - [x] create a shared history
 - [ ] users/instances can delete messages
