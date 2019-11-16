@@ -67,11 +67,10 @@ main().then(({ roomName, secret, history, instanceId }) => {
     postMessage(
       'selection',
       figma.currentPage.selection.map(n => n.id)
-      );
-    });
+    );
+  });
 
-    figma.ui.onmessage = async message => {
-      // await figma.clientStorage.setAsync('user-settings', {});
+  figma.ui.onmessage = async message => {
     if (message.action === 'save-user-settings') {
       await figma.clientStorage.setAsync('user-settings', message.payload);
 
@@ -84,7 +83,6 @@ main().then(({ roomName, secret, history, instanceId }) => {
       figma.root.setPluginData(
         'history',
         JSON.stringify(history.concat(message.payload))
-        //(history || []).concat(message.payload)
       );
     }
 
@@ -112,7 +110,6 @@ main().then(({ roomName, secret, history, instanceId }) => {
 
       postMessage('initialize', url || '');
 
-
       const settings = await figma.clientStorage.getAsync('user-settings');
 
       postMessage('root-data', {
@@ -122,7 +119,6 @@ main().then(({ roomName, secret, history, instanceId }) => {
         instanceId,
         settings
       });
-
     }
 
     if (message.action === 'get-selection') {
