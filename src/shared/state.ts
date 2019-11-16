@@ -21,6 +21,7 @@ const state = store({
   disableAutoScroll: false,
   scrollToBottom() {
     if (!state.disableAutoScroll) {
+      console.log('ok', state.disableAutoScroll);
       // scroll to bottom
       if (state.messagesRef.current) {
         state.messagesRef.current.scrollTop =
@@ -109,7 +110,8 @@ const state = store({
       }
 
       state.messages.push(newMessage);
-      state.scrollToBottom();
+
+      setTimeout(state.scrollToBottom, 0);
     } catch (e) {
       console.log(e);
     }

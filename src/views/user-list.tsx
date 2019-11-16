@@ -14,7 +14,7 @@ const UserListView: FunctionComponent = () => {
               <div
                 className="color"
                 style={{ backgroundColor: user.color || '#000' }}
-              ></div>
+              />
               <div className="name">{user.name}</div>
             </div>
           ))}
