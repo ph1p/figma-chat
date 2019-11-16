@@ -3,7 +3,6 @@
     "target": "es6",
     "jsx": "react",
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "lib": ["dom"]
+    "allowSyntheticDefaultImports": true
   }
 }

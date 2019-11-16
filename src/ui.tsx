@@ -7,6 +7,7 @@ import './assets/css/ui.css';
 import { sendMainMessage, DEFAULT_SERVER_URL } from './utils';
 import SettingsScreen from './containers/settings';
 import ChatScreen from './containers/chat';
+import { view, state } from './shared/state';
 
 let CURRENT_SERVER_URL;
 
@@ -28,6 +29,21 @@ onmessage = message => {
 };
 
 const init = (SERVER_URL = 'https://figma-chat.ph1p.dev/') => {
+  state.url = SERVER_URL;
+
+  sendMainMessage('get-root-data');
+
+  // check focus
+  window.addEventListener('focus', () => {
+    sendMainMessage('focus', true);
+    state.isFocused = true;
+  });
+
+  window.addEventListener('blur', () => {
+    sendMainMessage('focus', false);
+    state.isFocused = false;
+  });
+
   const App = () => {
     return (
       <Switch>

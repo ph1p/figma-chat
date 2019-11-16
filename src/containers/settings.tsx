@@ -1,35 +1,29 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { sendMainMessage, colors, DEFAULT_SERVER_URL } from '../utils';
-import { view, state } from '../shared/state';
+import { store } from 'react-easy-state';
+import { colors, DEFAULT_SERVER_URL } from '../utils';
+import { state, view } from '../shared/state';
 import Header from '../components/header';
 
 const SettingsScreen: FunctionComponent = () => {
   const history = useHistory();
-
-  const [url, setUrl] = useState(state.url);
-  const [settings, setSettings] = useState({
-    ...state.settings
+  const settings = store({
+    color: '',
+    name: '',
+    url: ''
   });
 
   const saveSettings = () => {
-    sendMainMessage('save-user-settings', settings);
-
-    if (url && url !== state.url) {
-      sendMainMessage('set-server-url', url);
-    }
+    state.persistSettings(settings);
     history.push('/');
   };
 
-  const removeAllMessages = () => {
-    if (
-      (window as any).confirm('Remove all messages? (This cannot be undone)')
-    ) {
-      sendMainMessage('remove-all-messages');
-      (window as any).alert('Messages successfully removed');
-    }
-  };
+  useEffect(() => {
+    settings.name = state.settings.name;
+    settings.color = state.settings.color;
+    settings.url = state.settings.url;
+  }, [settings]);
 
   return (
     <>
@@ -37,7 +31,7 @@ const SettingsScreen: FunctionComponent = () => {
         title="Settings"
         backButton
         right={
-          <DeleteHistory onClick={removeAllMessages}>
+          <DeleteHistory onClick={state.removeAllMessages}>
             <div>Delete history</div>
             <div className="icon icon--trash"></div>
           </DeleteHistory>
@@ -49,10 +43,7 @@ const SettingsScreen: FunctionComponent = () => {
             type="input"
             value={settings.name}
             onChange={({ target }: any) =>
-              setSettings({
-                ...settings,
-                name: target.value.substr(0, 20)
-              })
+              (settings.name = target.value.substr(0, 20))
             }
             className="input"
             placeholder="Username ..."
@@ -64,12 +55,7 @@ const SettingsScreen: FunctionComponent = () => {
             {Object.keys(colors).map(color => (
               <div
                 key={color}
-                onClick={() =>
-                  setSettings({
-                    ...settings,
-                    color
-                  })
-                }
+                onClick={() => (settings.color = color)}
                 className={`color ${settings.color === color && ' active'}`}
                 style={{ backgroundColor: color }}
               />
@@ -78,15 +64,17 @@ const SettingsScreen: FunctionComponent = () => {
 
           <h4>
             Server URL (requires restart)
-            <p onClick={() => setUrl(DEFAULT_SERVER_URL)}>
+            <p onClick={() => (settings.url = DEFAULT_SERVER_URL)}>
               default: {DEFAULT_SERVER_URL}
             </p>
           </h4>
 
           <input
             type="input"
-            value={url}
-            onChange={({ target }: any) => setUrl(target.value.substr(0, 255))}
+            value={settings.url}
+            onChange={({ target }: any) =>
+              (settings.url = target.value.substr(0, 255))
+            }
             className="input"
             placeholder="Server-URL ..."
           />
@@ -143,11 +131,16 @@ const Settings = styled.div`
       height: 44px;
       border-radius: 19px;
       cursor: pointer;
-      &:hover::after,
+      &:hover::after {
+        content: '';
+        bottom: -12px;
+        opacity: 1;
+      }
       &.active::after {
         content: '';
         bottom: -12px;
         opacity: 1;
+        background-color: #000;
       }
       &:hover::after {
         background-color: #999;

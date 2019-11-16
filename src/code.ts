@@ -62,7 +62,16 @@ if (figma.command === 'show') {
 }
 
 main().then(({ roomName, secret, history, instanceId }) => {
-  figma.ui.onmessage = async message => {
+  // events
+  figma.on('selectionchange', () => {
+    postMessage(
+      'selection',
+      figma.currentPage.selection.map(n => n.id)
+      );
+    });
+
+    figma.ui.onmessage = async message => {
+      // await figma.clientStorage.setAsync('user-settings', {});
     if (message.action === 'save-user-settings') {
       await figma.clientStorage.setAsync('user-settings', message.payload);
 
@@ -91,12 +100,6 @@ main().then(({ roomName, secret, history, instanceId }) => {
       }
     }
 
-    if (message.action === 'get-user-settings') {
-      const settings = await figma.clientStorage.getAsync('user-settings');
-
-      postMessage('user-settings', settings);
-    }
-
     if (message.action === 'set-server-url') {
       await figma.clientStorage.setAsync('server-url', message.payload);
 
@@ -111,7 +114,10 @@ main().then(({ roomName, secret, history, instanceId }) => {
     }
 
     if (message.action === 'get-selection') {
-      postMessage('selection', figma.currentPage.selection.map(n => n.id));
+      postMessage(
+        'selection',
+        figma.currentPage.selection.map(n => n.id)
+      );
     }
 
     if (message.action === 'remove-all-messages') {
@@ -145,7 +151,15 @@ main().then(({ roomName, secret, history, instanceId }) => {
     }
 
     if (message.action === 'get-root-data') {
-      postMessage('root-data', { roomName, secret, history, instanceId });
+      const settings = await figma.clientStorage.getAsync('user-settings');
+
+      postMessage('root-data', {
+        roomName,
+        secret,
+        history,
+        instanceId,
+        settings
+      });
     }
 
     if (message.action === 'cancel') {
