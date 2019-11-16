@@ -1,6 +1,11 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom';
-import { MemoryRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  MemoryRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom';
 import io from 'socket.io-client';
 // styles
 import './assets/css/ui.css';
@@ -8,12 +13,14 @@ import './assets/figma-ui/main.min.css';
 import { ConnectionEnum } from './shared/interfaces';
 import { SocketProvider } from './shared/socket-provider';
 import { state, view } from './shared/state';
-import { sendMainMessage, DEFAULT_SERVER_URL } from './utils';
+import { sendMainMessage } from './shared/utils';
+import { DEFAULT_SERVER_URL } from './shared/constants';
+// views
 import ChatView from './views/chat';
 import ConnectionView from './views/connection';
-// views
 import SettingsView from './views/settings';
 import UserListView from './views/user-list';
+import MinimizedView from './views/minimized';
 
 // initialize
 sendMainMessage('initialize');
@@ -73,7 +80,11 @@ const init = serverUrl => {
     return (
       <SocketProvider socket={socket}>
         <Router>
+          {state.isMinimized && <Redirect to="/minimized" />}
           <Switch>
+            <Route exact path="/minimized">
+              <MinimizedView />
+            </Route>
             <Route exact path="/connecting">
               <ConnectionView retry={init} text="connecting..." />
             </Route>

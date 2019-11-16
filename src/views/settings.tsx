@@ -6,7 +6,7 @@ import Header from '../components/header';
 import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/socket-provider';
 import { state, view } from '../shared/state';
-import { colors, DEFAULT_SERVER_URL } from '../utils';
+import { colors, DEFAULT_SERVER_URL } from '../shared/constants';
 
 interface Props {
   socket: SocketIOClient.Socket;

@@ -1,6 +1,8 @@
 import React, { FunctionComponent } from 'react';
-import { sendMainMessage, colors } from '../utils';
 import styled from 'styled-components';
+import TimeAgo from 'timeago-react';
+import { colors } from '../shared/constants';
+import { sendMainMessage } from '../shared/utils';
 
 interface Props {
   data: any;
@@ -15,7 +17,14 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
     <MessageContainer
       className={`message ${data.id === instanceId ? 'me' : colorClass}`}
     >
-      {data.id !== instanceId ? <div className="user">{username}</div> : ''}
+      <MessageHeader>
+        {data.id !== instanceId ? <div className="user">{username}</div> : ''}
+        {data.message.date && (
+          <div className="date">
+            <TimeAgo datetime={data.message.date} locale="en_US" />
+          </div>
+        )}
+      </MessageHeader>
       {data.message.selection ? (
         <span
           onClick={() =>
@@ -36,6 +45,17 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
   );
 };
 
+const MessageHeader = styled.header`
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  margin-bottom: 5px;
+  color: #fff;
+  .date {
+    opacity: 0.5;
+  }
+`;
+
 const MessageContainer = styled.div`
   background-color: #18a0fb;
   border-radius: 15px;
@@ -53,12 +73,14 @@ const MessageContainer = styled.div`
     color: #000;
     margin: 0 0 15px 30%;
     background-color: #ebebeb;
-  }
+    header {
+      color: #000;
+    }
 
-  .user {
-    font-size: 9px;
-    margin-bottom: 5px;
-    color: #fff;
+    .selection {
+      border-color: #000;
+      color: #000;
+    }
   }
 
   .selection {
@@ -70,16 +92,7 @@ const MessageContainer = styled.div`
     color: #fff;
   }
 
-  &.me .user {
-    color: #000;
-  }
-
-  &.me .selection {
-    border-color: #000;
-    color: #000;
-  }
-
-  &.lightblue .user {
+  &.lightblue header {
     color: #1c4856;
   }
   &.lightblue .selection {
@@ -87,7 +100,7 @@ const MessageContainer = styled.div`
     color: #1c4856;
   }
 
-  &.lightgreen .user {
+  &.lightgreen header {
     color: #3a8459;
   }
   &.lightgreen .selection {
@@ -95,7 +108,7 @@ const MessageContainer = styled.div`
     color: #3a8459;
   }
 
-  &.purple .user {
+  &.purple header {
     color: #ffffff;
   }
   &.purple .selection {
@@ -103,7 +116,7 @@ const MessageContainer = styled.div`
     color: #ffffff;
   }
 
-  &.red .user {
+  &.red header {
     color: #ffffff;
   }
   &.red .selection {
@@ -111,7 +124,7 @@ const MessageContainer = styled.div`
     color: #ffffff;
   }
 
-  &.green .user {
+  &.green header {
     color: #0d6540;
   }
   &.green .selection {
@@ -119,7 +132,7 @@ const MessageContainer = styled.div`
     color: #0d6540;
   }
 
-  &.orange .user {
+  &.orange header {
     color: #865427;
   }
   &.orange .selection {
@@ -127,7 +140,7 @@ const MessageContainer = styled.div`
     color: #865427;
   }
 
-  &.beige .user {
+  &.beige header {
     color: #564432;
   }
   &.beige .selection {

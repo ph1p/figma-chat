@@ -5,12 +5,11 @@ import styled from 'styled-components';
 // components
 import Header from '../components/header';
 import Message from '../components/message';
+import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
+//shared
 import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/socket-provider';
 import { state, view } from '../shared/state';
-
-
-const IS_PROD = true;
 
 interface Props {
   socket: SocketIOClient.Socket;
@@ -21,14 +20,25 @@ const ChatView: FunctionComponent<Props> = props => {
   const chatState = store({
     textMessage: '',
     selection: [],
-    addSelection: false
+    addSelection: false,
+    messagesToShow: MAX_MESSAGES,
+    get hideMoreButton() {
+      return (
+        chatState.messagesToShow >= state.messages.length ||
+        chatState.filteredMessages.length >= state.messages.length
+      );
+    },
+    get filteredMessages() {
+      return state.messages.slice(-chatState.messagesToShow);
+    }
   });
 
   const sendMessage = e => {
     e.preventDefault();
     if (state.roomName) {
       let data = {
-        text: chatState.textMessage
+        text: chatState.textMessage,
+        date: new Date()
       };
 
       if (chatState.selection.length > 0) {
@@ -103,6 +113,17 @@ const ChatView: FunctionComponent<Props> = props => {
     state.scrollToBottom();
   }, []);
 
+  const showMore = () => {
+    if (
+      chatState.filteredMessages.length + MAX_MESSAGES >=
+      state.messages.length
+    ) {
+      chatState.messagesToShow = state.messages.length;
+    } else {
+      chatState.messagesToShow += MAX_MESSAGES;
+    }
+  };
+
   return (
     <>
       {state.status === ConnectionEnum.NONE && <Redirect to="/connecting" />}
@@ -122,9 +143,14 @@ const ChatView: FunctionComponent<Props> = props => {
           </div>
         }
         right={
-          <Online onClick={() => history.push('/user-list')}>
-            {state.online.length}
-          </Online>
+          <HeaderRight>
+            <Minimize onClick={state.toggleMinimizeChat}>
+              <div className="icon icon--minus" />
+            </Minimize>
+            <Online onClick={() => history.push('/user-list')}>
+              {state.online.length}
+            </Online>
+          </HeaderRight>
         }
         left={
           <Link to="/settings">
@@ -135,14 +161,22 @@ const ChatView: FunctionComponent<Props> = props => {
       <Chat>
         <Messages
           ref={state.messagesRef}
-          onScroll={e => {
+          onWheel={() => {
+            const { current } = state.messagesRef;
+
             state.disableAutoScroll =
-              e.target.scrollHeight -
-                (e.target.scrollTop + e.target.clientHeight) >
+              current.scrollHeight -
+                (current.scrollTop + current.clientHeight) >
               0;
           }}
         >
-          {state.messages.map((m, i) => (
+          {!chatState.hideMoreButton && (
+            <MoreButton className="button button--secondary" onClick={showMore}>
+              show more
+            </MoreButton>
+          )}
+
+          {chatState.filteredMessages.map((m, i) => (
             <Message key={i} data={m} instanceId={state.instanceId} />
           ))}
         </Messages>
@@ -171,7 +205,7 @@ const ChatView: FunctionComponent<Props> = props => {
               <label className="switch__label" htmlFor="uniqueId"></label>
             </div>
             <button type="submit">
-              <div className="icon icon--comment icon--button" />
+              <div className="icon icon--comment" />
             </button>
           </ChatInput>
         </Footer>
@@ -179,6 +213,14 @@ const ChatView: FunctionComponent<Props> = props => {
     </>
   );
 };
+
+const MoreButton = styled.button`
+  padding: 0 7px;
+  height: 20px;
+  margin: 0 0 15px;
+  width: 100%;
+  cursor: pointer;
+`;
 
 const ChatInput = styled.div`
   display: flex;
@@ -232,15 +274,23 @@ const Messages = styled.div`
   padding: 15px 15px 0;
 `;
 
+const HeaderRight = styled.div`
+  display: flex;
+`;
+
+const Minimize = styled.div`
+  border-right: 1px solid #e9e9e9;
+`;
+
 const Online = styled.div`
   position: relative;
-  padding: 8px 12px;
+  padding: 8px 12px 8px 24px;
   align-self: center;
   cursor: pointer;
   font-weight: bold;
   &::after {
     content: '';
-    left: -3px;
+    left: 10px;
     top: 13px;
     position: absolute;
     width: 5px;

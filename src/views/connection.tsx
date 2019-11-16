@@ -9,29 +9,6 @@ interface Props {
   retry?: (url: string) => void;
 }
 
-const Connection = styled.div`
-  display: grid;
-  text-align: center;
-  height: 100vh;
-  width: 100vw;
-  font-size: 14px;
-  div {
-    align-self: center;
-  }
-  button {
-    cursor: pointer;
-  }
-`;
-
-const Text = styled.div`
-  margin-bottom: 20px;
-`;
-
-const Settings = styled.button`
-  margin-left: 10px;
-  cursor: pointer;
-`;
-
 const ConnectionView: FunctionComponent<Props> = props => {
   const { push } = useHistory();
 
@@ -59,5 +36,28 @@ const ConnectionView: FunctionComponent<Props> = props => {
     </Connection>
   );
 };
+
+const Connection = styled.div`
+  display: grid;
+  text-align: center;
+  height: 100vh;
+  width: 100vw;
+  font-size: 14px;
+  div {
+    align-self: center;
+  }
+  button {
+    cursor: pointer;
+  }
+`;
+
+const Text = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Settings = styled.button`
+  margin-left: 10px;
+  cursor: pointer;
+`;
 
 export default view(ConnectionView);

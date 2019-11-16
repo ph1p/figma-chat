@@ -24,9 +24,3 @@ body {
 ::-webkit-scrollbar-thumb {
   background-color: #000000;
 }
-
-.info-paragraph {
-  padding: 15px;
-  text-align: center;
-  color: #999;
-}

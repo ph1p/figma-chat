@@ -1,5 +1,5 @@
 import uniqid from 'uniqid';
-import { generateString } from './utils';
+import { generateString } from './shared/utils';
 
 let isMinimized = false;
 let isFocused = true;

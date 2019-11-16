@@ -1,7 +1,8 @@
 import { createRef } from 'react';
 import { store, view } from 'react-easy-state';
 import SimpleEncryptor from 'simple-encryptor';
-import { DEFAULT_SERVER_URL, sendMainMessage } from '../utils';
+import { DEFAULT_SERVER_URL } from './constants';
+import { sendMainMessage } from './utils';
 import { ConnectionEnum } from './interfaces';
 
 const state = store({
@@ -21,7 +22,6 @@ const state = store({
   disableAutoScroll: false,
   scrollToBottom() {
     if (!state.disableAutoScroll) {
-      console.log('ok', state.disableAutoScroll);
       // scroll to bottom
       if (state.messagesRef.current) {
         state.messagesRef.current.scrollTop =
@@ -38,6 +38,10 @@ const state = store({
     url: DEFAULT_SERVER_URL
   },
   // ---
+  toggleMinimizeChat() {
+    state.isMinimized = !state.isMinimized;
+    sendMainMessage('minimize', state.isMinimized);
+  },
   removeAllMessages() {
     if (
       (window as any).confirm('Remove all messages? (This cannot be undone)')

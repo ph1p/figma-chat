@@ -48,6 +48,7 @@ The plugin must set an interval that asks for new updates every n milliseconds.
 - [ ] create a random unique user name to detect returning users on server and inside a figma file
 - [x] remove all messages
 - [ ] add max message count to prevent a to large object inside the figma file
+- [x] pagination
 
 Feel free to open a feature request: https://github.com/ph1p/figma-chat/issues
 
