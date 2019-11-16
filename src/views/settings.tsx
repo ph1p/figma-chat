@@ -1,12 +1,20 @@
 import React, { FunctionComponent, useEffect } from 'react';
+import { store } from 'react-easy-state';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { store } from 'react-easy-state';
-import { colors, DEFAULT_SERVER_URL } from '../utils';
-import { state, view } from '../shared/state';
 import Header from '../components/header';
+import { ConnectionEnum } from '../shared/interfaces';
+import { withSocketContext } from '../shared/socket-provider';
+import { state, view } from '../shared/state';
+import { colors, DEFAULT_SERVER_URL } from '../utils';
 
-const SettingsScreen: FunctionComponent = () => {
+interface Props {
+  socket: SocketIOClient.Socket;
+}
+
+const SettingsView: FunctionComponent<Props> = props => {
+  const isConnected = state.status === ConnectionEnum.CONNECTED;
+
   const history = useHistory();
   const settings = store({
     color: '',
@@ -15,8 +23,11 @@ const SettingsScreen: FunctionComponent = () => {
   });
 
   const saveSettings = () => {
-    state.persistSettings(settings);
-    history.push('/');
+    state.persistSettings(settings, props.socket);
+
+    if (isConnected) {
+      history.push('/');
+    }
   };
 
   useEffect(() => {
@@ -31,10 +42,12 @@ const SettingsScreen: FunctionComponent = () => {
         title="Settings"
         backButton
         right={
-          <DeleteHistory onClick={state.removeAllMessages}>
-            <div>Delete history</div>
-            <div className="icon icon--trash"></div>
-          </DeleteHistory>
+          isConnected && (
+            <DeleteHistory onClick={state.removeAllMessages}>
+              <div>Delete history</div>
+              <div className="icon icon--trash"></div>
+            </DeleteHistory>
+          )
         }
       />
       <Settings>
@@ -161,4 +174,4 @@ const Settings = styled.div`
   }
 `;
 
-export default view(SettingsScreen);
+export default withSocketContext(view(SettingsView));

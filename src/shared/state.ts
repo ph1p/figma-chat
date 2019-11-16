@@ -1,27 +1,42 @@
-import SimpleEncryptor from 'simple-encryptor';
+import { createRef } from 'react';
 import { store, view } from 'react-easy-state';
+import SimpleEncryptor from 'simple-encryptor';
 import { DEFAULT_SERVER_URL, sendMainMessage } from '../utils';
+import { ConnectionEnum } from './interfaces';
 
 const state = store({
-  //---
-  secret: '',
-  roomName: '',
-  instanceId: '',
   get encryptor() {
     return SimpleEncryptor(state.secret);
   },
+  status: ConnectionEnum.NONE,
+  // ---
+  secret: '',
+  roomName: '',
+  instanceId: '',
+  // ---
+  online: [],
   // ---
   messages: [],
+  messagesRef: createRef(),
+  disableAutoScroll: false,
+  scrollToBottom() {
+    if (!state.disableAutoScroll) {
+      // scroll to bottom
+      if (state.messagesRef.current) {
+        state.messagesRef.current.scrollTop =
+          state.messagesRef.current.scrollHeight;
+      }
+    }
+  },
   // ---
   isFocused: true,
   isMinimized: false,
-  online: 0,
   settings: {
     name: '',
     color: '',
     url: DEFAULT_SERVER_URL
   },
-  //---
+  // ---
   removeAllMessages() {
     if (
       (window as any).confirm('Remove all messages? (This cannot be undone)')
@@ -31,21 +46,24 @@ const state = store({
       state.messages = [];
     }
   },
-  persistSettings(settings) {
+  persistSettings(settings, socket) {
     sendMainMessage('save-user-settings', Object.assign({}, settings));
 
     state.settings = {
       ...state.settings,
       ...settings
-    }
+    };
 
     if (settings.url && settings.url !== state.url) {
       sendMainMessage('set-server-url', settings.url);
     }
+
+    if (socket) {
+      socket.emit('set user', state.settings);
+    }
   },
   addMessage(messageData) {
-    const isLocal = typeof messageData === 'string';
-
+    const isLocal = !messageData.user;
     const decryptedMessage = state.encryptor.decrypt(
       isLocal ? messageData : messageData.message
     );
@@ -53,42 +71,45 @@ const state = store({
     // silent on error
     try {
       const data = JSON.parse(decryptedMessage);
-
-      // local sender
-      if (isLocal) {
-        messageData = {
-          id: state.instanceId,
-          message: messageData,
-          user: {
-            color: state.settings.color,
-            name: state.settings.name
-          }
-        };
-      }
-
-      const newMessage = {
-        id: messageData.id,
-        user: messageData.user,
+      let newMessage: {} = {
         message: {
           ...data
         }
       };
 
+      // is local sender
       if (isLocal) {
+        newMessage = {
+          id: state.instanceId,
+          user: {
+            color: state.settings.color,
+            name: state.settings.name
+          },
+          message: {
+            ...data
+          }
+        };
+
         sendMainMessage('add-message-to-history', newMessage);
       } else {
+        newMessage = {
+          id: messageData.id,
+          user: messageData.user,
+          message: {
+            ...data
+          }
+        };
+
         sendMainMessage(
           'notification',
           messageData.user && messageData.user.name
             ? `New chat message from ${messageData.user.name}`
             : `New chat message`
         );
-
-        figma.notify(`new message from ${data}`);
       }
 
       state.messages.push(newMessage);
-      console.log('hm');
+      state.scrollToBottom();
     } catch (e) {
       console.log(e);
     }

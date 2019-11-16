@@ -9,7 +9,7 @@ export const sendMainMessage = (action, payload = {}) =>
     '*'
   );
 
-export const DEFAULT_SERVER_URL = 'https://figma-chat.ph1p.dev';
+export const DEFAULT_SERVER_URL = 'https://figma-chat.ph1p.dev/';
 
 export const colors = {
   '#4F4F4F': 'gray',

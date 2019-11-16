@@ -34,6 +34,7 @@ const Head = styled.div`
     .back-button,
     .left {
       border-right: 1px solid #e9e9e9;
+      cursor: pointer;
     }
     .left {
     }
@@ -43,6 +44,9 @@ const Head = styled.div`
       align-self: center;
     }
     .right {
+    }
+    .icon {
+      cursor: pointer;
     }
   }
 `;

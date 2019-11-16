@@ -31,7 +31,7 @@ module.exports = (env, argv) => ({
   },
   resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
   output: {
-    filename: '[name].js',
+  //   filename: '[name].js',
     path: path.resolve(__dirname, figmaPlugin.name)
   },
   plugins: [

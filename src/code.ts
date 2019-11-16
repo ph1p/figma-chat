@@ -111,6 +111,18 @@ main().then(({ roomName, secret, history, instanceId }) => {
       const url = await figma.clientStorage.getAsync('server-url');
 
       postMessage('initialize', url || '');
+
+
+      const settings = await figma.clientStorage.getAsync('user-settings');
+
+      postMessage('root-data', {
+        roomName,
+        secret,
+        history,
+        instanceId,
+        settings
+      });
+
     }
 
     if (message.action === 'get-selection') {
