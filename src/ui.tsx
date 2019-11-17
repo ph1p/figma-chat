@@ -64,6 +64,15 @@ const init = serverUrl => {
     state.addMessage(data);
   });
 
+  socket.on('join leave message', data => {
+    const username = data.user.name || 'Anon';
+    const message = 'joined the chat';
+    if (data.type === 'LEAVE') {
+      const message = 'leaved the chat';
+    }
+    state.addNotification(`${username} ${message}`);
+  });
+
   socket.on('online', data => (state.online = data));
 
   sendMainMessage('get-root-data');
