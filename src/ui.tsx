@@ -2,25 +2,28 @@ import React from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   MemoryRouter as Router,
+  Redirect,
   Route,
-  Switch,
-  Redirect
+  Switch
 } from 'react-router-dom';
 import io from 'socket.io-client';
 // styles
 import './assets/css/ui.css';
 import './assets/figma-ui/main.min.css';
+// components
+import Notifications from './components/notifications';
+// shared
+import { DEFAULT_SERVER_URL } from './shared/constants';
 import { ConnectionEnum } from './shared/interfaces';
 import { SocketProvider } from './shared/socket-provider';
 import { state, view } from './shared/state';
 import { sendMainMessage } from './shared/utils';
-import { DEFAULT_SERVER_URL } from './shared/constants';
 // views
 import ChatView from './views/chat';
 import ConnectionView from './views/connection';
+import MinimizedView from './views/minimized';
 import SettingsView from './views/settings';
 import UserListView from './views/user-list';
-import MinimizedView from './views/minimized';
 
 // initialize
 sendMainMessage('initialize');
@@ -78,31 +81,35 @@ const init = serverUrl => {
 
   const App = view(() => {
     return (
-      <SocketProvider socket={socket}>
-        <Router>
-          {state.isMinimized && <Redirect to="/minimized" />}
-          <Switch>
-            <Route exact path="/minimized">
-              <MinimizedView />
-            </Route>
-            <Route exact path="/connecting">
-              <ConnectionView retry={init} text="connecting..." />
-            </Route>
-            <Route exact path="/connection-error">
-              <ConnectionView retry={init} text="connection error :( " />
-            </Route>
-            <Route exact path="/">
-              <ChatView />
-            </Route>
-            <Route path="/settings">
-              <SettingsView />
-            </Route>
-            <Route path="/user-list">
-              <UserListView />
-            </Route>
-          </Switch>
-        </Router>
-      </SocketProvider>
+      <>
+        <Notifications />
+
+        <SocketProvider socket={socket}>
+          <Router>
+            {state.isMinimized && <Redirect to="/minimized" />}
+            <Switch>
+              <Route exact path="/minimized">
+                <MinimizedView />
+              </Route>
+              <Route exact path="/connecting">
+                <ConnectionView retry={init} text="connecting..." />
+              </Route>
+              <Route exact path="/connection-error">
+                <ConnectionView retry={init} text="connection error :( " />
+              </Route>
+              <Route exact path="/">
+                <ChatView />
+              </Route>
+              <Route path="/settings">
+                <SettingsView init={init} />
+              </Route>
+              <Route path="/user-list">
+                <UserListView />
+              </Route>
+            </Switch>
+          </Router>
+        </SocketProvider>
+      </>
     );
   });
 

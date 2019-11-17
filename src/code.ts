@@ -100,9 +100,6 @@ main().then(({ roomName, secret, history, instanceId }) => {
 
     if (message.action === 'set-server-url') {
       await figma.clientStorage.setAsync('server-url', message.payload);
-
-      alert('Please restart the plugin to connect to the new server.');
-      figma.closePlugin();
     }
 
     if (message.action === 'initialize') {

@@ -37,6 +37,14 @@ const state = store({
     color: '',
     url: DEFAULT_SERVER_URL
   },
+  notifications: [],
+  addNotification(text: string, type: string) {
+    state.notifications.push({
+      id: Math.random(),
+      text,
+      type
+    });
+  },
   // ---
   toggleMinimizeChat() {
     state.isMinimized = !state.isMinimized;
@@ -51,7 +59,8 @@ const state = store({
       state.messages = [];
     }
   },
-  persistSettings(settings, socket) {
+  persistSettings(settings, socket, init) {
+    // save user settings in main
     sendMainMessage('save-user-settings', Object.assign({}, settings));
 
     state.settings = {
@@ -60,10 +69,24 @@ const state = store({
     };
 
     if (settings.url && settings.url !== state.url) {
+      // set server URL
       sendMainMessage('set-server-url', settings.url);
+
+      // re init main app and disconnect socket
+      // to prevent multiple sign in
+      if (init) {
+        if (socket && socket.connected) {
+          socket.disconnect();
+        }
+
+        init(settings.url);
+
+        state.addNotification('Updated server-URL');
+      }
     }
 
-    if (socket) {
+    if (socket && socket.connected) {
+      // set user data on server
       socket.emit('set user', state.settings);
     }
   },

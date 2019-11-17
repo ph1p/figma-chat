@@ -11,11 +11,11 @@ import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/socket-provider';
 import { state, view } from '../shared/state';
 
-interface Props {
+interface ChatProps {
   socket: SocketIOClient.Socket;
 }
 
-const ChatView: FunctionComponent<Props> = props => {
+const ChatView: FunctionComponent<ChatProps> = props => {
   const history = useHistory();
   const chatState = store({
     textMessage: '',
@@ -52,7 +52,16 @@ const ChatView: FunctionComponent<Props> = props => {
         }
       }
 
-      if (chatState.textMessage) {
+      if (
+        !chatState.textMessage &&
+        !chatState.addSelection &&
+        chatState.selection.length === 0
+      ) {
+        state.addNotification(
+          'Please enter a text or select something',
+          'error'
+        );
+      } else {
         const message = state.encryptor.encrypt(JSON.stringify(data));
 
         props.socket.emit('chat message', {

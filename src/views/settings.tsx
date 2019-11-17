@@ -8,11 +8,12 @@ import { withSocketContext } from '../shared/socket-provider';
 import { state, view } from '../shared/state';
 import { colors, DEFAULT_SERVER_URL } from '../shared/constants';
 
-interface Props {
+interface SettingsProps {
   socket: SocketIOClient.Socket;
+  init?: (serverUrl: any) => void;
 }
 
-const SettingsView: FunctionComponent<Props> = props => {
+const SettingsView: FunctionComponent<SettingsProps> = props => {
   const isConnected = state.status === ConnectionEnum.CONNECTED;
 
   const history = useHistory();
@@ -23,7 +24,14 @@ const SettingsView: FunctionComponent<Props> = props => {
   });
 
   const saveSettings = () => {
-    state.persistSettings(settings, props.socket);
+    if (
+      state.settings.name !== settings.name ||
+      state.settings.color !== settings.color
+    ) {
+      state.addNotification('Successfully updated settings', 'success');
+    }
+
+    state.persistSettings(settings, props.socket, props.init);
 
     if (isConnected) {
       history.push('/');

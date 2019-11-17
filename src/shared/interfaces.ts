@@ -7,6 +7,12 @@ export enum ConnectionEnum {
   CONNECTING = 'CONNECTING'
 }
 
+export interface NotificationParams {
+  id: string;
+  text: string;
+  type: string;
+}
+
 export interface MessageData {
   message: string;
   id: string;
