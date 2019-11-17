@@ -50,6 +50,7 @@ const init = serverUrl => {
     state.status = ConnectionEnum.CONNECTED;
 
     socket.emit('join room', state.roomName);
+    socket.emit('set user', state.settings);
   });
 
   socket.on('connect_error', () => {
@@ -66,9 +67,10 @@ const init = serverUrl => {
 
   socket.on('join leave message', data => {
     const username = data.user.name || 'Anon';
-    const message = 'joined the chat';
+    let message = 'joins the conversation';
+
     if (data.type === 'LEAVE') {
-      const message = 'leaved the chat';
+      message = 'leaves the conversation';
     }
     state.addNotification(`${username} ${message}`);
   });

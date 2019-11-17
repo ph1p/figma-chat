@@ -1,44 +1,43 @@
 import React, { FunctionComponent } from 'react';
-import { Redirect, useHistory, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { state, view } from '../shared/state';
 import Header from '../components/header';
+import { ConnectionEnum } from '../shared/interfaces';
+import { state, view } from '../shared/state';
 
-const MinimizedView: FunctionComponent = () => {
-  const { push } = useHistory();
-
-  return (
-    <>
-      <Header
-        title={
-          <div
-            style={{
-              color: state.settings.color || '#000'
-            }}
-          >
-            {state.settings.name}
-          </div>
-        }
-        left={
-          <div onClick={state.toggleMinimizeChat}>
-            <div className="icon icon--plus" />
-          </div>
-        }
-      />
-      <Minimized>
-        {!state.isMinimized && <Redirect to="/" />}
-
-        <Users>
-          {state.online.map(user => (
-            <User key={user.id} className="user" color={user.color || '#000'}>
-              {user.name.substr(0, 2)}
-            </User>
-          ))}
-        </Users>
-      </Minimized>
-    </>
-  );
-};
+const MinimizedView: FunctionComponent = () => (
+  <>
+    <Header
+      title={
+        <div
+          style={{
+            color: state.settings.color || '#000'
+          }}
+        >
+          {state.settings.name}
+        </div>
+      }
+      left={
+        <div onClick={state.toggleMinimizeChat}>
+          <div className="icon icon--plus" />
+        </div>
+      }
+    />
+    <Minimized>
+      {!state.isMinimized && <Redirect to="/" />}
+      {state.status === ConnectionEnum.ERROR && (
+        <Redirect to="/connection-error" />
+      )}
+      <Users>
+        {state.online.map(user => (
+          <User key={user.id} className="user" color={user.color || '#000'}>
+            {user.name.substr(0, 2)}
+          </User>
+        ))}
+      </Users>
+    </Minimized>
+  </>
+);
 
 const Minimized = styled.div`
   display: grid;

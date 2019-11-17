@@ -23,6 +23,12 @@ const SettingsView: FunctionComponent<SettingsProps> = props => {
     url: ''
   });
 
+  useEffect(() => {
+    if (state.isMinimized) {
+      state.toggleMinimizeChat();
+    }
+  }, []);
+
   const saveSettings = () => {
     if (
       state.settings.name !== settings.name ||
