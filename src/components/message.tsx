@@ -80,6 +80,10 @@ const MessageContainer = styled.div`
     .selection {
       border-color: #000;
       color: #000;
+      opacity: 0.7;
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 

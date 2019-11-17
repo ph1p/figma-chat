@@ -139,6 +139,12 @@ const Settings = styled.div`
     button {
       width: 100%;
       cursor: pointer;
+      background-color: #000;
+      color: #fff;
+      opacity: 0.9;
+      &:hover {
+        opacity: 1;
+      }
     }
   }
   .colors {

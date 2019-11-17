@@ -229,6 +229,13 @@ const MoreButton = styled.button`
   margin: 0 0 15px;
   width: 100%;
   cursor: pointer;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
+  &:active {
+    padding: 0 7px;
+  }
 `;
 
 const ChatInput = styled.div`
