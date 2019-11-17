@@ -1,6 +1,6 @@
 {
   "name": "figma-chat",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "description": "",
   "main": "code.js",
   "scripts": {
@@ -15,22 +15,25 @@
   "bugs": {
     "url": "https://github.com/ph1p/figma-chat/issues"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "license": "ISC",
   "devDependencies": {
-    "@types/react": "^16.9.2",
-    "@types/react-dom": "^16.9.0",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
     "@types/socket.io-client": "^1.4.32",
     "create-file-webpack": "^1.0.2",
     "css-loader": "^3.2.0",
     "html-webpack-inline-source-plugin": "0.0.10",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^1.0.0",
-    "terser-webpack-plugin": "^2.0.1",
-    "ts-loader": "^6.1.0",
-    "typescript": "^3.6.3",
-    "url-loader": "^2.1.0",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.8"
+    "terser-webpack-plugin": "^2.2.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.2",
+    "url-loader": "^2.2.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   },
   "figmaPlugin": {
     "name": "Figma Chat",
@@ -50,11 +53,16 @@
     ]
   },
   "dependencies": {
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-easy-state": "^6.1.3",
+    "react-router-dom": "^5.1.2",
     "simple-encryptor": "^3.0.0",
-    "socket.io-client": "^2.2.0",
-    "type-fest": "^0.7.1",
-    "uniqid": "^5.0.3"
+    "socket.io-client": "^2.3.0",
+    "styled-components": "^4.4.1",
+    "timeago-react": "^3.0.0",
+    "type-fest": "^0.8.1",
+    "uniqid": "^5.1.0"
   }
 }

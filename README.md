@@ -38,7 +38,7 @@ The plugin must set an interval that asks for new updates every n milliseconds.
 ### Todolist/Featurelist
 
 - [x] set custom server URL ([https://github.com/ph1p/figma-chat-server](https://github.com/ph1p/figma-chat-server))
-- [ ] add leave and join message
+- [x] add leave and join message
 - [ ] add typing info
 - [x] notifications (first version)
 - [x] save local history
@@ -48,6 +48,7 @@ The plugin must set an interval that asks for new updates every n milliseconds.
 - [ ] create a random unique user name to detect returning users on server and inside a figma file
 - [x] remove all messages
 - [ ] add max message count to prevent a to large object inside the figma file
+- [x] pagination
 
 Feel free to open a feature request: https://github.com/ph1p/figma-chat/issues
 

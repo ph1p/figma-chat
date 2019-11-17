@@ -1,5 +1,5 @@
 import uniqid from 'uniqid';
-import { generateString } from './utils';
+import { generateString } from './shared/utils';
 
 let isMinimized = false;
 let isFocused = true;
@@ -62,6 +62,14 @@ if (figma.command === 'show') {
 }
 
 main().then(({ roomName, secret, history, instanceId }) => {
+  // events
+  figma.on('selectionchange', () => {
+    postMessage(
+      'selection',
+      figma.currentPage.selection.map(n => n.id)
+    );
+  });
+
   figma.ui.onmessage = async message => {
     if (message.action === 'save-user-settings') {
       await figma.clientStorage.setAsync('user-settings', message.payload);
@@ -75,7 +83,6 @@ main().then(({ roomName, secret, history, instanceId }) => {
       figma.root.setPluginData(
         'history',
         JSON.stringify(history.concat(message.payload))
-        //(history || []).concat(message.payload)
       );
     }
 
@@ -91,27 +98,31 @@ main().then(({ roomName, secret, history, instanceId }) => {
       }
     }
 
-    if (message.action === 'get-user-settings') {
-      const settings = await figma.clientStorage.getAsync('user-settings');
-
-      postMessage('user-settings', settings);
-    }
-
     if (message.action === 'set-server-url') {
       await figma.clientStorage.setAsync('server-url', message.payload);
-
-      alert('Please restart the plugin to connect to the new server.');
-      figma.closePlugin();
     }
 
     if (message.action === 'initialize') {
       const url = await figma.clientStorage.getAsync('server-url');
 
       postMessage('initialize', url || '');
+
+      const settings = await figma.clientStorage.getAsync('user-settings');
+
+      postMessage('root-data', {
+        roomName,
+        secret,
+        history,
+        instanceId,
+        settings
+      });
     }
 
     if (message.action === 'get-selection') {
-      postMessage('selection', figma.currentPage.selection.map(n => n.id));
+      postMessage(
+        'selection',
+        figma.currentPage.selection.map(n => n.id)
+      );
     }
 
     if (message.action === 'remove-all-messages') {
@@ -145,7 +156,15 @@ main().then(({ roomName, secret, history, instanceId }) => {
     }
 
     if (message.action === 'get-root-data') {
-      postMessage('root-data', { roomName, secret, history, instanceId });
+      const settings = await figma.clientStorage.getAsync('user-settings');
+
+      postMessage('root-data', {
+        roomName,
+        secret,
+        history,
+        instanceId,
+        settings
+      });
     }
 
     if (message.action === 'cancel') {
