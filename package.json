@@ -40,17 +40,7 @@
     "id": "742073255743594050",
     "api": "1.0.0",
     "main": "code.js",
-    "ui": "ui.html",
-    "menu": [
-      {
-        "name": "Open Chat",
-        "command": "show"
-      },
-      {
-        "name": "Hide Chat",
-        "command": "hide"
-      }
-    ]
+    "ui": "ui.html"
   },
   "dependencies": {
     "prop-types": "^15.7.2",

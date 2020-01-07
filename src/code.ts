@@ -53,15 +53,11 @@ const postMessage = (type = '', payload = {}) =>
     payload
   });
 
-if (figma.command === 'hide') {
-  figma.ui.hide();
-}
-
-if (figma.command === 'show') {
-  figma.ui.show();
-}
+figma.ui.show();
 
 main().then(({ roomName, secret, history, instanceId }) => {
+  postMessage('ready');
+
   // events
   figma.on('selectionchange', () => {
     postMessage(

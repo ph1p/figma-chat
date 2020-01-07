@@ -25,12 +25,14 @@ import MinimizedView from './views/minimized';
 import SettingsView from './views/settings';
 import UserListView from './views/user-list';
 
-// wait 100ms to initialize, to prevent race conditions
-setTimeout(() => sendMainMessage('initialize'), 100);
-
 onmessage = message => {
   if (message.data.pluginMessage) {
     const { type, payload } = message.data.pluginMessage;
+
+    // initialize
+    if (type === 'ready') {
+      sendMainMessage('initialize');
+    }
 
     if (type === 'initialize') {
       init(payload !== '' ? payload : DEFAULT_SERVER_URL);
