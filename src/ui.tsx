@@ -25,8 +25,9 @@ import MinimizedView from './views/minimized';
 import SettingsView from './views/settings';
 import UserListView from './views/user-list';
 
-// initialize
-sendMainMessage('initialize');
+// wait 100ms to initialize, to prevent race conditions
+setTimeout(() => sendMainMessage('initialize'), 100);
+
 onmessage = message => {
   if (message.data.pluginMessage) {
     const { type, payload } = message.data.pluginMessage;
