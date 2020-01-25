@@ -1,12 +1,13 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState, Fragment } from 'react';
 import { store } from 'react-easy-state';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 // components
 import Header from '../components/header';
 import Message from '../components/message';
-import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
+import Chatbar from '../components/chatbar';
 //shared
+import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/socket-provider';
 import { state, view } from '../shared/state';
@@ -19,8 +20,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
   const history = useHistory();
   const chatState = store({
     textMessage: '',
-    selection: [],
-    addSelection: false,
+    selectionIsChecked: false,
     messagesToShow: MAX_MESSAGES,
     get hideMoreButton() {
       return (
@@ -41,22 +41,18 @@ const ChatView: FunctionComponent<ChatProps> = props => {
         date: new Date()
       };
 
-      if (chatState.selection.length > 0) {
-        if (chatState.addSelection) {
+      if (state.selection.length > 0) {
+        if (chatState.selectionIsChecked) {
           data = {
             ...data,
             ...{
-              selection: chatState.selection
+              selection: state.selection
             }
           };
         }
       }
 
-      if (
-        !chatState.textMessage &&
-        !chatState.addSelection &&
-        chatState.selection.length === 0
-      ) {
+      if (!chatState.textMessage && !chatState.selectionIsChecked) {
         state.addNotification(
           'Please enter a text or select something',
           'error'
@@ -72,7 +68,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
         state.addMessage(message);
 
         chatState.textMessage = '';
-        chatState.addSelection = false;
+        chatState.selectionIsChecked = false;
       }
     }
   };
@@ -85,9 +81,10 @@ const ChatView: FunctionComponent<ChatProps> = props => {
       // set selection
       if (pmessage.type === 'selection') {
         const hasSelection = pmessage.payload.length > 0;
-        chatState.selection = hasSelection ? pmessage.payload : [];
+        state.selection = hasSelection ? pmessage.payload : [];
+
         if (!hasSelection) {
-          chatState.addSelection = false;
+          chatState.selectionIsChecked = false;
         }
       }
 
@@ -96,6 +93,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
           roomName: dataRoomName = '',
           secret: dataSecret = '',
           history: messages = [],
+          selection = [],
           settings = {},
           instanceId = ''
         } = {
@@ -112,6 +110,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
         state.roomName = dataRoomName;
         state.messages = messages;
         state.instanceId = instanceId;
+        state.selection = selection;
 
         state.persistSettings(settings, props.socket);
       }
@@ -167,7 +166,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
           </Link>
         }
       />
-      <Chat>
+      <Chat hasSelection={state.selection.length > 0}>
         <Messages
           ref={state.messagesRef}
           onWheel={() => {
@@ -186,38 +185,24 @@ const ChatView: FunctionComponent<ChatProps> = props => {
           )}
 
           {chatState.filteredMessages.map((m, i) => (
-            <Message key={i} data={m} instanceId={state.instanceId} />
+            <Fragment key={i}>
+              <Message data={m} instanceId={state.instanceId} />
+              {(i + 1) % MAX_MESSAGES === 0 &&
+              i + 1 !== chatState.filteredMessages.length ? (
+                <MessageSeperator />
+              ) : (
+                ''
+              )}
+            </Fragment>
           ))}
         </Messages>
-        <Footer onSubmit={e => sendMessage(e)}>
-          <ChatInput>
-            <input
-              type="input"
-              className="input"
-              value={chatState.textMessage}
-              onChange={({ target }: any) =>
-                (chatState.textMessage = target.value.substr(0, 1000))
-              }
-              placeholder="Write something ..."
-            />
-            <div className="switch">
-              <input
-                className="switch__toggle"
-                disabled={!chatState.selection.length}
-                checked={chatState.addSelection}
-                onChange={({ target }: any) =>
-                  (chatState.addSelection = target.checked)
-                }
-                type="checkbox"
-                id="uniqueId"
-              />
-              <label className="switch__label" htmlFor="uniqueId"></label>
-            </div>
-            <button type="submit">
-              <div className="icon icon--comment" />
-            </button>
-          </ChatInput>
-        </Footer>
+        <Chatbar
+          sendMessage={sendMessage}
+          setTextMessage={text => (chatState.textMessage = text)}
+          textMessage={chatState.textMessage}
+          setSelectionIsChecked={isChecked => (chatState.selectionIsChecked = isChecked)}
+          selectionIsChecked={chatState.selectionIsChecked}
+        />
       </Chat>
     </>
   );
@@ -238,48 +223,16 @@ const MoreButton = styled.button`
   }
 `;
 
-const ChatInput = styled.div`
-  display: flex;
-  height: 44px;
-`;
-
-const Footer = styled.form`
-  margin: 0;
-  border-top: 1px solid #e9e9e9;
-  input {
-    margin: 7px;
-  }
-  button {
-    border: 0;
-    padding: 0 5px;
-    margin: 0;
-    background-color: transparent;
-    outline: none;
-    cursor: pointer;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.06);
-      .icon {
-        cursor: pointer;
-        background-color: transparent;
-      }
-    }
-  }
-  .switch {
-    border-width: 0 1px;
-    border-style: solid;
-    border-color: #e9e9e9;
-    height: 44px;
-    &__label {
-      top: -16px;
-      position: relative;
-      cursor: pointer;
-    }
-  }
+const MessageSeperator = styled.div`
+  border-width: 1px 0 0 0;
+  border-color: #dcdcdc;
+  border-style: solid;
+  margin-bottom: 15px;
 `;
 
 const Chat = styled.div`
   display: grid;
-  grid-template-rows: auto 45px;
+  grid-template-rows: auto ${p => (p.hasSelection ? '80px' : '45px')};
   height: calc(100vh - 33px);
   width: 100vw;
 `;

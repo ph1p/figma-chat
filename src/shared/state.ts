@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import { store, view } from 'react-easy-state';
 import SimpleEncryptor from 'simple-encryptor';
-import { DEFAULT_SERVER_URL } from './constants';
+import { DEFAULT_SERVER_URL, colors } from './constants';
 import { sendMainMessage } from './utils';
 import { ConnectionEnum } from './interfaces';
 
@@ -20,6 +20,7 @@ const state = store({
   messages: [],
   messagesRef: createRef(),
   disableAutoScroll: false,
+  selection: [],
   scrollToBottom() {
     if (!state.disableAutoScroll) {
       // scroll to bottom
@@ -34,7 +35,7 @@ const state = store({
   isMinimized: false,
   settings: {
     name: '',
-    color: '',
+    color: colors["#4F4F4F"],
     url: DEFAULT_SERVER_URL
   },
   notifications: [],

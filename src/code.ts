@@ -55,116 +55,109 @@ const postMessage = (type = '', payload = {}) =>
 
 figma.ui.show();
 
+const getSelectionIds = () => {
+  return figma.currentPage.selection.map(n => n.id);
+};
+
+const sendSelection = () => {
+  postMessage('selection', getSelectionIds());
+};
+
+const sendRootData = async ({ roomName, secret, history, instanceId }) => {
+  const settings = await figma.clientStorage.getAsync('user-settings');
+
+  postMessage('root-data', {
+    roomName,
+    secret,
+    history,
+    instanceId,
+    settings,
+    selection: getSelectionIds()
+  });
+};
+
 main().then(({ roomName, secret, history, instanceId }) => {
   postMessage('ready');
 
   // events
-  figma.on('selectionchange', () => {
-    postMessage(
-      'selection',
-      figma.currentPage.selection.map(n => n.id)
-    );
-  });
+  figma.on('selectionchange', sendSelection);
 
   figma.ui.onmessage = async message => {
-    if (message.action === 'save-user-settings') {
-      await figma.clientStorage.setAsync('user-settings', message.payload);
+    switch (message.action) {
+      case 'save-user-settings':
+        await figma.clientStorage.setAsync('user-settings', message.payload);
 
-      postMessage('user-settings', message.payload);
-    }
+        postMessage('user-settings', message.payload);
+        break;
+      case 'add-message-to-history':
+        {
+          const history = JSON.parse(figma.root.getPluginData('history'));
 
-    if (message.action === 'add-message-to-history') {
-      const history = JSON.parse(figma.root.getPluginData('history'));
+          figma.root.setPluginData(
+            'history',
+            JSON.stringify(history.concat(message.payload))
+          );
+        }
+        break;
+      case 'get-history':
+        {
+          const history = figma.root.getPluginData('history');
 
-      figma.root.setPluginData(
-        'history',
-        JSON.stringify(history.concat(message.payload))
-      );
-    }
+          postMessage('history', JSON.parse(history));
+        }
+        break;
+      case 'notification':
+        if (sendNotifications) {
+          figma.notify(message.payload);
+        }
+        break;
+      case 'set-server-url':
+        await figma.clientStorage.setAsync('server-url', message.payload);
+        break;
+      case 'initialize':
+        const url = await figma.clientStorage.getAsync('server-url');
 
-    if (message.action === 'get-history') {
-      const history = figma.root.getPluginData('history');
+        postMessage('initialize', url || '');
 
-      postMessage('history', JSON.parse(history));
-    }
+        sendRootData({ roomName, secret, history, instanceId });
+        break;
+      case 'get-selection':
+        sendSelection();
+        break;
+      case 'remove-all-messages':
+        figma.root.setPluginData('history', '[]');
 
-    if (message.action === 'notification') {
-      if (sendNotifications) {
-        figma.notify(message.payload);
-      }
-    }
+        postMessage('history', JSON.parse('[]'));
+        break;
+      case 'minimize':
+        isMinimized = message.payload;
+        sendNotifications = isMinimized;
 
-    if (message.action === 'set-server-url') {
-      await figma.clientStorage.setAsync('server-url', message.payload);
-    }
+        // resize window
+        figma.ui.resize(message.payload ? 180 : 300, message.payload ? 1 : 415);
+        break;
+      case 'focus':
+        if (!isMinimized) {
+          isFocused = message.payload;
 
-    if (message.action === 'initialize') {
-      const url = await figma.clientStorage.getAsync('server-url');
+          if (!isFocused) {
+            sendNotifications = true;
+          }
+        }
+        break;
+      case 'focus-nodes':
+        const nodes = figma.currentPage.findAll(
+          n => message.payload.ids.indexOf(n.id) !== -1
+        );
 
-      postMessage('initialize', url || '');
-
-      const settings = await figma.clientStorage.getAsync('user-settings');
-
-      postMessage('root-data', {
-        roomName,
-        secret,
-        history,
-        instanceId,
-        settings
-      });
-    }
-
-    if (message.action === 'get-selection') {
-      postMessage(
-        'selection',
-        figma.currentPage.selection.map(n => n.id)
-      );
-    }
-
-    if (message.action === 'remove-all-messages') {
-      figma.root.setPluginData('history', '[]');
-
-      postMessage('history', JSON.parse('[]'));
-    }
-
-    if (message.action === 'minimize') {
-      isMinimized = message.payload;
-      sendNotifications = isMinimized;
-
-      // resize window
-      figma.ui.resize(message.payload ? 180 : 300, message.payload ? 1 : 415);
-    }
-
-    if (message.action === 'focus' && !isMinimized) {
-      isFocused = message.payload;
-
-      if (!isFocused) {
-        sendNotifications = true;
-      }
-    }
-
-    if (message.action === 'focus-nodes') {
-      const nodes = figma.currentPage.findAll(
-        n => message.payload.ids.indexOf(n.id) !== -1
-      );
-
-      figma.viewport.scrollAndZoomIntoView(nodes);
-    }
-
-    if (message.action === 'get-root-data') {
-      const settings = await figma.clientStorage.getAsync('user-settings');
-
-      postMessage('root-data', {
-        roomName,
-        secret,
-        history,
-        instanceId,
-        settings
-      });
-    }
-
-    if (message.action === 'cancel') {
-      figma.closePlugin();
+        figma.viewport.scrollAndZoomIntoView(nodes);
+        break;
+      case 'get-root-data':
+        sendRootData({ roomName, secret, history, instanceId });
+        break;
+      case 'cancel':
+        figma.closePlugin();
+        break;
     }
   };
 });

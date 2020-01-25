@@ -15,7 +15,9 @@ const UserListView: FunctionComponent = () => {
                 className="color"
                 style={{ backgroundColor: user.color || '#000' }}
               />
-              <div className="name">{user.name}</div>
+              <div className={`name ${!user.name ? 'empty' : ''}`}>
+                {user.name || 'Anon'}
+              </div>
             </div>
           ))}
         </div>
@@ -37,6 +39,12 @@ const UserList = styled.div`
       font-weight: bold;
       display: flex;
       align-items: center;
+      .name {
+        &.empty {
+          font-weight: normal;
+          font-style: italic;
+        }
+      }
       .color {
         border-radius: 100%;
         width: 12px;
