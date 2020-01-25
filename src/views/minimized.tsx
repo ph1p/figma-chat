@@ -18,9 +18,9 @@ const MinimizedView: FunctionComponent = () => (
         </div>
       }
       left={
-        <div onClick={state.toggleMinimizeChat}>
+        <Maximize onClick={state.toggleMinimizeChat}>
           <div className="icon icon--plus" />
-        </div>
+        </Maximize>
       }
     />
     <Minimized>
@@ -39,6 +39,18 @@ const MinimizedView: FunctionComponent = () => (
   </>
 );
 
+const Maximize = styled.div`
+  .icon {
+    margin: 5px;
+    height: 22px;
+    width: 24px;
+    background-position: -4px -5px;
+    border-radius: 5px;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+  }
+`;
 const Minimized = styled.div`
   display: grid;
   text-align: center;

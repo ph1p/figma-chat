@@ -161,9 +161,11 @@ const ChatView: FunctionComponent<ChatProps> = props => {
           </HeaderRight>
         }
         left={
-          <Link to="/settings">
-            <div className="icon icon--adjust"></div>
-          </Link>
+          <SettingsIcon>
+            <Link to="/settings">
+              <div className="icon icon--adjust"></div>
+            </Link>
+          </SettingsIcon>
         }
       />
       <Chat hasSelection={state.selection.length > 0}>
@@ -200,7 +202,9 @@ const ChatView: FunctionComponent<ChatProps> = props => {
           sendMessage={sendMessage}
           setTextMessage={text => (chatState.textMessage = text)}
           textMessage={chatState.textMessage}
-          setSelectionIsChecked={isChecked => (chatState.selectionIsChecked = isChecked)}
+          setSelectionIsChecked={isChecked =>
+            (chatState.selectionIsChecked = isChecked)
+          }
           selectionIsChecked={chatState.selectionIsChecked}
         />
       </Chat>
@@ -225,9 +229,9 @@ const MoreButton = styled.button`
 
 const MessageSeperator = styled.div`
   border-width: 1px 0 0 0;
-  border-color: #dcdcdc;
-  border-style: solid;
-  margin-bottom: 15px;
+  border-color: #ececec;
+  border-style: dotted;
+  margin: -5px 0 10px;
 `;
 
 const Chat = styled.div`
@@ -248,7 +252,33 @@ const HeaderRight = styled.div`
 `;
 
 const Minimize = styled.div`
-  border-right: 1px solid #e9e9e9;
+  .icon {
+    margin: 5px;
+    height: 22px;
+    width: 24px;
+    background-position: -4px -5px;
+    border-radius: 5px;
+  }
+  &:hover {
+    .icon {
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+  }
+`;
+
+const SettingsIcon = styled.div`
+  .icon {
+    margin: 5px;
+    height: 22px;
+    width: 24px;
+    background-position: -4px -5px;
+    border-radius: 5px;
+  }
+  &:hover {
+    .icon {
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+  }
 `;
 
 const Online = styled.div`
@@ -257,6 +287,7 @@ const Online = styled.div`
   align-self: center;
   cursor: pointer;
   font-weight: bold;
+  border-left: 1px solid #e9e9e9;
   &::after {
     content: '';
     left: 10px;

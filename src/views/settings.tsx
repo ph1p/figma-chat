@@ -125,6 +125,16 @@ const DeleteHistory = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin: 5px;
+  height: 21px;
+  padding: 0 0 0 10px;
+  border-radius: 5px;
+  .icon {
+    width: 31px;
+  }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
 `;
 
 const Settings = styled.div`
