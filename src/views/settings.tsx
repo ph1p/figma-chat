@@ -90,7 +90,7 @@ const SettingsView: FunctionComponent<SettingsProps> = props => {
           </div>
 
           <h4>
-            Server URL (requires restart)
+            Server URL
             <p onClick={() => (settings.url = DEFAULT_SERVER_URL)}>
               default: {DEFAULT_SERVER_URL}
             </p>

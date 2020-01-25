@@ -52,8 +52,11 @@ const init = serverUrl => {
   socket.on('connected', () => {
     state.status = ConnectionEnum.CONNECTED;
 
-    socket.emit('join room', state.roomName);
     socket.emit('set user', state.settings);
+    socket.emit('join room', {
+      room: state.roomName,
+      settings: state.settings
+    });
   });
 
   socket.on('connect_error', () => {
