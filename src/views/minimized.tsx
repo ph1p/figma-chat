@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Header from '../components/header';
 import { ConnectionEnum } from '../shared/interfaces';
 import { state, view } from '../shared/state';
+import { SharedIcon } from '../shared/style';
 
 const MinimizedView: FunctionComponent = () => (
   <>
@@ -18,9 +19,9 @@ const MinimizedView: FunctionComponent = () => (
         </div>
       }
       left={
-        <Maximize onClick={state.toggleMinimizeChat}>
+        <SharedIcon onClick={state.toggleMinimizeChat}>
           <div className="icon icon--plus" />
-        </Maximize>
+        </SharedIcon>
       }
     />
     <Minimized>
@@ -38,19 +39,6 @@ const MinimizedView: FunctionComponent = () => (
     </Minimized>
   </>
 );
-
-const Maximize = styled.div`
-  .icon {
-    margin: 5px;
-    height: 22px;
-    width: 24px;
-    background-position: -4px -5px;
-    border-radius: 5px;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.06);
-    }
-  }
-`;
 
 const Minimized = styled.div`
   display: grid;

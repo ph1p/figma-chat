@@ -11,6 +11,7 @@ import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/socket-provider';
 import { state, view } from '../shared/state';
+import { SharedIcon } from '../shared/style';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
@@ -152,20 +153,20 @@ const ChatView: FunctionComponent<ChatProps> = props => {
         }
         right={
           <HeaderRight>
-            <Minimize onClick={state.toggleMinimizeChat}>
+            <SharedIcon onClick={state.toggleMinimizeChat}>
               <div className="icon icon--minus" />
-            </Minimize>
+            </SharedIcon>
             <Online onClick={() => history.push('/user-list')}>
               {state.online.length}
             </Online>
           </HeaderRight>
         }
         left={
-          <SettingsIcon>
+          <SharedIcon>
             <Link to="/settings">
               <div className="icon icon--adjust"></div>
             </Link>
-          </SettingsIcon>
+          </SharedIcon>
         }
       />
       <Chat hasSelection={state.selection.length > 0}>
@@ -249,36 +250,6 @@ const Messages = styled.div`
 
 const HeaderRight = styled.div`
   display: flex;
-`;
-
-const Minimize = styled.div`
-  .icon {
-    margin: 5px;
-    height: 22px;
-    width: 24px;
-    background-position: -4px -5px;
-    border-radius: 5px;
-  }
-  &:hover {
-    .icon {
-      background-color: rgba(0, 0, 0, 0.06);
-    }
-  }
-`;
-
-const SettingsIcon = styled.div`
-  .icon {
-    margin: 5px;
-    height: 22px;
-    width: 24px;
-    background-position: -4px -5px;
-    border-radius: 5px;
-  }
-  &:hover {
-    .icon {
-      background-color: rgba(0, 0, 0, 0.06);
-    }
-  }
 `;
 
 const Online = styled.div`

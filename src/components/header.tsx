@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { SharedIcon } from '../shared/style';
 
 interface Props {
   title: any;
@@ -13,11 +14,11 @@ const Header: FunctionComponent<Props> = props => (
   <Head>
     <div className="inner">
       {props.backButton && (
-        <BackButtonIcon>
+        <SharedIcon>
           <Link to="/">
             <div className="icon icon--return"></div>
           </Link>
-        </BackButtonIcon>
+        </SharedIcon>
       )}
       {props.left && <div className="left">{props.left}</div>}
       <div className="title">{props.title}</div>
@@ -25,21 +26,6 @@ const Header: FunctionComponent<Props> = props => (
     </div>
   </Head>
 );
-
-const BackButtonIcon = styled.div`
-  .icon {
-    margin: 5px;
-    height: 22px;
-    width: 24px;
-    background-position: -4px -5px;
-    border-radius: 5px;
-  }
-  &:hover {
-    .icon {
-      background-color: rgba(0, 0, 0, 0.06);
-    }
-  }
-`;
 
 const Head = styled.div`
   border-bottom: 1px solid #e9e9e9;
