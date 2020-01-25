@@ -349,7 +349,6 @@
 }
 
 .button--secondary:enabled:active {
-  padding: 4px 15px 4px 15px;
   border: 2px solid #18a0fb;
 }
 
