@@ -12,6 +12,7 @@ interface Props {
 const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
   const username = data.user.name || '';
   const colorClass = colors[data.user.color] || 'blue';
+  const selection = data?.message?.selection;
 
   return (
     <MessageContainer
@@ -25,17 +26,18 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
           </div>
         )}
       </MessageHeader>
-      {data.message.selection ? (
+      {selection ? (
         <span
           onClick={() =>
             sendMainMessage('focus-nodes', {
-              ids: data.message.selection
+              ids: selection
             })
           }
         >
           {data.message.text}
           <button className="selection button button--secondary">
-            attached elements
+            attached {selection.length} element
+            {selection.length > 1 ? 's' : ''}
           </button>
         </span>
       ) : (

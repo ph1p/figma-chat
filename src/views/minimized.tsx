@@ -51,6 +51,7 @@ const Maximize = styled.div`
     }
   }
 `;
+
 const Minimized = styled.div`
   display: grid;
   text-align: center;

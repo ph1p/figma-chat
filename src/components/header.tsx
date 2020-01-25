@@ -47,7 +47,6 @@ const Head = styled.div`
     display: grid;
     grid-template-columns: auto 1fr auto;
     width: 100%;
-    .back-button,
     .left {
       cursor: pointer;
     }
@@ -55,8 +54,6 @@ const Head = styled.div`
       padding: 0 10px 0 2px;
       font-weight: bold;
       align-self: center;
-    }
-    .right {
     }
     .icon {
       cursor: pointer;
