@@ -4,6 +4,7 @@ import { generateString } from './shared/utils';
 let isMinimized = false;
 let isFocused = true;
 let sendNotifications = false;
+let triggerSelectionEvent = true;
 
 figma.showUI(__html__, {
   width: 300,
@@ -80,7 +81,11 @@ main().then(({ roomName, secret, history, instanceId }) => {
   postMessage('ready');
 
   // events
-  figma.on('selectionchange', sendSelection);
+  figma.on('selectionchange', () => {
+    if (triggerSelectionEvent) {
+      sendSelection();
+    }
+  });
 
   figma.ui.onmessage = async message => {
     switch (message.action) {
@@ -146,12 +151,15 @@ main().then(({ roomName, secret, history, instanceId }) => {
         }
         break;
       case 'focus-nodes':
+        triggerSelectionEvent = false;
         const nodes = figma.currentPage.findAll(
           n => message.payload.ids.indexOf(n.id) !== -1
         );
 
         figma.currentPage.selection = nodes;
         figma.viewport.scrollAndZoomIntoView(nodes);
+
+        setTimeout(() => (triggerSelectionEvent = true));
 
         break;
       case 'get-root-data':

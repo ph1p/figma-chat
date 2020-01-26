@@ -1,6 +1,8 @@
 import React, { FunctionComponent, useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { state } from '../shared/state';
+import { sendMainMessage } from '../shared/utils';
+import { SharedIcon } from '../shared/style';
 
 interface ChatProps {
   sendMessage: (event: any) => void;
@@ -39,7 +41,7 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
             className="checkbox__box"
             type="checkbox"
             checked={props.selectionIsChecked}
-            onChange={e => {
+            onChange={(e: any) => {
               props.setSelectionIsChecked(e.target.checked);
               chatTextInput.current.focus();
             }}
@@ -49,6 +51,18 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
             Add current selection (<span>{selection}</span> element
             {selection > 1 ? 's' : ''})
           </label>
+
+          <PreviewSelection
+            onClick={() =>
+              sendMainMessage('focus-nodes', {
+                ids: [...state.selection]
+              })
+            }
+          >
+            <SharedIcon>
+              <div className="icon icon--visible icon--white" />
+            </SharedIcon>
+          </PreviewSelection>
         </SelectionInfo>
       ) : (
         ''
@@ -74,10 +88,26 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
   );
 };
 
+const PreviewSelection = styled.div`
+  position: relative;
+  margin-top: 2px;
+  z-index: 5;
+  .icon {
+    cursor: pointer;
+  }
+
+  &:hover {
+    .icon {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+  }
+`;
+
 const SelectionInfo = styled.div`
   animation: ${p => (p.hasSelection ? 'fadeIn' : 'fadeOut')} 0.3s;
   position: ${p => (p.hasSelection ? '' : 'absolute')};
   bottom: ${p => (p.hasSelection ? '' : '45px')};
+  display: flex;
   width: 100%;
   border-top: 0;
   background-color: #000;
