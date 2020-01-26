@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState, Fragment } from 'react';
+import React, { FunctionComponent, useEffect, Fragment } from 'react';
 import { store } from 'react-easy-state';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';

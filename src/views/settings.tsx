@@ -7,6 +7,7 @@ import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/socket-provider';
 import { state, view } from '../shared/state';
 import { colors, DEFAULT_SERVER_URL } from '../shared/constants';
+import { version, repository } from '../../package.json';
 
 interface SettingsProps {
   socket: SocketIOClient.Socket;
@@ -116,11 +117,26 @@ const SettingsView: FunctionComponent<SettingsProps> = props => {
             save
           </button>
         </div>
+        <VersionNote target="_blank" href={repository.url}>
+          version: {version}
+        </VersionNote>
       </Settings>
     </>
   );
 };
 
+const VersionNote = styled.a`
+  position: absolute;
+  right: 20px;
+  bottom: 6px;
+  color: #999;
+  text-align: right;
+  text-decoration: none;
+  font-size: 10px;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 const DeleteHistory = styled.div`
   display: flex;
   align-items: center;

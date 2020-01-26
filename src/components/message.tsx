@@ -36,7 +36,7 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
         >
           {data.message.text}
           <button className="selection button button--secondary">
-            attached {selection.length} element
+            focus {selection.length} element
             {selection.length > 1 ? 's' : ''}
           </button>
         </span>

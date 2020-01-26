@@ -150,7 +150,9 @@ main().then(({ roomName, secret, history, instanceId }) => {
           n => message.payload.ids.indexOf(n.id) !== -1
         );
 
+        figma.currentPage.selection = nodes;
         figma.viewport.scrollAndZoomIntoView(nodes);
+
         break;
       case 'get-root-data':
         sendRootData({ roomName, secret, history, instanceId });
