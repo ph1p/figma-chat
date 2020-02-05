@@ -5,7 +5,8 @@
   "main": "code.js",
   "scripts": {
     "build": "webpack --mode=production",
-    "dev": "DEBUG=* webpack --watch"
+    "dev": "DEBUG=* webpack --watch",
+    "version": "conventional-changelog -p karma -i CHANGELOG.md -s -r 0 && git add ."
   },
   "author": "Philip Stapelfeldt <phil@capshake.com>",
   "repository": {
@@ -40,7 +41,15 @@
     "id": "742073255743594050",
     "api": "1.0.0",
     "main": "code.js",
-    "ui": "ui.html"
+    "ui": "ui.html",
+    "enableProposedApi": false,
+    "relaunchButtons": [
+      {
+        "command": "relaunch",
+        "name": "Send to chat",
+        "multipleSelection": true
+      }
+    ]
   },
   "dependencies": {
     "prop-types": "^15.7.2",

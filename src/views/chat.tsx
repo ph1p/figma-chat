@@ -12,6 +12,7 @@ import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/socket-provider';
 import { state, view } from '../shared/state';
 import { SharedIcon } from '../shared/style';
+import { sendMainMessage } from '../shared/utils';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
@@ -34,8 +35,10 @@ const ChatView: FunctionComponent<ChatProps> = props => {
     }
   });
 
-  const sendMessage = e => {
-    e.preventDefault();
+  const sendMessage = (e = null) => {
+    if (e) {
+      e.preventDefault();
+    }
     if (state.roomName) {
       let data = {
         text: chatState.textMessage,
@@ -114,6 +117,18 @@ const ChatView: FunctionComponent<ChatProps> = props => {
         state.selection = selection;
 
         state.persistSettings(settings, props.socket);
+
+        sendMainMessage('ask-for-relaunch-message');
+      }
+
+      if (pmessage.type === 'relaunch-message') {
+        chatState.selectionIsChecked = true;
+        state.selection = pmessage.payload.selection || [];
+
+        if (state.selection.length) {
+          sendMessage();
+          sendMainMessage('notify', 'Selection sent successfully');
+        }
       }
     }
   };

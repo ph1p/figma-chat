@@ -6,9 +6,12 @@ let isFocused = true;
 let sendNotifications = false;
 let triggerSelectionEvent = true;
 
+const isRelaunch = figma.command === 'relaunch';
+
 figma.showUI(__html__, {
   width: 300,
   height: 415
+  // visible: !isRelaunch
 });
 
 async function main() {
@@ -54,8 +57,6 @@ const postMessage = (type = '', payload = {}) =>
     payload
   });
 
-figma.ui.show();
-
 const getSelectionIds = () => {
   return figma.currentPage.selection.map(n => n.id);
 };
@@ -77,11 +78,44 @@ const sendRootData = async ({ roomName, secret, history, instanceId }) => {
   });
 };
 
+let prevSelected;
+let alreadyAskedForRelaunchMessage = false;
+
+const isValidShape = node =>
+  node.type === 'RECTANGLE' ||
+  node.type === 'ELLIPSE' ||
+  node.type === 'GROUP' ||
+  node.type === 'TEXT' ||
+  node.type === 'VECTOR' ||
+  node.type === 'FRAME' ||
+  node.type === 'COMPONENT' ||
+  node.type === 'INSTANCE' ||
+  node.type === 'POLYGON';
+
+function iterateOverFile(node, cb) {
+  if ('children' in node) {
+    if (node.type !== 'INSTANCE') {
+      cb(node);
+      for (const child of node.children) {
+        cb(child);
+        iterateOverFile(child, cb);
+      }
+    }
+  }
+}
+
 main().then(({ roomName, secret, history, instanceId }) => {
   postMessage('ready');
 
   // events
   figma.on('selectionchange', () => {
+    iterateOverFile(figma.root, node => {
+      if (node.setRelaunchData && isValidShape(node)) {
+        node.setRelaunchData({
+          relaunch: 'Send selection to chat'
+        });
+      }
+    });
     if (triggerSelectionEvent) {
       sendSelection();
     }
@@ -110,6 +144,9 @@ main().then(({ roomName, secret, history, instanceId }) => {
 
           postMessage('history', JSON.parse(history));
         }
+        break;
+      case 'notify':
+        figma.notify(message.payload);
         break;
       case 'notification':
         if (sendNotifications) {
@@ -164,6 +201,15 @@ main().then(({ roomName, secret, history, instanceId }) => {
         break;
       case 'get-root-data':
         sendRootData({ roomName, secret, history, instanceId });
+        break;
+
+      case 'ask-for-relaunch-message':
+        if (isRelaunch && !alreadyAskedForRelaunchMessage) {
+          alreadyAskedForRelaunchMessage = true;
+          postMessage('relaunch-message', {
+            selection: getSelectionIds()
+          });
+        }
         break;
       case 'cancel':
         figma.closePlugin();
