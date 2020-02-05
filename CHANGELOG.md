@@ -1,3 +1,9 @@
+## 2.3.0 (2020-02-05)
+
+* feat(relaunch): add api proposal ([72c2bf8](https://github.com/ph1p/figma-chat/commit/72c2bf8))
+
+
+
 ## <small>2.2.1 (2020-01-26)</small>
 
 * 2.2.1 ([979d8cd](https://github.com/ph1p/figma-chat/commit/979d8cd))
