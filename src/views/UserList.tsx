@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
-import Header from '../components/header';
+import Header from '../components/Header';
 import { state, view } from '../shared/state';
 
 const UserListView: FunctionComponent = () => {

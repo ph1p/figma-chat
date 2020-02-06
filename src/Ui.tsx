@@ -11,19 +11,19 @@ import io from 'socket.io-client';
 import './assets/css/ui.css';
 import './assets/figma-ui/main.min.css';
 // components
-import Notifications from './components/notifications';
+import Notifications from './components/Notifications';
 // shared
 import { DEFAULT_SERVER_URL } from './shared/constants';
 import { ConnectionEnum } from './shared/interfaces';
-import { SocketProvider } from './shared/socketprovider';
+import { SocketProvider } from './shared/SocketProvider';
 import { state, view } from './shared/state';
 import { sendMainMessage } from './shared/utils';
 // views
-import ChatView from './views/chat';
-import ConnectionView from './views/connection';
-import MinimizedView from './views/minimized';
-import SettingsView from './views/settings';
-import UserListView from './views/userlist';
+import ChatView from './views/Chat';
+import ConnectionView from './views/Connection';
+import MinimizedView from './views/Minimized';
+import SettingsView from './views/Settings';
+import UserListView from './views/UserList';
 
 onmessage = message => {
   if (message.data.pluginMessage) {

@@ -3,13 +3,13 @@ import { store } from 'react-easy-state';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 // components
-import Header from '../components/header';
-import Message from '../components/message';
-import Chatbar from '../components/chatbar';
+import Header from '../components/Header';
+import Message from '../components/Message';
+import Chatbar from '../components/Chatbar';
 //shared
 import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
-import { withSocketContext } from '../shared/socketprovider';
+import { withSocketContext } from '../shared/SocketProvider';
 import { state, view } from '../shared/state';
 import { SharedIcon } from '../shared/style';
 import { sendMainMessage } from '../shared/utils';

@@ -13,7 +13,7 @@ module.exports = (env, argv) => ({
     minimizer: [new TerserPlugin()]
   },
   entry: {
-    ui: './src/ui.tsx',
+    ui: './src/Ui.tsx',
     code: './src/code.ts'
   },
   module: {

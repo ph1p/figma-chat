@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import Header from '../components/header';
+import Header from '../components/Header';
 import { ConnectionEnum } from '../shared/interfaces';
 import { state, view } from '../shared/state';
 import { SharedIcon } from '../shared/style';
