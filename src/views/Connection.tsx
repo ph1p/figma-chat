@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { ConnectionEnum } from '../shared/interfaces';

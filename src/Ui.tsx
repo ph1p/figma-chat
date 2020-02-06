@@ -15,7 +15,7 @@ import Notifications from './components/notifications';
 // shared
 import { DEFAULT_SERVER_URL } from './shared/constants';
 import { ConnectionEnum } from './shared/interfaces';
-import { SocketProvider } from './shared/socket-provider';
+import { SocketProvider } from './shared/socketprovider';
 import { state, view } from './shared/state';
 import { sendMainMessage } from './shared/utils';
 // views
@@ -23,7 +23,7 @@ import ChatView from './views/chat';
 import ConnectionView from './views/connection';
 import MinimizedView from './views/minimized';
 import SettingsView from './views/settings';
-import UserListView from './views/user-list';
+import UserListView from './views/userlist';
 
 onmessage = message => {
   if (message.data.pluginMessage) {

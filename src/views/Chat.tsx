@@ -9,7 +9,7 @@ import Chatbar from '../components/chatbar';
 //shared
 import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
-import { withSocketContext } from '../shared/socket-provider';
+import { withSocketContext } from '../shared/socketprovider';
 import { state, view } from '../shared/state';
 import { SharedIcon } from '../shared/style';
 import { sendMainMessage } from '../shared/utils';

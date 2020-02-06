@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { NotificationParams } from '../shared/interfaces';
 import { state, view } from '../shared/state';
-import Notification from './notification';
+import Notification from './Notification';
 
 const Notifications: FunctionComponent = () => {
   const deleteNotification = (id: string) =>

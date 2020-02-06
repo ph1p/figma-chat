@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/header';
 import { ConnectionEnum } from '../shared/interfaces';
-import { withSocketContext } from '../shared/socket-provider';
+import { withSocketContext } from '../shared/socketprovider';
 import { state, view } from '../shared/state';
 import { colors, DEFAULT_SERVER_URL } from '../shared/constants';
 import { version, repository } from '../../package.json';
