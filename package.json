@@ -1,6 +1,6 @@
 {
   "name": "figma-chat",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "",
   "main": "code.js",
   "scripts": {
@@ -42,7 +42,7 @@
     "api": "1.0.0",
     "main": "code.js",
     "ui": "ui.html",
-    "enableProposedApi": true,
+    "enableProposedApi": false,
     "relaunchButtons": [
       {
         "command": "relaunch",
