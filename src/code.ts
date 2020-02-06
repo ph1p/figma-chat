@@ -112,7 +112,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
     iterateOverFile(figma.root, node => {
       if (node.setRelaunchData && isValidShape(node)) {
         node.setRelaunchData({
-          relaunch: 'Send selection to chat'
+          relaunch: ''
         });
       }
     });

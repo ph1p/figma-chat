@@ -46,7 +46,7 @@
     "relaunchButtons": [
       {
         "command": "relaunch",
-        "name": "Send to chat",
+        "name": "Send selection to chat",
         "multipleSelection": true
       }
     ]

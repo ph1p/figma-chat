@@ -57,6 +57,8 @@ const init = serverUrl => {
       room: state.roomName,
       settings: state.settings
     });
+
+    sendMainMessage('ask-for-relaunch-message');
   });
 
   socket.on('connect_error', () => {

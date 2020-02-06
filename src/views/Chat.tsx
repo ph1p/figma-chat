@@ -117,8 +117,6 @@ const ChatView: FunctionComponent<ChatProps> = props => {
         state.selection = selection;
 
         state.persistSettings(settings, props.socket);
-
-        sendMainMessage('ask-for-relaunch-message');
       }
 
       if (pmessage.type === 'relaunch-message') {
