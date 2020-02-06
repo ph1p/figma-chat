@@ -1,5 +1,14 @@
+## <small>2.3.1 (2020-02-06)</small>
+
+* fix(relaunch): fix message on relaunch ([33346fe](https://github.com/ph1p/figma-chat/commit/33346fe))
+* refactor(rename): write all tsx files with capital letters ([eedc1b8](https://github.com/ph1p/figma-chat/commit/eedc1b8))
+* build(deps): update dependencies ([018d251](https://github.com/ph1p/figma-chat/commit/018d251))
+
+
+
 ## 2.3.0 (2020-02-05)
 
+* 2.3.0 ([8387362](https://github.com/ph1p/figma-chat/commit/8387362))
 * feat(relaunch): add api proposal ([72c2bf8](https://github.com/ph1p/figma-chat/commit/72c2bf8))
 
 
