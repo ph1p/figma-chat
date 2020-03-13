@@ -31,7 +31,12 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
   };
 
   return (
-    <form onSubmit={props.sendMessage}>
+    <form
+      onSubmit={e => {
+        props.sendMessage(e);
+        chatTextInput.current.value = '';
+      }}
+    >
       {show ? (
         <SelectionInfo
           hasSelection={hasSelection}
@@ -72,7 +77,6 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
           ref={chatTextInput}
           type="input"
           className="input"
-          value={props.textMessage}
           onChange={({ target }: any) =>
             props.setTextMessage(target.value.substr(0, 1000))
           }
