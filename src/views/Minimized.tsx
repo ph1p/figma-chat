@@ -18,7 +18,7 @@ const MinimizedView: FunctionComponent = () => (
           {state.settings.name}
         </div>
       }
-      left={
+      right={
         <SharedIcon onClick={state.toggleMinimizeChat}>
           <div className="icon icon--plus" />
         </SharedIcon>
