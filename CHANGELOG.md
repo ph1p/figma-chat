@@ -1,9 +1,17 @@
+## <small>2.3.3 (2020-03-17)</small>
+
+* refactor(minimized): move plus icon to the right ([33887ab](https://github.com/ph1p/figma-chat/commit/33887ab))
+* move expand icon to the right ([e71fb30](https://github.com/ph1p/figma-chat/commit/e71fb30))
+
+
+
 ## <small>2.3.2 (2020-03-13)</small>
 
+* 2.3.1 ([8c6f2d3](https://github.com/ph1p/figma-chat/commit/8c6f2d3))
+* 2.3.2 ([22feff1](https://github.com/ph1p/figma-chat/commit/22feff1))
 * fix(build): set import names correct ([de2af61](https://github.com/ph1p/figma-chat/commit/de2af61))
 * fix(input): ability to type ã õ á é etc characters ([a3a4633](https://github.com/ph1p/figma-chat/commit/a3a4633)), closes [#3](https://github.com/ph1p/figma-chat/issues/3)
 * fix(relaunch): fix message on relaunch ([33346fe](https://github.com/ph1p/figma-chat/commit/33346fe))
-* 2.3.1 ([8c6f2d3](https://github.com/ph1p/figma-chat/commit/8c6f2d3))
 * refactor(rename): write all tsx files with capital letters ([eedc1b8](https://github.com/ph1p/figma-chat/commit/eedc1b8))
 * build(deps): update dependencies ([018d251](https://github.com/ph1p/figma-chat/commit/018d251))
 
