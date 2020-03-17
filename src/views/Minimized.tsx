@@ -10,15 +10,12 @@ const MinimizedView: FunctionComponent = () => (
   <>
     <Header
       title={
-        <div
-          style={{
-            color: state.settings.color || '#000'
-          }}
-        >
+        <Title color={state.settings.color || '#000'}>
           {state.settings.name}
-        </div>
+        </Title>
       }
-      left={
+      left={<span></span>}
+      right={
         <SharedIcon onClick={state.toggleMinimizeChat}>
           <div className="icon icon--plus" />
         </SharedIcon>
@@ -52,6 +49,11 @@ const Minimized = styled.div`
   button {
     cursor: pointer;
   }
+`;
+
+const Title = styled.div`
+  margin-left: 10px;
+  color: ${props => props.color};
 `;
 
 const Users = styled.div`
