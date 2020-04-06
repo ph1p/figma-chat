@@ -6,7 +6,6 @@ import { sendMainMessage } from './utils';
 import { ConnectionEnum } from './interfaces';
 
 import MessageSound from '../assets/sound.mp3';
-const audio = new Audio(MessageSound);
 
 const state = store({
   get encryptor() {
@@ -135,6 +134,7 @@ const state = store({
         };
 
         if (state.settings.enableNotificationSound) {
+          const audio = new Audio(MessageSound);
           audio.play();
         }
         if (state.settings.enableNotificationTooltip) {
