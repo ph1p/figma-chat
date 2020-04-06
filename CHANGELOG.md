@@ -1,7 +1,14 @@
+## 2.4.0 (2020-04-06)
+
+* feat(settings): add new notification settings and sound ([2d65d72](https://github.com/ph1p/figma-chat/commit/2d65d72))
+
+
+
 ## <small>2.3.3 (2020-03-17)</small>
 
-* refactor(minimized): move plus icon to the right ([33887ab](https://github.com/ph1p/figma-chat/commit/33887ab))
+* 2.3.3 ([3d610a3](https://github.com/ph1p/figma-chat/commit/3d610a3))
 * move expand icon to the right ([e71fb30](https://github.com/ph1p/figma-chat/commit/e71fb30))
+* refactor(minimized): move plus icon to the right ([33887ab](https://github.com/ph1p/figma-chat/commit/33887ab))
 
 
 
