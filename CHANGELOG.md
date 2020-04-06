@@ -1,5 +1,13 @@
+## <small>2.4.1 (2020-04-06)</small>
+
+* fix(sound): create new instance to play sound immediately ([7d69be0](https://github.com/ph1p/figma-chat/commit/7d69be0))
+
+
+
 ## 2.4.0 (2020-04-06)
 
+* fix(deps): audit fix some dependencies ([a5cb723](https://github.com/ph1p/figma-chat/commit/a5cb723))
+* 2.4.0 ([d53cd73](https://github.com/ph1p/figma-chat/commit/d53cd73))
 * feat(settings): add new notification settings and sound ([2d65d72](https://github.com/ph1p/figma-chat/commit/2d65d72))
 
 
