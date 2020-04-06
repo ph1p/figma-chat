@@ -4,7 +4,7 @@ import {
   MemoryRouter as Router,
   Redirect,
   Route,
-  Switch
+  Switch,
 } from 'react-router-dom';
 import io from 'socket.io-client';
 // styles
@@ -25,7 +25,7 @@ import MinimizedView from './views/Minimized';
 import SettingsView from './views/Settings';
 import UserListView from './views/UserList';
 
-onmessage = message => {
+onmessage = (message) => {
   if (message.data.pluginMessage) {
     const { type, payload } = message.data.pluginMessage;
 
@@ -40,13 +40,13 @@ onmessage = message => {
   }
 };
 
-const init = serverUrl => {
+const init = (serverUrl) => {
   state.url = serverUrl;
 
   const socket: SocketIOClient.Socket = io(serverUrl, {
     reconnectionAttempts: 3,
     forceNew: true,
-    transports: ['websocket']
+    transports: ['websocket'],
   });
 
   socket.on('connected', () => {
@@ -55,7 +55,7 @@ const init = serverUrl => {
     socket.emit('set user', state.settings);
     socket.emit('join room', {
       room: state.roomName,
-      settings: state.settings
+      settings: state.settings,
     });
 
     sendMainMessage('ask-for-relaunch-message');
@@ -69,11 +69,11 @@ const init = serverUrl => {
     state.status = ConnectionEnum.ERROR;
   });
 
-  socket.on('chat message', data => {
+  socket.on('chat message', (data) => {
     state.addMessage(data);
   });
 
-  socket.on('join leave message', data => {
+  socket.on('join leave message', (data) => {
     const username = data.user.name || 'Anon';
     let message = 'joins the conversation';
 
@@ -83,7 +83,7 @@ const init = serverUrl => {
     state.addNotification(`${username} ${message}`);
   });
 
-  socket.on('online', data => (state.online = data));
+  socket.on('online', (data) => (state.online = data));
 
   sendMainMessage('get-root-data');
 

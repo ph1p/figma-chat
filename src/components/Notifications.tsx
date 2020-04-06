@@ -29,7 +29,7 @@ const Notifications: FunctionComponent = () => {
 const NotificationsContainer = styled.div`
   position: absolute;
   top: 0;
-  z-index: 1;
+  z-index: 11;
   padding: 10px;
   width: 100%;
 `;

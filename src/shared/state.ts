@@ -5,6 +5,9 @@ import { DEFAULT_SERVER_URL, colors } from './constants';
 import { sendMainMessage } from './utils';
 import { ConnectionEnum } from './interfaces';
 
+import MessageSound from '../assets/sound.mp3';
+const audio = new Audio(MessageSound);
+
 const state = store({
   get encryptor() {
     return SimpleEncryptor(state.secret);
@@ -35,15 +38,17 @@ const state = store({
   isMinimized: false,
   settings: {
     name: '',
-    color: colors["#4F4F4F"],
-    url: DEFAULT_SERVER_URL
+    color: colors['#4F4F4F'],
+    url: DEFAULT_SERVER_URL,
+    enableNotificationTooltip: true,
+    enableNotificationSound: true,
   },
   notifications: [],
   addNotification(text: string, type: string) {
     state.notifications.push({
       id: Math.random(),
       text,
-      type
+      type,
     });
   },
   // ---
@@ -66,7 +71,7 @@ const state = store({
 
     state.settings = {
       ...state.settings,
-      ...settings
+      ...settings,
     };
 
     if (settings.url && settings.url !== state.url) {
@@ -102,8 +107,8 @@ const state = store({
       const data = JSON.parse(decryptedMessage);
       let newMessage: {} = {
         message: {
-          ...data
-        }
+          ...data,
+        },
       };
 
       // is local sender
@@ -112,11 +117,11 @@ const state = store({
           id: state.instanceId,
           user: {
             color: state.settings.color,
-            name: state.settings.name
+            name: state.settings.name,
           },
           message: {
-            ...data
-          }
+            ...data,
+          },
         };
 
         sendMainMessage('add-message-to-history', newMessage);
@@ -125,16 +130,21 @@ const state = store({
           id: messageData.id,
           user: messageData.user,
           message: {
-            ...data
-          }
+            ...data,
+          },
         };
 
-        sendMainMessage(
-          'notification',
-          messageData.user && messageData.user.name
-            ? `New chat message from ${messageData.user.name}`
-            : `New chat message`
-        );
+        if (state.settings.enableNotificationSound) {
+          audio.play();
+        }
+        if (state.settings.enableNotificationTooltip) {
+          sendMainMessage(
+            'notification',
+            messageData?.user?.name
+              ? `New chat message from ${messageData.user.name}`
+              : `New chat message`
+          );
+        }
       }
 
       state.messages.push(newMessage);
@@ -143,7 +153,7 @@ const state = store({
     } catch (e) {
       console.log(e);
     }
-  }
+  },
 });
 
 export { state, view };

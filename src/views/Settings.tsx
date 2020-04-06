@@ -14,14 +14,16 @@ interface SettingsProps {
   init?: (serverUrl: any) => void;
 }
 
-const SettingsView: FunctionComponent<SettingsProps> = props => {
+const SettingsView: FunctionComponent<SettingsProps> = (props) => {
   const isConnected = state.status === ConnectionEnum.CONNECTED;
 
   const history = useHistory();
   const settings = store({
     color: '',
     name: '',
-    url: ''
+    url: '',
+    enableNotificationTooltip: true,
+    enableNotificationSound: true,
   });
 
   useEffect(() => {
@@ -33,7 +35,11 @@ const SettingsView: FunctionComponent<SettingsProps> = props => {
   const saveSettings = () => {
     if (
       state.settings.name !== settings.name ||
-      state.settings.color !== settings.color
+      state.settings.color !== settings.color ||
+      state.settings.enableNotificationTooltip !==
+        settings.enableNotificationTooltip ||
+      state.settings.enableNotificationSound !==
+        settings.enableNotificationSound
     ) {
       state.addNotification('Successfully updated settings', 'success');
     }
@@ -49,6 +55,9 @@ const SettingsView: FunctionComponent<SettingsProps> = props => {
     settings.name = state.settings.name;
     settings.color = state.settings.color;
     settings.url = state.settings.url;
+    settings.enableNotificationTooltip =
+      state.settings.enableNotificationTooltip;
+    settings.enableNotificationSound = state.settings.enableNotificationSound;
   }, [settings]);
 
   return (
@@ -78,9 +87,45 @@ const SettingsView: FunctionComponent<SettingsProps> = props => {
           />
           <br />
 
+          <h4>Notifications</h4>
+
+          <NotificationCheckboxes>
+            <input
+              className="checkbox__box"
+              type="checkbox"
+              checked={settings.enableNotificationTooltip}
+              onChange={() =>
+                (settings.enableNotificationTooltip = !settings.enableNotificationTooltip)
+              }
+              id="notificationTooltipCheckbox"
+            />
+            <label
+              className="checkbox__label"
+              htmlFor="notificationTooltipCheckbox"
+            >
+              Enable tooltips
+            </label>
+
+            <input
+              className="checkbox__box"
+              type="checkbox"
+              checked={settings.enableNotificationSound}
+              onChange={() =>
+                (settings.enableNotificationSound = !settings.enableNotificationSound)
+              }
+              id="notificationSoundCheckbox"
+            />
+            <label
+              className="checkbox__label"
+              htmlFor="notificationSoundCheckbox"
+            >
+              Enable sound
+            </label>
+          </NotificationCheckboxes>
+
           <h4>Your bubble color</h4>
           <div className="colors">
-            {Object.keys(colors).map(color => (
+            {Object.keys(colors).map((color) => (
               <div
                 key={color}
                 onClick={() => (settings.color = color)}
@@ -126,17 +171,18 @@ const SettingsView: FunctionComponent<SettingsProps> = props => {
 };
 
 const VersionNote = styled.a`
-  position: absolute;
-  right: 20px;
-  bottom: 6px;
+  margin-top: 10px;
+  width: 100%;
   color: #999;
   text-align: right;
   text-decoration: none;
   font-size: 10px;
+  display: block;
   &:hover {
     text-decoration: underline;
   }
 `;
+
 const DeleteHistory = styled.div`
   display: flex;
   align-items: center;
@@ -150,6 +196,16 @@ const DeleteHistory = styled.div`
   }
   &:hover {
     background-color: rgba(0, 0, 0, 0.06);
+  }
+`;
+
+const NotificationCheckboxes = styled.div`
+  margin: 0 0 15px;
+  .checkbox__label {
+    margin-bottom: 5px;
+    &:before {
+      margin: 2px 10px 0 0;
+    }
   }
 `;
 

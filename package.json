@@ -21,8 +21,8 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "@types/react": "^16.9.23",
-    "@types/react-dom": "^16.9.5",
+    "@types/react": "^16.9.32",
+    "@types/react-dom": "^16.9.6",
     "@types/socket.io-client": "^1.4.32",
     "create-file-webpack": "^1.0.2",
     "css-loader": "^3.4.2",
@@ -30,10 +30,10 @@
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^1.1.3",
     "terser-webpack-plugin": "^2.3.5",
-    "ts-loader": "^6.2.1",
+    "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
-    "url-loader": "^3.0.0",
-    "webpack": "^4.42.0",
+    "url-loader": "^4.0.0",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
   },
   "figmaPlugin": {
@@ -45,6 +45,10 @@
     "enableProposedApi": false,
     "relaunchButtons": [
       {
+        "command": "open",
+        "name": "Open Figma-Chat"
+      },
+      {
         "command": "relaunch",
         "name": "Send selection to chat",
         "multipleSelection": true
@@ -53,15 +57,15 @@
   },
   "dependencies": {
     "prop-types": "^15.7.2",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-easy-state": "^6.1.3",
     "react-router-dom": "^5.1.2",
     "simple-encryptor": "^3.0.0",
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.0.1",
     "timeago-react": "^3.0.0",
-    "type-fest": "^0.12.0",
+    "type-fest": "^0.13.0",
     "uniqid": "^5.2.0"
   }
 }

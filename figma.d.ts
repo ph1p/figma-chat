@@ -1,4 +1,4 @@
-// Figma Plugin API version 1, update 11
+// Figma Plugin API version 1, update 14
 
 declare global {
   // Global variable with Figma's plugin API.
@@ -161,8 +161,6 @@ declare global {
     center: Vector;
     zoom: number;
     scrollAndZoomIntoView(nodes: ReadonlyArray<BaseNode>): void;
-
-    /** PROPOSED API ONLY */
     readonly bounds: Rect;
   }
 
@@ -511,14 +509,14 @@ declare global {
     // be a name related to your plugin. Other plugins will be able to read this data.
     getSharedPluginData(namespace: string, key: string): string;
     setSharedPluginData(namespace: string, key: string, value: string): void;
+    setRelaunchData(data: {
+      [command: string]: /* description */ string;
+    }): void;
   }
 
   interface SceneNodeMixin {
     visible: boolean;
     locked: boolean;
-
-    /** PROPOSED API ONLY */
-    expanded: boolean;
   }
 
   interface ChildrenMixin {
@@ -527,9 +525,7 @@ declare global {
     appendChild(child: SceneNode): void;
     insertChild(index: number, child: SceneNode): void;
 
-    /** PROPOSED API ONLY */
     findChildren(callback?: (node: SceneNode) => boolean): SceneNode[];
-    /** PROPOSED API ONLY */
     findChild(callback: (node: SceneNode) => boolean): SceneNode | null;
 
     /**
@@ -558,11 +554,9 @@ declare global {
 
     readonly width: number;
     readonly height: number;
-
-    /** PROPOSED API ONLY */
     constrainProportions: boolean;
 
-    layoutAlign: 'MIN' | 'CENTER' | 'MAX'; // applicable only inside auto-layout frames
+    layoutAlign: 'MIN' | 'CENTER' | 'MAX' | 'STRETCH'; // applicable only inside auto-layout frames
 
     resize(width: number, height: number): void;
     resizeWithoutConstraints(width: number, height: number): void;
@@ -577,11 +571,8 @@ declare global {
   }
 
   interface ContainerMixin {
+    expanded: boolean;
     backgrounds: ReadonlyArray<Paint>; // DEPRECATED: use 'fills' instead
-    layoutGrids: ReadonlyArray<LayoutGrid>;
-    clipsContent: boolean;
-    guides: ReadonlyArray<Guide>;
-    gridStyleId: string;
     backgroundStyleId: string; // DEPRECATED: use 'fillStyleId' instead
   }
 
@@ -598,17 +589,13 @@ declare global {
     fills: ReadonlyArray<Paint> | PluginAPI['mixed'];
     strokes: ReadonlyArray<Paint>;
     strokeWeight: number;
+    strokeMiterLimit: number;
     strokeAlign: 'CENTER' | 'INSIDE' | 'OUTSIDE';
     strokeCap: StrokeCap | PluginAPI['mixed'];
     strokeJoin: StrokeJoin | PluginAPI['mixed'];
     dashPattern: ReadonlyArray<number>;
     fillStyleId: string | PluginAPI['mixed'];
     strokeStyleId: string;
-
-    /** PROPOSED API ONLY */
-    strokeMiterLimit: number;
-
-    /** PROPOSED API ONLY */
     outlineStroke(): VectorNode | null;
   }
 
@@ -629,17 +616,6 @@ declare global {
     exportAsync(settings?: ExportSettings): Promise<Uint8Array>; // Defaults to PNG format
   }
 
-  interface RelaunchOptions {
-    [command: string]: string;
-  }
-
-  interface RelaunchableMixin {
-    /** PROPOSED API ONLY */
-    setRelaunchData(options: RelaunchOptions): void;
-    /** PROPOSED API ONLY */
-    clearRelaunchData(): void;
-  }
-
   interface ReactionMixin {
     readonly reactions: ReadonlyArray<Reaction>;
   }
@@ -651,8 +627,7 @@ declare global {
       BlendMixin,
       GeometryMixin,
       LayoutMixin,
-      ExportMixin,
-      RelaunchableMixin {}
+      ExportMixin {}
 
   interface DefaultFrameMixin
     extends BaseNodeMixin,
@@ -666,13 +641,17 @@ declare global {
       BlendMixin,
       ConstraintMixin,
       LayoutMixin,
-      ExportMixin,
-      RelaunchableMixin {
+      ExportMixin {
     layoutMode: 'NONE' | 'HORIZONTAL' | 'VERTICAL';
     counterAxisSizingMode: 'FIXED' | 'AUTO'; // applicable only if layoutMode != "NONE"
     horizontalPadding: number; // applicable only if layoutMode != "NONE"
     verticalPadding: number; // applicable only if layoutMode != "NONE"
     itemSpacing: number; // applicable only if layoutMode != "NONE"
+
+    layoutGrids: ReadonlyArray<LayoutGrid>;
+    gridStyleId: string;
+    clipsContent: boolean;
+    guides: ReadonlyArray<Guide>;
 
     overflowDirection: OverflowDirection;
     numberOfFixedChildren: number;
@@ -692,10 +671,7 @@ declare global {
 
     appendChild(child: PageNode): void;
     insertChild(index: number, child: PageNode): void;
-
-    /** PROPOSED API ONLY */
     findChildren(callback?: (node: PageNode) => boolean): Array<PageNode>;
-    /** PROPOSED API ONLY */
     findChild(callback: (node: PageNode) => boolean): PageNode | null;
 
     /**
@@ -715,16 +691,13 @@ declare global {
     ): PageNode | SceneNode | null;
   }
 
-  interface PageNode
-    extends BaseNodeMixin,
-      ChildrenMixin,
-      ExportMixin,
-      RelaunchableMixin {
+  interface PageNode extends BaseNodeMixin, ChildrenMixin, ExportMixin {
     readonly type: 'PAGE';
     clone(): PageNode;
 
     guides: ReadonlyArray<Guide>;
     selection: ReadonlyArray<SceneNode>;
+    selectedTextRange: { node: TextNode; start: number; end: number } | null;
 
     backgrounds: ReadonlyArray<Paint>;
 
@@ -749,8 +722,7 @@ declare global {
       ContainerMixin,
       BlendMixin,
       LayoutMixin,
-      ExportMixin,
-      RelaunchableMixin {
+      ExportMixin {
     readonly type: 'GROUP';
     clone(): GroupNode;
   }
@@ -759,8 +731,7 @@ declare global {
     extends BaseNodeMixin,
       SceneNodeMixin,
       LayoutMixin,
-      ExportMixin,
-      RelaunchableMixin {
+      ExportMixin {
     readonly type: 'SLICE';
     clone(): SliceNode;
   }
@@ -815,7 +786,6 @@ declare global {
   interface TextNode extends DefaultShapeMixin, ConstraintMixin {
     readonly type: 'TEXT';
     clone(): TextNode;
-    characters: string;
     readonly hasMissingFont: boolean;
     textAlignHorizontal: 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFIED';
     textAlignVertical: 'TOP' | 'CENTER' | 'BOTTOM';
@@ -831,6 +801,14 @@ declare global {
     textDecoration: TextDecoration | PluginAPI['mixed'];
     letterSpacing: LetterSpacing | PluginAPI['mixed'];
     lineHeight: LineHeight | PluginAPI['mixed'];
+
+    characters: string;
+    insertCharacters(
+      start: number,
+      characters: string,
+      useStyle?: 'BEFORE' | 'AFTER'
+    ): void;
+    deleteCharacters(start: number, end: number): void;
 
     getRangeFontSize(start: number, end: number): number | PluginAPI['mixed'];
     setRangeFontSize(start: number, end: number, value: number): void;
@@ -889,8 +867,6 @@ declare global {
     readonly type: 'INSTANCE';
     clone(): InstanceNode;
     masterComponent: ComponentNode;
-
-    /** PROPOSED API ONLY */
     scaleFactor: number;
   }
 
@@ -901,6 +877,8 @@ declare global {
     readonly type: 'BOOLEAN_OPERATION';
     clone(): BooleanOperationNode;
     booleanOperation: 'UNION' | 'INTERSECT' | 'SUBTRACT' | 'EXCLUDE';
+
+    expanded: boolean;
   }
 
   type BaseNode = DocumentNode | PageNode | SceneNode;

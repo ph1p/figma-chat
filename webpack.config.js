@@ -24,12 +24,14 @@ module.exports = (env, argv) => ({
         loader: [{ loader: 'style-loader' }, { loader: 'css-loader' }]
       },
       {
-        test: /\.(png|jpg|gif|webp|svg|zip)$/,
+        test: /\.(png|jpg|gif|webp|svg|zip|mp3)$/,
         loader: [{ loader: 'url-loader' }]
       }
     ]
   },
-  resolve: { extensions: ['.tsx', '.ts', '.jsx', '.js'] },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js', '.mp3']
+  },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, figmaPlugin.name)

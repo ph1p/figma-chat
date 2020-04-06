@@ -1,4 +1,4 @@
- # figma-chat ![](https://github.com/ph1p/figma-chat/workflows/Build%20Figma-Chat/badge.svg)
+# figma-chat ![](https://github.com/ph1p/figma-chat/workflows/Build%20Figma-Chat/badge.svg)
 
 ![](./assets/header.png)
 
@@ -63,14 +63,19 @@ npm install
 ```bash
 npm run build
 ```
+
 or
 
 ```bash
 npm run dev
 ```
 
-* Open figma
-* Go to **Plugins**
-* Click the "+" next to **Development**
-* Choose the manifest.json inside `figma-chat/Figma Chat`
-* Ready to develop
+- Open figma
+- Go to **Plugins**
+- Click the "+" next to **Development**
+- Choose the manifest.json inside `figma-chat/Figma Chat`
+- Ready to develop
+
+### Sound
+
+Thanks to [https://notificationsounds.com/notification-sounds/when-604](https://notificationsounds.com/notification-sounds/when-604)

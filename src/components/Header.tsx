@@ -29,6 +29,10 @@ const Header: FunctionComponent<Props> = props => (
 
 const Head = styled.div`
   border-bottom: 1px solid #e9e9e9;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  background-color: #fff;
   .inner {
     display: grid;
     grid-template-columns: auto 1fr auto;

@@ -10,8 +10,12 @@ const isRelaunch = figma.command === 'relaunch';
 
 figma.showUI(__html__, {
   width: 300,
-  height: 415
+  height: 415,
   // visible: !isRelaunch
+});
+
+figma.root.setRelaunchData({
+  open: '',
 });
 
 async function main() {
@@ -47,18 +51,18 @@ async function main() {
     roomName,
     secret,
     history: typeof history === 'string' ? JSON.parse(history) : [],
-    instanceId
+    instanceId,
   };
 }
 
 const postMessage = (type = '', payload = {}) =>
   figma.ui.postMessage({
     type,
-    payload
+    payload,
   });
 
 const getSelectionIds = () => {
-  return figma.currentPage.selection.map(n => n.id);
+  return figma.currentPage.selection.map((n) => n.id);
 };
 
 const sendSelection = () => {
@@ -74,14 +78,13 @@ const sendRootData = async ({ roomName, secret, history, instanceId }) => {
     history,
     instanceId,
     settings,
-    selection: getSelectionIds()
+    selection: getSelectionIds(),
   });
 };
 
-let prevSelected;
 let alreadyAskedForRelaunchMessage = false;
 
-const isValidShape = node =>
+const isValidShape = (node) =>
   node.type === 'RECTANGLE' ||
   node.type === 'ELLIPSE' ||
   node.type === 'GROUP' ||
@@ -109,10 +112,10 @@ main().then(({ roomName, secret, history, instanceId }) => {
 
   // events
   figma.on('selectionchange', () => {
-    iterateOverFile(figma.root, node => {
+    iterateOverFile(figma.root, (node) => {
       if (node.setRelaunchData && isValidShape(node)) {
         node.setRelaunchData({
-          relaunch: ''
+          relaunch: '',
         });
       }
     });
@@ -121,7 +124,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
     }
   });
 
-  figma.ui.onmessage = async message => {
+  figma.ui.onmessage = async (message) => {
     switch (message.action) {
       case 'save-user-settings':
         await figma.clientStorage.setAsync('user-settings', message.payload);
@@ -190,7 +193,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
       case 'focus-nodes':
         triggerSelectionEvent = false;
         const nodes = figma.currentPage.findAll(
-          n => message.payload.ids.indexOf(n.id) !== -1
+          (n) => message.payload.ids.indexOf(n.id) !== -1
         );
 
         figma.currentPage.selection = nodes;
@@ -207,7 +210,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
         if (isRelaunch && !alreadyAskedForRelaunchMessage) {
           alreadyAskedForRelaunchMessage = true;
           postMessage('relaunch-message', {
-            selection: getSelectionIds()
+            selection: getSelectionIds(),
           });
         }
         break;
