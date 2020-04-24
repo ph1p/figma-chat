@@ -1,11 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface SettingsProps {
-  socket: SocketIOClient.Socket;
-  init?: (serverUrl: any) => void;
-}
-
 const Checkbox = (props) => {
   return (
     <CheckboxWrapper checked={props.checked}>
