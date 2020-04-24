@@ -25,6 +25,16 @@ async function main() {
   let history = figma.root.getPluginData('history');
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
+  let ownerId = figma.root.getPluginData('ownerId');
+
+  if (!instanceId) {
+    instanceId = 'user-' + uniqid() + '-' + generateString(15);
+    await figma.clientStorage.setAsync('id', instanceId);
+  }
+
+  if(!roomName && !secret) {
+    figma.root.setPluginData('ownerId', instanceId);
+  }
 
   if (!roomName) {
     let randomRoomName = uniqid() + '-' + generateString(15);
@@ -42,10 +52,6 @@ async function main() {
     figma.root.setPluginData('history', history);
   }
 
-  if (!instanceId) {
-    instanceId = 'user-' + uniqid() + '-' + generateString(15);
-    await figma.clientStorage.setAsync('id', instanceId);
-  }
 
 
 

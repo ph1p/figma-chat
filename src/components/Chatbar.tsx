@@ -109,7 +109,7 @@ const ChatBarForm = styled.form`
 `;
 
 const SelectionCheckbox = styled.div`
-  position: fixed;
+  position: absolute;
   right: 0;
   top: 0;
   animation-delay: 0.4s;

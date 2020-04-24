@@ -25,7 +25,6 @@ import MinimizedView from './views/Minimized';
 import UserListView from './views/UserList';
 
 onmessage = (message) => {
-  console.log(message.data.pluginMessage);
   if (message.data.pluginMessage) {
     const { type, payload } = message.data.pluginMessage;
 

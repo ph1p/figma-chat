@@ -158,7 +158,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       )}
 
       <Chat hasSelection={state.selection.length > 0}>
-        <FloatingButtonRight>
+        <FloatingButtonRight isSettings={isSettings}>
           <Online onClick={() => history.push('/user-list')}>
             {state.online.length}
           </Online>
@@ -245,11 +245,13 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
 const FloatingButtonRight = styled.div`
   position: fixed;
   z-index: 9;
-  right: 20px;
-  top: 20px;
+  right: 10px;
+  top: 10px;
   background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   border-radius: 5px;
+  transition: transform 0.5s;
+  transform: translate(${({ isSettings }) => (isSettings ? 150 : 0)}px);
 `;
 
 const SettingsArrow = styled.div`
@@ -300,7 +302,7 @@ const Messages = styled.div`
   background-color: #fff;
   border-radius: 0 0 15px 15px;
   transition: height 0.4s;
-  height: ${({ isSettings }) => (isSettings ? 70 : 371)}px;
+  height: ${({ isSettings }) => (isSettings ? 50 : 371)}px;
 `;
 
 const Online = styled.div`
