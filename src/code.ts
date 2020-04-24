@@ -47,6 +47,8 @@ async function main() {
     await figma.clientStorage.setAsync('id', instanceId);
   }
 
+
+
   return {
     roomName,
     secret,

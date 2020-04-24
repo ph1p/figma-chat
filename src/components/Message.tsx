@@ -1,8 +1,12 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
-import TimeAgo from 'timeago-react';
 import { colors } from '../shared/constants';
 import { sendMainMessage } from '../shared/utils';
+import TimeAgo from 'react-timeago';
+import nowStrings from 'react-timeago/lib/language-strings/en-short';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+
+const formatter = buildFormatter(nowStrings);
 
 interface Props {
   data: any;
@@ -13,37 +17,40 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
   const username = data.user.name || '';
   const colorClass = colors[data.user.color] || 'blue';
   const selection = data?.message?.selection;
+  const isSelf = data.id === instanceId;
 
   return (
-    <MessageContainer
-      className={`message ${data.id === instanceId ? 'me' : colorClass}`}
-    >
-      <MessageHeader>
-        {data.id !== instanceId ? <div className="user">{username}</div> : ''}
+    <MessageFlex isSelf={isSelf}>
+      <MessageDate>
         {data.message.date && (
-          <div className="date">
-            <TimeAgo datetime={data.message.date} locale="en_US" />
-          </div>
+          <TimeAgo date={data.message.date} formatter={formatter} />
         )}
-      </MessageHeader>
-      {selection ? (
-        <span
-          onClick={() =>
-            sendMainMessage('focus-nodes', {
-              ids: selection
-            })
-          }
-        >
-          {data.message.text}
-          <button className="selection button button--secondary">
-            focus {selection.length} element
-            {selection.length > 1 ? 's' : ''}
-          </button>
-        </span>
-      ) : (
-        <span>{data.message.text}</span>
-      )}
-    </MessageContainer>
+      </MessageDate>
+      <MessageContainer className={`message ${isSelf ? 'me' : colorClass}`}>
+        {data.id !== instanceId && username && (
+          <MessageHeader>
+            <div className="user">{username}</div>
+          </MessageHeader>
+        )}
+        {selection ? (
+          <span
+            onClick={() =>
+              sendMainMessage('focus-nodes', {
+                ids: selection,
+              })
+            }
+          >
+            {data.message.text}
+            <button className="selection button button--secondary">
+              focus {selection.length} element
+              {selection.length > 1 ? 's' : ''}
+            </button>
+          </span>
+        ) : (
+          <span>{data.message.text}</span>
+        )}
+      </MessageContainer>
+    </MessageFlex>
   );
 };
 
@@ -51,30 +58,39 @@ const MessageHeader = styled.header`
   display: flex;
   justify-content: space-between;
   font-size: 9px;
-  margin-bottom: 5px;
   color: #fff;
-  .date {
-    opacity: 0.5;
-  }
+`;
+
+const MessageDate = styled.div`
+  font-weight: normal;
+  color: #b3b3b3;
+  font-size: 9px;
+`;
+
+const MessageFlex = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: ${({ isSelf }) => (isSelf ? 'row' : 'row-reverse')};
 `;
 
 const MessageContainer = styled.div`
   background-color: #18a0fb;
-  border-radius: 15px;
+  border-radius: 0 14px 14px 14px;
   color: #fff;
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 16px;
-  padding: 12px 15px;
-  margin: 0 30% 15px 0;
+  padding: 10px 12px;
+  margin: 0 10px 15px 0;
   word-break: break-word;
 
   &.me {
     color: #000;
-    margin: 0 0 15px 30%;
+    margin: 0 0 15px 10px;
     background-color: #ebebeb;
+    border-radius: 14px 14px 0 14px;
     header {
       color: #000;
     }

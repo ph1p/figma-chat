@@ -2,12 +2,14 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { store } from 'react-easy-state';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import Header from '../components/Header';
+import { version, repository } from '../../package.json';
+// shared
 import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/SocketProvider';
 import { state, view } from '../shared/state';
-import { colors, DEFAULT_SERVER_URL } from '../shared/constants';
-import { version, repository } from '../../package.json';
+import { DEFAULT_SERVER_URL } from '../shared/constants';
+// components
+import Checkbox from '../components/Checkbox';
 
 interface SettingsProps {
   socket: SocketIOClient.Socket;
@@ -62,34 +64,30 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
 
   return (
     <>
-      <Header
-        title="Settings"
-        backButton
-        right={
-          isConnected && (
-            <DeleteHistory onClick={state.removeAllMessages}>
-              <div>Delete history</div>
-              <div className="icon icon--trash"></div>
-            </DeleteHistory>
-          )
-        }
-      />
       <Settings>
         <div className="fields">
+          <h4>Username</h4>
           <input
-            type="input"
+            type="text"
             value={settings.name}
             onChange={({ target }: any) =>
               (settings.name = target.value.substr(0, 20))
             }
-            className="input"
             placeholder="Username ..."
           />
           <br />
 
-          <h4>Notifications</h4>
-
-          <NotificationCheckboxes>
+          <Checkboxes>
+            <Checkbox
+              title="Enable tooltips"
+              name="notificationTooltipCheckbox"
+              checked={settings.enableNotificationTooltip}
+              onChange={() =>
+                (settings.enableNotificationTooltip = !settings.enableNotificationTooltip)
+              }
+            />
+          </Checkboxes>
+          {/* <NotificationCheckboxes>
             <input
               className="checkbox__box"
               type="checkbox"
@@ -105,7 +103,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
             >
               Enable tooltips
             </label>
-
+            {/*
             <input
               className="checkbox__box"
               type="checkbox"
@@ -121,9 +119,9 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
             >
               Enable sound
             </label>
-          </NotificationCheckboxes>
+          </NotificationCheckboxes> */}
 
-          <h4>Your bubble color</h4>
+          {/* <h4>Your bubble color</h4>
           <div className="colors">
             {Object.keys(colors).map((color) => (
               <div
@@ -133,24 +131,33 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
                 style={{ backgroundColor: color }}
               />
             ))}
-          </div>
+          </div> */}
 
           <h4>
             Server URL
-            <p onClick={() => (settings.url = DEFAULT_SERVER_URL)}>
-              default: {DEFAULT_SERVER_URL}
-            </p>
+            <span onClick={() => (settings.url = DEFAULT_SERVER_URL)}>
+              reset
+            </span>
           </h4>
 
           <input
-            type="input"
+            type="text"
             value={settings.url}
             onChange={({ target }: any) =>
               (settings.url = target.value.substr(0, 255))
             }
-            className="input"
             placeholder="Server-URL ..."
           />
+        </div>
+
+        <div className="delete-history">
+          <button
+            type="submit"
+            onClick={state.removeAllMessages}
+            className="button button--secondary"
+          >
+            Delete history
+          </button>
         </div>
 
         <div className="save-button">
@@ -162,6 +169,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
             save
           </button>
         </div>
+
         <VersionNote target="_blank" href={repository.url}>
           version: {version}
         </VersionNote>
@@ -173,7 +181,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
 const VersionNote = styled.a`
   margin-top: 10px;
   width: 100%;
-  color: #999;
+  color: #fff;
   text-align: right;
   text-decoration: none;
   font-size: 10px;
@@ -183,24 +191,8 @@ const VersionNote = styled.a`
   }
 `;
 
-const DeleteHistory = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  margin: 5px;
-  height: 21px;
-  padding: 0 0 0 10px;
-  border-radius: 5px;
-  .icon {
-    width: 31px;
-  }
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.06);
-  }
-`;
-
-const NotificationCheckboxes = styled.div`
-  margin: 0 0 15px;
+const Checkboxes = styled.div`
+  margin: 25px 0 25px;
   .checkbox__label {
     margin-bottom: 5px;
     &:before {
@@ -211,19 +203,36 @@ const NotificationCheckboxes = styled.div`
 
 const Settings = styled.div`
   padding: 20px;
+  color: #fff;
 
   h4 {
-    margin: 0 0 15px;
+    margin: 20px 0 15px;
+    &:first-child {
+      margin-top: 0;
+    }
   }
-  p {
-    color: #999;
-    margin: 0;
+  span {
+    opacity: 0.8;
+    margin: 0 0 0 8px;
     font-size: 10px;
+    cursor: pointer;
+  }
+  input[type='text'] {
+    font-size: 11px;
+    width: 100%;
+    border-width: 0 0 1px 0;
+    border-color: #fff;
+    border-style: solid;
+    background-color: transparent;
+    color: #fff;
+    padding: 5px 4px;
   }
   .fields {
     margin-bottom: 20px;
   }
-  .save-button {
+
+  .save-button,
+  .delete-history {
     button {
       width: 100%;
       cursor: pointer;
@@ -233,6 +242,13 @@ const Settings = styled.div`
       &:hover {
         opacity: 1;
       }
+    }
+  }
+  .delete-history {
+    button {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-color: rgba(0, 0, 0, 0.2);
+      margin-bottom: 8px;
     }
   }
   .colors {

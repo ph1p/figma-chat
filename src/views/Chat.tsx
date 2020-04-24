@@ -1,9 +1,10 @@
 import React, { FunctionComponent, useEffect, Fragment } from 'react';
 import { store } from 'react-easy-state';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
+import { Route, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 // components
-import Header from '../components/Header';
+import SettingsView from '../views/Settings';
 import Message from '../components/Message';
 import Chatbar from '../components/Chatbar';
 //shared
@@ -16,9 +17,11 @@ import { sendMainMessage } from '../shared/utils';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
+  retry: () => void;
 }
 
-const ChatView: FunctionComponent<ChatProps> = props => {
+const ChatView: FunctionComponent<ChatProps> = (props) => {
+  const isSettings = useRouteMatch('/settings');
   const history = useHistory();
   const chatState = store({
     textMessage: '',
@@ -32,7 +35,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
     },
     get filteredMessages() {
       return state.messages.slice(-chatState.messagesToShow);
-    }
+    },
   });
 
   const sendMessage = (e = null) => {
@@ -42,7 +45,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
     if (state.roomName) {
       let data = {
         text: chatState.textMessage,
-        date: new Date()
+        date: new Date(),
       };
 
       if (state.selection.length > 0) {
@@ -50,8 +53,8 @@ const ChatView: FunctionComponent<ChatProps> = props => {
           data = {
             ...data,
             ...{
-              selection: state.selection
-            }
+              selection: state.selection,
+            },
           };
         }
       }
@@ -66,7 +69,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
 
         props.socket.emit('chat message', {
           roomName: state.roomName,
-          message
+          message,
         });
 
         state.addMessage(message);
@@ -78,7 +81,7 @@ const ChatView: FunctionComponent<ChatProps> = props => {
   };
 
   // All messages from main
-  onmessage = message => {
+  onmessage = (message) => {
     const pmessage = message.data.pluginMessage;
 
     if (pmessage) {
@@ -99,15 +102,15 @@ const ChatView: FunctionComponent<ChatProps> = props => {
           history: messages = [],
           selection = [],
           settings = {},
-          instanceId = ''
+          instanceId = '',
         } = {
           ...pmessage.payload,
           ...(!IS_PROD
             ? {
                 secret: 'thisismysecretkey',
-                roomName: 'dev'
+                roomName: 'dev',
               }
-            : {})
+            : {}),
         };
 
         state.secret = dataSecret;
@@ -154,36 +157,18 @@ const ChatView: FunctionComponent<ChatProps> = props => {
         <Redirect to="/connection-error" />
       )}
 
-      <Header
-        title={
-          <div
-            style={{
-              color: state.settings.color || '#000'
-            }}
-          >
-            {state.settings.name}
-          </div>
-        }
-        right={
-          <HeaderRight>
-            <SharedIcon onClick={state.toggleMinimizeChat}>
-              <div className="icon icon--minus" />
-            </SharedIcon>
-            <Online onClick={() => history.push('/user-list')}>
-              {state.online.length}
-            </Online>
-          </HeaderRight>
-        }
-        left={
-          <SharedIcon>
-            <Link to="/settings">
-              <div className="icon icon--adjust"></div>
-            </Link>
-          </SharedIcon>
-        }
-      />
       <Chat hasSelection={state.selection.length > 0}>
+        <FloatingButtonRight>
+          <Online onClick={() => history.push('/user-list')}>
+            {state.online.length}
+          </Online>
+          <SharedIcon onClick={state.toggleMinimizeChat}>
+            <div className="icon icon--minus icon--white" />
+          </SharedIcon>
+        </FloatingButtonRight>
+
         <Messages
+          isSettings={isSettings}
           ref={state.messagesRef}
           onWheel={() => {
             const { current } = state.messagesRef;
@@ -211,20 +196,73 @@ const ChatView: FunctionComponent<ChatProps> = props => {
               )}
             </Fragment>
           ))}
+          <SettingsArrow
+            isSettings={isSettings}
+            onClick={() => history.push(isSettings ? '/' : '/settings')}
+          >
+            {isSettings ? (
+              <svg
+                width="11"
+                height="7"
+                viewBox="0 0 11 7"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M9.99985 1L5.49985 5.5L0.999849 1" stroke="black" />
+              </svg>
+            ) : (
+              <svg
+                width="11"
+                height="6"
+                viewBox="0 0 11 6"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M1 5.5L5.5 1L10 5.5" stroke="black" />
+              </svg>
+            )}
+          </SettingsArrow>
         </Messages>
-        <Chatbar
-          sendMessage={sendMessage}
-          setTextMessage={text => (chatState.textMessage = text)}
-          textMessage={chatState.textMessage}
-          setSelectionIsChecked={isChecked =>
-            (chatState.selectionIsChecked = isChecked)
-          }
-          selectionIsChecked={chatState.selectionIsChecked}
-        />
+        <Route path="/settings">
+          <SettingsView></SettingsView>
+        </Route>
+        {!isSettings && (
+          <Chatbar
+            sendMessage={sendMessage}
+            setTextMessage={(text) => (chatState.textMessage = text)}
+            textMessage={chatState.textMessage}
+            setSelectionIsChecked={(isChecked) =>
+              (chatState.selectionIsChecked = isChecked)
+            }
+            selectionIsChecked={chatState.selectionIsChecked}
+          />
+        )}
       </Chat>
     </>
   );
 };
+
+const FloatingButtonRight = styled.div`
+  position: fixed;
+  z-index: 9;
+  right: 20px;
+  top: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  border-radius: 5px;
+`;
+
+const SettingsArrow = styled.div`
+  position: sticky;
+  left: 0;
+  bottom: 0;
+  padding-bottom: 17px;
+  cursor: pointer;
+  transition: rotate 0.3s;
+  width: 100%;
+  height: 10px;
+  text-align: center;
+`;
 
 const MoreButton = styled.button`
   padding: 0 7px;
@@ -249,29 +287,29 @@ const MessageSeperator = styled.div`
 `;
 
 const Chat = styled.div`
-  display: grid;
-  grid-template-rows: auto ${p => (p.hasSelection ? '80px' : '45px')};
-  height: calc(100vh - 33px);
+  height: 100vh;
   width: 100vw;
+  background-color: #5751ff;
 `;
 
 const Messages = styled.div`
+  position: relative;
   margin: 0;
-  overflow: auto;
+  overflow: ${({ isSettings }) => (isSettings ? 'hidden' : 'auto')};
   padding: 15px 15px 0;
-`;
-
-const HeaderRight = styled.div`
-  display: flex;
+  background-color: #fff;
+  border-radius: 0 0 15px 15px;
+  transition: height 0.4s;
+  height: ${({ isSettings }) => (isSettings ? 70 : 371)}px;
 `;
 
 const Online = styled.div`
   position: relative;
-  padding: 8px 12px 8px 24px;
+  padding: 8px 0 8px 24px;
   align-self: center;
   cursor: pointer;
   font-weight: bold;
-  border-left: 1px solid #e9e9e9;
+  color: #fff;
   &::after {
     content: '';
     left: 10px;

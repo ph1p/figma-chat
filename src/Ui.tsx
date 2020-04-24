@@ -22,10 +22,10 @@ import { sendMainMessage } from './shared/utils';
 import ChatView from './views/Chat';
 import ConnectionView from './views/Connection';
 import MinimizedView from './views/Minimized';
-import SettingsView from './views/Settings';
 import UserListView from './views/UserList';
 
 onmessage = (message) => {
+  console.log(message.data.pluginMessage);
   if (message.data.pluginMessage) {
     const { type, payload } = message.data.pluginMessage;
 
@@ -116,14 +116,11 @@ const init = (serverUrl) => {
               <Route exact path="/connection-error">
                 <ConnectionView retry={init} text="connection error :( " />
               </Route>
-              <Route exact path="/">
-                <ChatView />
-              </Route>
-              <Route path="/settings">
-                <SettingsView init={init} />
-              </Route>
               <Route path="/user-list">
                 <UserListView />
+              </Route>
+              <Route path="/">
+                <ChatView retry={init} />
               </Route>
             </Switch>
           </Router>

@@ -12,7 +12,7 @@ interface ChatProps {
   selectionIsChecked: boolean;
 }
 
-const ChatBar: FunctionComponent<ChatProps> = props => {
+const ChatBar: FunctionComponent<ChatProps> = (props) => {
   const selection = state.selection.length;
   const hasSelection = Boolean(selection);
   const [show, setShow] = useState(hasSelection);
@@ -31,13 +31,13 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
   };
 
   return (
-    <form
-      onSubmit={e => {
+    <ChatBarForm
+      onSubmit={(e) => {
         props.sendMessage(e);
         chatTextInput.current.value = '';
       }}
     >
-      {show ? (
+      {false ? (
         <SelectionInfo
           hasSelection={hasSelection}
           onAnimationEnd={onAnimationEnd}
@@ -60,7 +60,7 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
           <PreviewSelection
             onClick={() =>
               sendMainMessage('focus-nodes', {
-                ids: [...state.selection]
+                ids: [...state.selection],
               })
             }
           >
@@ -72,11 +72,24 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
       ) : (
         ''
       )}
-      <ChatInput>
+      <ChatInput hasSelection={hasSelection}>
+        <BellIcon>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 15 16"
+          >
+            <path
+              fill="#5751FF"
+              fillRule="evenodd"
+              d="M11 5v4l1 1H2l1-1V5a4 4 0 018 0zm1 4a2 2 0 002 2H0a2 2 0 002-2V5a5 5 0 0110 0v4zm-5 5l-2-2H4a3 3 0 106 0H9l-2 2z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </BellIcon>
         <input
           ref={chatTextInput}
           type="input"
-          className="input"
           onChange={({ target }: any) =>
             props.setTextMessage(target.value.substr(0, 1000))
           }
@@ -84,13 +97,40 @@ const ChatBar: FunctionComponent<ChatProps> = props => {
             props.selectionIsChecked ? '(optional)' : ''
           }`}
         />
-        <button type="submit">
-          <div className="icon icon--comment" />
-        </button>
       </ChatInput>
-    </form>
+      <SelectionCheckbox hasSelection={hasSelection}>lol</SelectionCheckbox>
+    </ChatBarForm>
   );
 };
+
+const ChatBarForm = styled.form`
+  position: relative;
+  margin: 0;
+`;
+
+const SelectionCheckbox = styled.div`
+  position: fixed;
+  right: 0;
+  top: 0;
+  animation-delay: 0.4s;
+  transition: all 0.4s;
+  opacity: ${(p) => (p.hasSelection ? 1 : 0)};
+  color: #fff;
+  margin: 7px 14px;
+  transform: translateX(${(p) => (p.hasSelection ? 0 : -50)}px);
+`;
+
+const BellIcon = styled.div`
+  cursor: pointer;
+  position: absolute;
+  z-index: 3;
+  left: 22px;
+  top: 15px;
+  svg {
+    width: 15px;
+    height: 16px;
+  }
+`;
 
 const PreviewSelection = styled.div`
   position: relative;
@@ -108,9 +148,9 @@ const PreviewSelection = styled.div`
 `;
 
 const SelectionInfo = styled.div`
-  animation: ${p => (p.hasSelection ? 'fadeIn' : 'fadeOut')} 0.3s;
-  position: ${p => (p.hasSelection ? '' : 'absolute')};
-  bottom: ${p => (p.hasSelection ? '' : '45px')};
+  animation: ${(p) => (p.hasSelection ? 'fadeIn' : 'fadeOut')} 0.3s;
+  position: ${(p) => (p.hasSelection ? '' : 'absolute')};
+  bottom: ${(p) => (p.hasSelection ? '' : '45px')};
   display: flex;
   width: 100%;
   border-top: 0;
@@ -137,12 +177,20 @@ const SelectionInfo = styled.div`
 const ChatInput = styled.div`
   display: flex;
   margin: 0;
-  border-top: 1px solid #e9e9e9;
-  background-color: #fff;
   position: relative;
   z-index: 3;
   input {
-    margin: 7px 0 0 7px;
+    position: relative;
+    z-index: 2;
+    border-radius: 6px;
+    width: 100%;
+    border: 0;
+    padding: 10px 14px 10px 30px;
+    margin: 7px 14px 0;
+    height: 30px;
+    outline: none;
+    transition: width 0.4s;
+    width: ${(p) => (p.hasSelection ? '200px' : '100%')};
   }
   button {
     border: 0;

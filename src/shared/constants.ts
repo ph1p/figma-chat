@@ -1,6 +1,6 @@
 export const IS_PROD = true;
 export const DEFAULT_SERVER_URL = 'https://figma-chat.ph1p.dev/';
-export const MAX_MESSAGES = 5;
+export const MAX_MESSAGES = 7;
 export const colors = {
   '#4F4F4F': 'gray',
   '#18A0FB': 'blue',
