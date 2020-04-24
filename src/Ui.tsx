@@ -1,5 +1,6 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom';
+import styled, { createGlobalStyle } from 'styled-components';
 import {
   MemoryRouter as Router,
   Redirect,
@@ -38,6 +39,16 @@ onmessage = (message) => {
     }
   }
 };
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    overflow: hidden;
+  }
+`;
+
+const AppWrapper = styled.div`
+  overflow: hidden;
+`;
 
 const init = (serverUrl) => {
   state.url = serverUrl;
@@ -99,7 +110,8 @@ const init = (serverUrl) => {
 
   const App = view(() => {
     return (
-      <>
+      <AppWrapper>
+        <GlobalStyle />
         <Notifications />
 
         <SocketProvider socket={socket}>
@@ -124,7 +136,7 @@ const init = (serverUrl) => {
             </Switch>
           </Router>
         </SocketProvider>
-      </>
+      </AppWrapper>
     );
   });
 

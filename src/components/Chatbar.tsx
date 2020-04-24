@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useState, useEffect, useRef } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import { state } from '../shared/state';
 import { sendMainMessage } from '../shared/utils';
@@ -13,6 +14,7 @@ interface ChatProps {
 }
 
 const ChatBar: FunctionComponent<ChatProps> = (props) => {
+  const isSettings = useRouteMatch('/settings');
   const selection = state.selection.length;
   const hasSelection = Boolean(selection);
   const [show, setShow] = useState(hasSelection);
@@ -32,6 +34,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
 
   return (
     <ChatBarForm
+      isSettings={isSettings}
       onSubmit={(e) => {
         props.sendMessage(e);
         chatTextInput.current.value = '';
@@ -104,8 +107,13 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
 };
 
 const ChatBarForm = styled.form`
-  position: relative;
+  position: absolute;
+  right: 14px;
+  left: 14px;
+  bottom: 7px;
   margin: 0;
+  transition: transform 0.3s;
+  transform: translateY(${({ isSettings }) => (isSettings ? 50 : 0)}px);
 `;
 
 const SelectionCheckbox = styled.div`
@@ -124,7 +132,7 @@ const BellIcon = styled.div`
   cursor: pointer;
   position: absolute;
   z-index: 3;
-  left: 22px;
+  left: 10px;
   top: 15px;
   svg {
     width: 15px;
@@ -186,7 +194,7 @@ const ChatInput = styled.div`
     width: 100%;
     border: 0;
     padding: 10px 14px 10px 30px;
-    margin: 7px 14px 0;
+    margin: 7px 0 0;
     height: 30px;
     outline: none;
     transition: width 0.4s;

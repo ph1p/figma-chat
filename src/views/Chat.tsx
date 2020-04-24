@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useEffect, Fragment } from 'react';
 import { store } from 'react-easy-state';
-import { Redirect, useHistory } from 'react-router-dom';
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Redirect, useHistory, Route, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 // components
 import SettingsView from '../views/Settings';
@@ -224,19 +223,18 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
           </SettingsArrow>
         </Messages>
         <Route path="/settings">
-          <SettingsView></SettingsView>
+          <SettingsView init={props.retry} />
         </Route>
-        {!isSettings && (
-          <Chatbar
-            sendMessage={sendMessage}
-            setTextMessage={(text) => (chatState.textMessage = text)}
-            textMessage={chatState.textMessage}
-            setSelectionIsChecked={(isChecked) =>
-              (chatState.selectionIsChecked = isChecked)
-            }
-            selectionIsChecked={chatState.selectionIsChecked}
-          />
-        )}
+
+        <Chatbar
+          sendMessage={sendMessage}
+          setTextMessage={(text) => (chatState.textMessage = text)}
+          textMessage={chatState.textMessage}
+          setSelectionIsChecked={(isChecked) =>
+            (chatState.selectionIsChecked = isChecked)
+          }
+          selectionIsChecked={chatState.selectionIsChecked}
+        />
       </Chat>
     </>
   );
@@ -258,6 +256,7 @@ const SettingsArrow = styled.div`
   position: sticky;
   left: 0;
   bottom: 0;
+  padding-top: 5px;
   padding-bottom: 17px;
   cursor: pointer;
   transition: rotate 0.3s;
@@ -296,13 +295,15 @@ const Chat = styled.div`
 
 const Messages = styled.div`
   position: relative;
+  z-index: 2;
   margin: 0;
   overflow: ${({ isSettings }) => (isSettings ? 'hidden' : 'auto')};
   padding: 15px 15px 0;
   background-color: #fff;
   border-radius: 0 0 15px 15px;
-  transition: height 0.4s;
-  height: ${({ isSettings }) => (isSettings ? 50 : 371)}px;
+  transition: transform 0.4s;
+  height: 371px;
+  transform: translateY(${({ isSettings }) => (isSettings ? -318 : 0)}px);
 `;
 
 const Online = styled.div`

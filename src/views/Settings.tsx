@@ -202,6 +202,9 @@ const Checkboxes = styled.div`
 `;
 
 const Settings = styled.div`
+  position: relative;
+  z-index: 1;
+  transform: translateY(-318px);
   padding: 20px;
   color: #fff;
 
@@ -226,6 +229,7 @@ const Settings = styled.div`
     background-color: transparent;
     color: #fff;
     padding: 5px 4px;
+    outline: none;
   }
   .fields {
     margin-bottom: 20px;
