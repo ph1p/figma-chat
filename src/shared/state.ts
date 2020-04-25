@@ -66,7 +66,10 @@ const state = store({
   },
   persistSettings(settings, socket, init) {
     // save user settings in main
-    sendMainMessage('save-user-settings', Object.assign({}, settings));
+    sendMainMessage(
+      'save-user-settings',
+      Object.assign({}, state.settings, settings)
+    );
 
     state.settings = {
       ...state.settings,

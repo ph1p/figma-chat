@@ -21,7 +21,6 @@ import { state, view } from './shared/state';
 import { sendMainMessage } from './shared/utils';
 // views
 import ChatView from './views/Chat';
-import ConnectionView from './views/Connection';
 import MinimizedView from './views/Minimized';
 import UserListView from './views/UserList';
 
@@ -43,6 +42,9 @@ onmessage = (message) => {
 const GlobalStyle = createGlobalStyle`
   body {
     overflow: hidden;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
   }
 `;
 
@@ -50,10 +52,18 @@ const AppWrapper = styled.div`
   overflow: hidden;
 `;
 
+let socket: SocketIOClient.Socket;
+
 const init = (serverUrl) => {
   state.url = serverUrl;
+  state.status = ConnectionEnum.NONE;
 
-  const socket: SocketIOClient.Socket = io(serverUrl, {
+  if(socket) {
+    socket.removeAllListeners();
+    socket.disconnect();
+  }
+
+  socket = io(serverUrl, {
     reconnectionAttempts: 3,
     forceNew: true,
     transports: ['websocket'],
@@ -121,17 +131,11 @@ const init = (serverUrl) => {
               <Route exact path="/minimized">
                 <MinimizedView />
               </Route>
-              <Route exact path="/connecting">
-                <ConnectionView retry={init} text="connecting..." />
-              </Route>
-              <Route exact path="/connection-error">
-                <ConnectionView retry={init} text="connection error :( " />
-              </Route>
               <Route path="/user-list">
                 <UserListView />
               </Route>
               <Route path="/">
-                <ChatView retry={init} />
+                <ChatView init={init} />
               </Route>
             </Switch>
           </Router>

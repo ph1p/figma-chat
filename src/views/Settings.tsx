@@ -21,7 +21,6 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
 
   const history = useHistory();
   const settings = store({
-    color: '',
     name: '',
     url: '',
     enableNotificationTooltip: true,
@@ -37,7 +36,6 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
   const saveSettings = () => {
     if (
       state.settings.name !== settings.name ||
-      state.settings.color !== settings.color ||
       state.settings.enableNotificationTooltip !==
         settings.enableNotificationTooltip ||
       state.settings.enableNotificationSound !==
@@ -54,8 +52,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
   };
 
   useEffect(() => {
-    settings.name = state.settings.name;
-    settings.color = state.settings.color;
+    settings.name = state.settings.name
     settings.url = state.settings.url;
     settings.enableNotificationTooltip =
       state.settings.enableNotificationTooltip;
@@ -87,51 +84,6 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               }
             />
           </Checkboxes>
-          {/* <NotificationCheckboxes>
-            <input
-              className="checkbox__box"
-              type="checkbox"
-              checked={settings.enableNotificationTooltip}
-              onChange={() =>
-                (settings.enableNotificationTooltip = !settings.enableNotificationTooltip)
-              }
-              id="notificationTooltipCheckbox"
-            />
-            <label
-              className="checkbox__label"
-              htmlFor="notificationTooltipCheckbox"
-            >
-              Enable tooltips
-            </label>
-            {/*
-            <input
-              className="checkbox__box"
-              type="checkbox"
-              checked={settings.enableNotificationSound}
-              onChange={() =>
-                (settings.enableNotificationSound = !settings.enableNotificationSound)
-              }
-              id="notificationSoundCheckbox"
-            />
-            <label
-              className="checkbox__label"
-              htmlFor="notificationSoundCheckbox"
-            >
-              Enable sound
-            </label>
-          </NotificationCheckboxes> */}
-
-          {/* <h4>Your bubble color</h4>
-          <div className="colors">
-            {Object.keys(colors).map((color) => (
-              <div
-                key={color}
-                onClick={() => (settings.color = color)}
-                className={`color ${settings.color === color && ' active'}`}
-                style={{ backgroundColor: color }}
-              />
-            ))}
-          </div> */}
 
           <h4>
             Server URL
@@ -253,45 +205,6 @@ const Settings = styled.div`
       background-color: rgba(0, 0, 0, 0.3);
       border-color: rgba(0, 0, 0, 0.2);
       margin-bottom: 8px;
-    }
-  }
-  .colors {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-gap: 21px 9px;
-    margin-bottom: 30px;
-    .color {
-      position: relative;
-      width: 28px;
-      height: 44px;
-      border-radius: 19px;
-      cursor: pointer;
-      &:hover::after {
-        content: '';
-        bottom: -12px;
-        opacity: 1;
-      }
-      &.active::after {
-        content: '';
-        bottom: -12px;
-        opacity: 1;
-        background-color: #000;
-      }
-      &:hover::after {
-        background-color: #999;
-      }
-      &::after {
-        content: '';
-        transition: all 0.3s;
-        opacity: 0;
-        bottom: -5px;
-
-        left: 12.5px;
-        position: absolute;
-        border-radius: 100%;
-        width: 4px;
-        height: 4px;
-      }
     }
   }
 `;
