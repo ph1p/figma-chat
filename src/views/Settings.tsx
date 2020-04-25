@@ -53,7 +53,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     settings.url = state.settings.url;
     settings.enableNotificationTooltip =
       state.settings.enableNotificationTooltip;
-  }, [settings]);
+  }, [state.settings]);
 
   return (
     <>

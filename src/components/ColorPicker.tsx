@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { state, view } from '../shared/state';
 import { colors } from '../shared/constants';
+import { withSocketContext } from '../shared/SocketProvider';
 
 interface Props {
   socket?: SocketIOClient.Socket;
@@ -120,4 +121,4 @@ const Picker = styled.div`
   }
 `;
 
-export default ColorPicker;
+export default withSocketContext(ColorPicker);

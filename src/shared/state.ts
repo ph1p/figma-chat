@@ -65,16 +65,13 @@ const state = store({
     }
   },
   persistSettings(settings, socket, init) {
-    // save user settings in main
-    sendMainMessage(
-      'save-user-settings',
-      Object.assign({}, state.settings, settings)
-    );
-
     state.settings = {
       ...state.settings,
       ...settings,
     };
+
+    // save user settings in main
+    sendMainMessage('save-user-settings', Object.assign({}, state.settings));
 
     if (settings.url && settings.url !== state.url) {
       // set server URL

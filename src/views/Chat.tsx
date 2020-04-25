@@ -175,33 +175,36 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
             more
           </MoreButton>
         )}
-
-        <Messages
-          onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
-          animationEnabled={animationEnabled}
+        <MessagesContainer
           isSettings={isSettings}
-          ref={state.messagesRef}
-          onWheel={() => {
-            const { current } = state.messagesRef;
-
-            state.disableAutoScroll =
-              current.scrollHeight -
-                (current.scrollTop + current.clientHeight) >
-              0;
-          }}
+          animationEnabled={animationEnabled}
         >
-          {chatState.filteredMessages.map((m, i) => (
-            <Fragment key={i}>
-              <Message data={m} instanceId={state.instanceId} />
-              {(i + 1) % MAX_MESSAGES === 0 &&
-              i + 1 !== chatState.filteredMessages.length ? (
-                <MessageSeperator />
-              ) : (
-                ''
-              )}
-            </Fragment>
-          ))}
+          <Messages
+            onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
+            animationEnabled={animationEnabled}
+            isSettings={isSettings}
+            ref={state.messagesRef}
+            onWheel={() => {
+              const { current } = state.messagesRef;
 
+              state.disableAutoScroll =
+                current.scrollHeight -
+                  (current.scrollTop + current.clientHeight) >
+                0;
+            }}
+          >
+            {chatState.filteredMessages.map((m, i) => (
+              <Fragment key={i}>
+                <Message data={m} instanceId={state.instanceId} />
+                {(i + 1) % MAX_MESSAGES === 0 &&
+                i + 1 !== chatState.filteredMessages.length ? (
+                  <MessageSeperator />
+                ) : (
+                  ''
+                )}
+              </Fragment>
+            ))}
+          </Messages>
           <SettingsArrow
             isSettings={isSettings}
             onClick={() => {
@@ -231,7 +234,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
               </svg>
             )}
           </SettingsArrow>
-        </Messages>
+        </MessagesContainer>
 
         {(isSettings || (!isSettings && !containerIsHidden)) && (
           <SettingsView init={props.init} />
@@ -239,7 +242,6 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
 
         <Chatbar
           init={props.init}
-          socket={props.socket}
           sendMessage={sendMessage}
           setTextMessage={(text) => (chatState.textMessage = text)}
           textMessage={chatState.textMessage}
@@ -283,8 +285,7 @@ const FloatingButtonRight = styled.div`
 `;
 
 const SettingsArrow = styled.div`
-  position: sticky;
-  left: 0;
+  position: absolute;
   bottom: 0;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -315,7 +316,7 @@ const MessageSeperator = styled.div`
   border-width: 1px 0 0 0;
   border-color: #ececec;
   border-style: dotted;
-  margin: -5px 0 10px;
+  margin: 5px 0 10px;
 `;
 
 const Chat = styled.div`
@@ -324,12 +325,12 @@ const Chat = styled.div`
   background-color: ${({ color }) => color};
 `;
 
-const Messages = styled.div`
+const MessagesContainer = styled.div`
+  /* display: grid;
+  grid-template-rows: auto 26px; */
   position: relative;
   z-index: 2;
   margin: 0;
-  overflow: ${({ isSettings }) => (isSettings ? 'hidden' : 'auto')};
-  padding: 55px 10px 0;
   background-color: #fff;
   border-radius: 0 0 15px 15px;
   transition: transform 0.4s;
@@ -339,6 +340,13 @@ const Messages = styled.div`
     ease-in-out forwards;
   animation-duration: ${({ animationEnabled }) =>
     animationEnabled ? 0.2 : 0}s;
+`;
+
+const Messages = styled.div`
+  padding: 55px 10px 0;
+  overflow: ${({ isSettings }) => (isSettings ? 'hidden' : 'auto')};
+  align-self: end;
+  height: 100%;
 `;
 
 const Online = styled.div`

@@ -7,7 +7,6 @@ import ColorPicker from './ColorPicker';
 import { ConnectionEnum } from '../shared/interfaces';
 
 interface ChatProps {
-  socket: SocketIOClient.Socket;
   sendMessage: (event: any) => void;
   setTextMessage: (text: string) => void;
   textMessage: string;
@@ -97,7 +96,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
               props.selectionIsChecked ? '(optional)' : ''
             }`}
           />
-          <ColorPicker socket={props.socket} />
+          <ColorPicker />
         </ChatInput>
         <SelectionCheckbox
           checked={props.selectionIsChecked}
