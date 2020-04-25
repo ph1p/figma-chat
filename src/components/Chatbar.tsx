@@ -220,7 +220,7 @@ const SelectionCheckbox = styled.div`
   animation-delay: 0.2s;
   transition: all 0.2s;
   color: #fff;
-  margin: 3px 0 0;
+  margin: 0;
   transform: translateX(${(p) => (p.hasSelection ? 0 : -50)}px);
   display: flex;
   align-items: center;
