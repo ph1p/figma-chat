@@ -133,7 +133,7 @@ const VersionNote = styled.a`
 `;
 
 const Checkboxes = styled.div`
-  margin: 25px 0 25px;
+  margin: 35px 0;
   .checkbox__label {
     margin-bottom: 5px;
     &:before {
