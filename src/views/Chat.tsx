@@ -178,9 +178,9 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
         <MessagesContainer
           isSettings={isSettings}
           animationEnabled={animationEnabled}
+          onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
         >
           <Messages
-            onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
             animationEnabled={animationEnabled}
             isSettings={isSettings}
             ref={state.messagesRef}
@@ -347,6 +347,11 @@ const Messages = styled.div`
   overflow: ${({ isSettings }) => (isSettings ? 'hidden' : 'auto')};
   align-self: end;
   height: 100%;
+  > div {
+    &:last-child {
+      margin-bottom: 22px;
+    }
+  }
 `;
 
 const Online = styled.div`

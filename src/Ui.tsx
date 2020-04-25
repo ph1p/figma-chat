@@ -54,16 +54,16 @@ const AppWrapper = styled.div`
 
 let socket: SocketIOClient.Socket;
 
-const init = (serverUrl) => {
-  state.url = serverUrl;
+const initSocketConnection = function (url) {
   state.status = ConnectionEnum.NONE;
+  state.settings.url = url;
 
-  if(socket) {
+  if (socket) {
     socket.removeAllListeners();
     socket.disconnect();
   }
 
-  socket = io(serverUrl, {
+  socket = io(url, {
     reconnectionAttempts: 3,
     forceNew: true,
     transports: ['websocket'],
@@ -106,6 +106,10 @@ const init = (serverUrl) => {
   socket.on('online', (data) => (state.online = data));
 
   sendMainMessage('get-root-data');
+};
+
+const init = (serverUrl) => {
+  initSocketConnection(serverUrl);
 
   // check focus
   window.addEventListener('focus', () => {
@@ -135,7 +139,7 @@ const init = (serverUrl) => {
                 <UserListView />
               </Route>
               <Route path="/">
-                <ChatView init={init} />
+                <ChatView init={initSocketConnection} />
               </Route>
             </Switch>
           </Router>

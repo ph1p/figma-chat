@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { store } from 'react-easy-state';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -16,8 +16,25 @@ interface SettingsProps {
   init?: (serverUrl: any) => void;
 }
 
+const Flag = (props) => {
+  return props.flags[props.type] ? (
+    <SavedFlag
+      onClick={() =>
+        props.reset({
+          ...props.flags,
+          [props.type]: false,
+        })
+      }
+    >
+      saved!
+    </SavedFlag>
+  ) : null;
+};
+
 const SettingsView: FunctionComponent<SettingsProps> = (props) => {
-  const isConnected = state.status === ConnectionEnum.CONNECTED;
+  const [flags, setFlag] = useState({
+    username: false,
+  });
 
   const history = useHistory();
   const settings = store({
@@ -30,23 +47,12 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     if (state.isMinimized) {
       state.toggleMinimizeChat();
     }
+
+    return () =>
+      setFlag({
+        username: true,
+      });
   }, []);
-
-  const saveSettings = (shouldClose: boolean = true) => {
-    if (
-      state.settings.name !== settings.name ||
-      state.settings.enableNotificationTooltip !==
-        settings.enableNotificationTooltip
-    ) {
-      state.addNotification('Successfully updated settings', 'success');
-    }
-
-    state.persistSettings(settings, props.socket, props.init);
-
-    if (isConnected && shouldClose) {
-      history.push('/');
-    }
-  };
 
   useEffect(() => {
     settings.name = state.settings.name;
@@ -55,11 +61,28 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
       state.settings.enableNotificationTooltip;
   }, [state.settings]);
 
+  const saveSettings = (shouldClose: boolean = true) => {
+    if (state.settings.name !== settings.name) {
+      setFlag({
+        ...flags,
+        username: true,
+      });
+    }
+
+    state.persistSettings(settings, props.socket, props.init);
+
+    if (shouldClose) {
+      history.push('/');
+    }
+  };
+
   return (
     <>
       <Settings>
         <div className="fields">
-          <h4>Username</h4>
+          <h4>
+            Username <Flag reset={setFlag} flags={flags} type="username" />
+          </h4>
           <input
             type="text"
             value={settings.name}
@@ -84,7 +107,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           </Checkboxes>
 
           <h4>
-            Server URL
+            Server URL <Flag reset={setFlag} flags={flags} type="url" />
             <span onClick={() => (settings.url = DEFAULT_SERVER_URL)}>
               reset
             </span>
@@ -93,7 +116,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <input
             type="text"
             value={settings.url}
-            onBlur={() => saveSettings(false)}
+            onBlur={() => saveSettings()}
             onChange={({ target }: any) =>
               (settings.url = target.value.substr(0, 255))
             }
@@ -118,6 +141,13 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     </>
   );
 };
+
+const SavedFlag = styled.span`
+  background-color: #fff;
+  color: #000;
+  padding: 4px 7px;
+  border-radius: 5px;
+`;
 
 const VersionNote = styled.a`
   margin-top: 5px;

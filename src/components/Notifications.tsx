@@ -7,7 +7,7 @@ import Notification from './Notification';
 const Notifications: FunctionComponent = () => {
   const deleteNotification = (id: string) =>
     state.notifications.splice(
-      state.notifications.findIndex(n => n.id === id),
+      state.notifications.findIndex((n) => n.id === id),
       1
     );
 
@@ -27,8 +27,10 @@ const Notifications: FunctionComponent = () => {
 };
 
 const NotificationsContainer = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
   position: absolute;
-  top: 0;
+  bottom: 39px;
   z-index: 11;
   padding: 10px;
   width: 100%;

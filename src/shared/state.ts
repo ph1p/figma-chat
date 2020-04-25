@@ -65,6 +65,7 @@ const state = store({
     }
   },
   persistSettings(settings, socket, init) {
+    const oldUrl = state.settings.url;
     state.settings = {
       ...state.settings,
       ...settings,
@@ -73,7 +74,7 @@ const state = store({
     // save user settings in main
     sendMainMessage('save-user-settings', Object.assign({}, state.settings));
 
-    if (settings.url && settings.url !== state.url) {
+    if (settings.url && settings.url !== oldUrl) {
       // set server URL
       sendMainMessage('set-server-url', settings.url);
 
