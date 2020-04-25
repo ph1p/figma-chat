@@ -34,14 +34,15 @@ const ColorPicker: FunctionComponent<Props> = view((props) => {
         {Object.keys(colors).map((color) => (
           <div
             key={color}
-            onClick={() =>
+            onClick={() => {
+              setIsOpen(false);
               state.persistSettings(
                 {
                   color,
                 },
                 props.socket
-              )
-            }
+              );
+            }}
             className={`color ${state.settings.color === color && ' active'}`}
             style={{ backgroundColor: color }}
           />
@@ -53,7 +54,7 @@ const ColorPicker: FunctionComponent<Props> = view((props) => {
 
 const Wrapper = styled.div`
   position: absolute;
-  right: 20px;
+  right: 22px;
   top: 10px;
   z-index: 4;
 `;

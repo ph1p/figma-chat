@@ -59,6 +59,10 @@ const MessageHeader = styled.header`
   justify-content: space-between;
   font-size: 9px;
   color: #fff;
+  .user {
+    line-height: 11px;
+    opacity: 0.6;
+  }
 `;
 
 const MessageDate = styled.div`
@@ -75,22 +79,23 @@ const MessageFlex = styled.div`
 
 const MessageContainer = styled.div`
   background-color: #18a0fb;
-  border-radius: 0 14px 14px 14px;
+  border-radius: 2px 14px 14px 14px;
   color: #fff;
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 11px;
   line-height: 16px;
-  padding: 10px 12px;
-  margin: 0 10px 15px 0;
+  padding: 7px 9px 6px;
+  margin: 0 10px 7px 0;
   word-break: break-word;
 
   &.me {
     color: #000;
-    margin: 0 0 15px 10px;
+    margin: 0 0 7px 10px;
+    padding: 7px 9px;
     background-color: #ebebeb;
-    border-radius: 14px 14px 0 14px;
+    border-radius: 14px 14px 2px 14px;
     header {
       color: #000;
     }
@@ -99,6 +104,7 @@ const MessageContainer = styled.div`
       border-color: #000;
       color: #000;
       opacity: 0.7;
+      margin-top: 0;
       &:hover {
         opacity: 1;
       }

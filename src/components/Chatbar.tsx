@@ -46,99 +46,83 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
         chatTextInput.current.value = '';
       }}
     >
-      {!isConnected && (
-        <ConnectionInfo>
-          {isFailed ? (
-            <>
-              connection failed{' '}
-              <span onClick={() => props.init(state.url)}>retry</span>
-            </>
-          ) : (
-            'connecting...'
-          )}
-        </ConnectionInfo>
-      )}
-      {/* {false ? (
-        <SelectionInfo
-          hasSelection={hasSelection}
-          onAnimationEnd={onAnimationEnd}
-        >
-          <input
-            className="checkbox__box"
-            type="checkbox"
-            checked={props.selectionIsChecked}
-            onChange={(e: any) => {
-              props.setSelectionIsChecked(e.target.checked);
-              chatTextInput.current.focus();
-            }}
-            id="selectionIsChecked"
-          />
-          <label className="checkbox__label" htmlFor="selectionIsChecked">
-            Add current selection (<span>{selection}</span> element
-            {selection > 1 ? 's' : ''})
-          </label>
+      <ConnectionInfo isConnected={isConnected}>
+        {isFailed ? (
+          <>
+            connection failed{' '}
+            <span onClick={() => props.init(state.url)}>retry</span>
+          </>
+        ) : (
+          'connecting...'
+        )}
+      </ConnectionInfo>
 
-          <PreviewSelection
+      <ChatInputWrapper isConnected={isConnected}>
+        <ChatInput hasSelection={hasSelection}>
+          <BellIcon
             onClick={() =>
-              sendMainMessage('focus-nodes', {
-                ids: [...state.selection],
-              })
+              (state.settings.enableNotificationSound = !state.settings
+                .enableNotificationSound)
             }
           >
-            <SharedIcon>
-              <div className="icon icon--visible icon--white" />
-            </SharedIcon>
-          </PreviewSelection>
-        </SelectionInfo>
-      ) : (
-        ''
-      )} */}
-      {isConnected && (
-        <>
-          <ChatInput hasSelection={hasSelection}>
-            <BellIcon
-              onClick={() =>
-                (state.settings.enableNotificationSound = !state.settings
-                  .enableNotificationSound)
-              }
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 15 16"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 15 16"
-              >
-                {state.settings.enableNotificationSound ? (
-                  <path
-                    fill={state.settings.color}
-                    fillRule="evenodd"
-                    d="M11 5v4l1 1H2l1-1V5a4 4 0 018 0zm1 4a2 2 0 002 2H0a2 2 0 002-2V5a5 5 0 0110 0v4zm-5 5l-2-2H4a3 3 0 106 0H9l-2 2z"
-                    clipRule="evenodd"
-                  />
-                ) : (
-                  <path
-                    fill={state.settings.color}
-                    fillRule="evenodd"
-                    d="M4.998 11.472h9.475v-.882a1.76 1.76 0 01-1.764-1.765v-3.53a5.31 5.31 0 00-.134-1.188l-.88.854c.01.11.014.222.014.334v3.53c0 .617.202 1.187.544 1.647H6.027l-1.029 1zm5.718-8.924a4.295 4.295 0 00-7.597 2.747v3.53c0 .604-.194 1.162-.522 1.617l-1.06 1.03H.354v-.882a1.76 1.76 0 001.765-1.765v-3.53a5.295 5.295 0 019.315-3.445l-.718.698zm-5.009 9.807a1.706 1.706 0 103.413 0h1a2.706 2.706 0 11-5.413 0h1zM0 14.146l14-14 .707.708-14 14L0 14.146z"
-                    clipRule="evenodd"
-                  />
-                )}
-              </svg>
-            </BellIcon>
-            <input
-              ref={chatTextInput}
-              type="input"
-              onChange={({ target }: any) =>
-                props.setTextMessage(target.value.substr(0, 1000))
-              }
-              placeholder={`Write something ... ${
-                props.selectionIsChecked ? '(optional)' : ''
-              }`}
+              {state.settings.enableNotificationSound ? (
+                <path
+                  fill={state.settings.color}
+                  fillRule="evenodd"
+                  d="M11 5v4l1 1H2l1-1V5a4 4 0 018 0zm1 4a2 2 0 002 2H0a2 2 0 002-2V5a5 5 0 0110 0v4zm-5 5l-2-2H4a3 3 0 106 0H9l-2 2z"
+                  clipRule="evenodd"
+                />
+              ) : (
+                <path
+                  fill={state.settings.color}
+                  fillRule="evenodd"
+                  d="M4.998 11.472h9.475v-.882a1.76 1.76 0 01-1.764-1.765v-3.53a5.31 5.31 0 00-.134-1.188l-.88.854c.01.11.014.222.014.334v3.53c0 .617.202 1.187.544 1.647H6.027l-1.029 1zm5.718-8.924a4.295 4.295 0 00-7.597 2.747v3.53c0 .604-.194 1.162-.522 1.617l-1.06 1.03H.354v-.882a1.76 1.76 0 001.765-1.765v-3.53a5.295 5.295 0 019.315-3.445l-.718.698zm-5.009 9.807a1.706 1.706 0 103.413 0h1a2.706 2.706 0 11-5.413 0h1zM0 14.146l14-14 .707.708-14 14L0 14.146z"
+                  clipRule="evenodd"
+                />
+              )}
+            </svg>
+          </BellIcon>
+          <input
+            ref={chatTextInput}
+            type="input"
+            onChange={({ target }: any) =>
+              props.setTextMessage(target.value.substr(0, 1000))
+            }
+            placeholder={`Write something ... ${
+              props.selectionIsChecked ? '(optional)' : ''
+            }`}
+          />
+          <ColorPicker socket={props.socket} />
+        </ChatInput>
+        <SelectionCheckbox
+          checked={props.selectionIsChecked}
+          hasSelection={hasSelection}
+          onClick={(e: any) => {
+            props.setSelectionIsChecked(!props.selectionIsChecked);
+            chatTextInput.current.focus();
+          }}
+        >
+          <svg
+            width="12"
+            height="12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M4 .5V3h4V.5h1V3h2.5v1H9v4h2.5v1H9v2.5H8V9H4v2.5H3V9H.5V8H3V4H.5V3H3V.5h1zM8 8V4H4v4h4z"
+              fill="#fff"
             />
-            <ColorPicker socket={props.socket} />
-          </ChatInput>
-          <SelectionCheckbox hasSelection={hasSelection}>lol</SelectionCheckbox>
-        </>
-      )}
+          </svg>
+          <div></div>
+        </SelectionCheckbox>
+      </ChatInputWrapper>
     </ChatBarForm>
   );
 };
@@ -156,6 +140,8 @@ const ConnectionInfo = styled.div`
   text-align: center;
   color: #fff;
   font-weight: bold;
+  transition: transform 0.2s;
+  transform: translateY(${({ isConnected }) => (isConnected ? 50 : 0)}px);
   span {
     text-decoration: underline;
     cursor: pointer;
@@ -172,27 +158,15 @@ const ChatBarForm = styled.form`
   left: 14px;
   bottom: 7px;
   margin: 0;
-  transition: transform 0.5s;
+  transition: transform 0.2s;
   transform: translateY(${({ isSettings }) => (isSettings ? 50 : 0)}px);
-`;
-
-const SelectionCheckbox = styled.div`
-  position: absolute;
-  right: 0;
-  top: 0;
-  animation-delay: 0.5s;
-  transition: all 0.5s;
-  opacity: ${(p) => (p.hasSelection ? 1 : 0)};
-  color: #fff;
-  margin: 7px 14px;
-  transform: translateX(${(p) => (p.hasSelection ? 0 : -50)}px);
 `;
 
 const BellIcon = styled.div`
   cursor: pointer;
   position: absolute;
   z-index: 3;
-  left: 10px;
+  left: 9px;
   top: 8px;
   svg {
     width: 15px;
@@ -200,46 +174,9 @@ const BellIcon = styled.div`
   }
 `;
 
-const PreviewSelection = styled.div`
-  position: relative;
-  margin-top: 2px;
-  z-index: 5;
-  .icon {
-    cursor: pointer;
-  }
-
-  &:hover {
-    .icon {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-  }
-`;
-
-const SelectionInfo = styled.div`
-  animation: ${(p) => (p.hasSelection ? 'fadeIn' : 'fadeOut')} 0.3s;
-  position: ${(p) => (p.hasSelection ? '' : 'absolute')};
-  bottom: ${(p) => (p.hasSelection ? '' : '45px')};
-  display: flex;
-  width: 100%;
-  border-top: 0;
-  background-color: #000;
-  color: #fff;
-  cursor: pointer;
-  z-index: 2;
-  label,
-  input {
-    cursor: pointer;
-  }
-  label {
-    padding: 10px 0;
-    span {
-      font-weight: bold;
-      margin-right: 3px;
-    }
-    &::before {
-      border-color: #fff;
-    }
-  }
+const ChatInputWrapper = styled.div`
+  transition: transform 0.3s;
+  transform: translateY(${({ isConnected }) => (isConnected ? 0 : 50)}px);
 `;
 
 const ChatInput = styled.div`
@@ -248,14 +185,14 @@ const ChatInput = styled.div`
   position: relative;
   z-index: 3;
   transition: width 0.3s;
-  width: ${(p) => (p.hasSelection ? '200px' : '100%')};
+  width: ${(p) => (p.hasSelection ? '225px' : '100%')};
   input {
     position: relative;
     z-index: 2;
     border-radius: 6px;
     width: 100%;
     border: 0;
-    padding: 10px 14px 10px 30px;
+    padding: 10px 30px 10px 30px;
     height: 30px;
     outline: none;
   }
@@ -272,6 +209,46 @@ const ChatInput = styled.div`
         cursor: pointer;
         border-radius: 5px;
       }
+    }
+  }
+`;
+
+const SelectionCheckbox = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  animation-delay: 0.2s;
+  transition: all 0.2s;
+  color: #fff;
+  margin: 3px 0 0;
+  transform: translateX(${(p) => (p.hasSelection ? 0 : -50)}px);
+  display: flex;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+  div {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 1px solid
+      rgba(255, 255, 255, ${({ checked }) => (checked ? 1 : 0.5)});
+    border-radius: 3px;
+    margin-left: 6px;
+    &::after {
+      content: '';
+      width: 7px;
+      height: 3px;
+      position: absolute;
+      border-width: 0px 0px 1px 1px;
+      border-color: #fff;
+      border-style: solid;
+      left: 3px;
+      top: 4px;
+      opacity: ${({ checked }) => (checked ? 1 : 0)};
+      transform: rotate(-45deg);
+    }
+    &:hover {
+      border-color: rgba(255, 255, 255, 1);
     }
   }
 `;

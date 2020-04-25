@@ -139,7 +139,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
   };
 
   useEffect(() => {
-    setTimeout(state.scrollToBottom, 10);
+    setTimeout(state.scrollToBottom, 100);
   }, []);
 
   const showMore = () => {
@@ -170,6 +170,12 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
           </FloatingButtonRight>
         )}
 
+        {!chatState.hideMoreButton && (
+          <MoreButton isSettings={isSettings} onClick={showMore}>
+            more
+          </MoreButton>
+        )}
+
         <Messages
           onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
           animationEnabled={animationEnabled}
@@ -184,12 +190,6 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
               0;
           }}
         >
-          {!chatState.hideMoreButton && (
-            <MoreButton className="button button--secondary" onClick={showMore}>
-              show more
-            </MoreButton>
-          )}
-
           {chatState.filteredMessages.map((m, i) => (
             <Fragment key={i}>
               <Message data={m} instanceId={state.instanceId} />
@@ -278,7 +278,7 @@ const FloatingButtonRight = styled.div`
   background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   border-radius: 5px;
-  transition: transform 0.5s;
+  transition: transform 0.2s;
   transform: translateX(${({ isSettings }) => (isSettings ? 150 : 0)}px);
 `;
 
@@ -286,27 +286,28 @@ const SettingsArrow = styled.div`
   position: sticky;
   left: 0;
   bottom: 0;
-  padding-top: 5px;
-  padding-bottom: 17px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   cursor: pointer;
   transition: rotate 0.3s;
   width: 100%;
-  height: 10px;
   text-align: center;
 `;
 
-const MoreButton = styled.button`
-  padding: 0 7px;
-  height: 20px;
-  margin: 0 0 15px;
-  width: 100%;
+const MoreButton = styled.div`
+  position: fixed;
+  z-index: 9;
+  left: 10px;
+  top: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  color: #fff;
+  transition: transform 0.2s;
+  transform: translateX(${({ isSettings }) => (isSettings ? -150 : 0)}px);
+  padding: 10px 15px;
   cursor: pointer;
-  opacity: 0.8;
   &:hover {
-    opacity: 1;
-  }
-  &:active {
-    padding: 0 7px;
+    background-color: rgba(0, 0, 0, 18);
   }
 `;
 
@@ -328,7 +329,7 @@ const Messages = styled.div`
   z-index: 2;
   margin: 0;
   overflow: ${({ isSettings }) => (isSettings ? 'hidden' : 'auto')};
-  padding: 15px 15px 0;
+  padding: 55px 10px 0;
   background-color: #fff;
   border-radius: 0 0 15px 15px;
   transition: transform 0.4s;
@@ -337,7 +338,7 @@ const Messages = styled.div`
       isSettings ? slideUpMessages : slideDownMessages}
     ease-in-out forwards;
   animation-duration: ${({ animationEnabled }) =>
-    animationEnabled ? 0.5 : 0}s;
+    animationEnabled ? 0.2 : 0}s;
 `;
 
 const Online = styled.div`

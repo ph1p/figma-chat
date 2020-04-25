@@ -24,7 +24,6 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     name: '',
     url: '',
     enableNotificationTooltip: true,
-    enableNotificationSound: true,
   });
 
   useEffect(() => {
@@ -33,30 +32,27 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     }
   }, []);
 
-  const saveSettings = () => {
+  const saveSettings = (shouldClose: boolean = true) => {
     if (
       state.settings.name !== settings.name ||
       state.settings.enableNotificationTooltip !==
-        settings.enableNotificationTooltip ||
-      state.settings.enableNotificationSound !==
-        settings.enableNotificationSound
+        settings.enableNotificationTooltip
     ) {
       state.addNotification('Successfully updated settings', 'success');
     }
 
     state.persistSettings(settings, props.socket, props.init);
 
-    if (isConnected) {
+    if (isConnected && shouldClose) {
       history.push('/');
     }
   };
 
   useEffect(() => {
-    settings.name = state.settings.name
+    settings.name = state.settings.name;
     settings.url = state.settings.url;
     settings.enableNotificationTooltip =
       state.settings.enableNotificationTooltip;
-    settings.enableNotificationSound = state.settings.enableNotificationSound;
   }, [settings]);
 
   return (
@@ -67,6 +63,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <input
             type="text"
             value={settings.name}
+            onBlur={() => saveSettings(false)}
             onChange={({ target }: any) =>
               (settings.name = target.value.substr(0, 20))
             }
@@ -79,9 +76,10 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               title="Enable tooltips"
               name="notificationTooltipCheckbox"
               checked={settings.enableNotificationTooltip}
-              onChange={() =>
-                (settings.enableNotificationTooltip = !settings.enableNotificationTooltip)
-              }
+              onChange={() => {
+                settings.enableNotificationTooltip = !settings.enableNotificationTooltip;
+                saveSettings(false);
+              }}
             />
           </Checkboxes>
 
@@ -95,6 +93,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <input
             type="text"
             value={settings.url}
+            onBlur={() => saveSettings(false)}
             onChange={({ target }: any) =>
               (settings.url = target.value.substr(0, 255))
             }
@@ -112,16 +111,6 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           </button>
         </div>
 
-        <div className="save-button">
-          <button
-            type="submit"
-            onClick={saveSettings}
-            className="button button--secondary"
-          >
-            save
-          </button>
-        </div>
-
         <VersionNote target="_blank" href={repository.url}>
           version: {version}
         </VersionNote>
@@ -131,7 +120,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
 };
 
 const VersionNote = styled.a`
-  margin-top: 10px;
+  margin-top: 5px;
   width: 100%;
   color: #fff;
   text-align: right;
@@ -155,8 +144,11 @@ const Checkboxes = styled.div`
 
 const Settings = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
   z-index: 1;
   transform: translateY(-318px);
+  height: 362px;
   padding: 20px;
   color: #fff;
 
@@ -187,7 +179,6 @@ const Settings = styled.div`
     margin-bottom: 20px;
   }
 
-  .save-button,
   .delete-history {
     button {
       width: 100%;
@@ -201,6 +192,7 @@ const Settings = styled.div`
     }
   }
   .delete-history {
+    margin-top: auto;
     button {
       background-color: rgba(0, 0, 0, 0.3);
       border-color: rgba(0, 0, 0, 0.2);
