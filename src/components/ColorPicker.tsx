@@ -74,12 +74,12 @@ const Picker = styled.div`
   pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   background-color: #000;
-  left: -240px;
+  left: -211px;
   top: -51px;
   border-radius: 8px;
   display: flex;
   padding: 10px;
-  width: 265px;
+  width: 235px;
   justify-content: space-between;
   &::after {
     top: 100%;
@@ -97,8 +97,8 @@ const Picker = styled.div`
   }
   .color {
     position: relative;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 100%;
     cursor: pointer;
     &:hover::after {
