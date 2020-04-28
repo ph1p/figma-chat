@@ -164,9 +164,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
             <Online onClick={() => history.push('/user-list')}>
               {state.online.length}
             </Online>
-            <SharedIcon onClick={state.toggleMinimizeChat}>
-              <div className="icon icon--minus icon--white" />
-            </SharedIcon>
+            <Minimize onClick={state.toggleMinimizeChat} />
           </FloatingButtonRight>
         )}
 
@@ -305,7 +303,8 @@ const MoreButton = styled.div`
   color: #fff;
   transition: transform 0.2s;
   transform: translateX(${({ isSettings }) => (isSettings ? -150 : 0)}px);
-  padding: 10px 15px;
+  padding: 5px 15px;
+  line-height: 14px;
   cursor: pointer;
   &:hover {
     background-color: rgba(0, 0, 0, 18);
@@ -356,20 +355,39 @@ const Messages = styled.div`
 
 const Online = styled.div`
   position: relative;
-  padding: 8px 0 8px 24px;
+  padding: 4px 5px 5px 20px;
   align-self: center;
   cursor: pointer;
   font-weight: bold;
   color: #fff;
   &::after {
     content: '';
-    left: 10px;
-    top: 13px;
+    left: 8px;
+    top: 10px;
     position: absolute;
     width: 5px;
     height: 5px;
     border-radius: 100%;
     background-color: #1bc47d;
+  }
+`;
+
+const Minimize = styled.div`
+  position: relative;
+  padding: 10px 0;
+  width: 24px;
+  align-self: center;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  &::after {
+    content: '';
+    left: 6px;
+    top: 9px;
+    position: absolute;
+    width: 11px;
+    height: 1px;
+    background-color: #fff;
   }
 `;
 
