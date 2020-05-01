@@ -158,10 +158,11 @@ const init = (serverUrl) => {
     return (
       <AppWrapper>
         <GlobalStyle />
-        <Notifications />
 
         <SocketProvider socket={socket}>
           <Router>
+            <Notifications />
+
             {store.isMinimized && <Redirect to="/minimized" />}
             <Switch>
               <Route exact path="/minimized">
