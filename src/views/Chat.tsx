@@ -1,5 +1,9 @@
-import React, { FunctionComponent, useEffect, Fragment, useState } from 'react';
-import { store } from 'react-easy-state';
+import React, {
+  FunctionComponent,
+  useEffect,
+  useState,
+  createRef,
+} from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 // components
@@ -10,73 +14,76 @@ import Chatbar from '../components/Chatbar';
 import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/SocketProvider';
-import { state, view } from '../shared/state';
 import { sendMainMessage } from '../shared/utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+// store
+import { observer, useLocalStore } from 'mobx-react';
+import { useStore } from '../store';
+import { toJS } from 'mobx';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
-  init?: (url: string) => void;
 }
 
 const ChatView: FunctionComponent<ChatProps> = (props) => {
-  const isConnected = state.status === ConnectionEnum.CONNECTED;
+  const store = useStore();
+  const isConnected = store.status === ConnectionEnum.CONNECTED;
 
   const [animationEnabled, enableAnimation] = useState(false);
   const [containerIsHidden, setContainerIsHidden] = useState(false);
   const isSettings = useRouteMatch('/settings');
 
   const history = useHistory();
-  const chatState = store({
+  const chatState = useLocalStore(() => ({
     textMessage: '',
     selectionIsChecked: false,
     messagesToShow: MAX_MESSAGES,
     get hideMoreButton() {
       return (
-        chatState.messagesToShow >= state.messages.length ||
-        chatState.filteredMessages.length >= state.messages.length
+        chatState.messagesToShow >= store.messages.length ||
+        chatState.filteredMessages.length >= store.messages.length
       );
     },
     get filteredMessages() {
-      return [...state.messages].slice(-chatState.messagesToShow);
+      return [...store.messages].slice(-chatState.messagesToShow);
     },
-  });
+  }));
 
   const sendMessage = (e = null) => {
     if (e) {
       e.preventDefault();
     }
-    if (state.roomName) {
+    if (store.roomName) {
       let data = {
         text: chatState.textMessage,
         date: new Date(),
       };
 
-      if (state.selection.length > 0) {
+      if (store.selection.length > 0) {
         if (chatState.selectionIsChecked) {
           data = {
             ...data,
             ...{
-              selection: state.selection,
+              selection: store.selection,
             },
           };
         }
       }
 
       if (!chatState.textMessage && !chatState.selectionIsChecked) {
-        state.addNotification(
+        store.addNotification(
           'Please enter a text or select something',
           'error'
         );
       } else {
-        const message = state.encryptor.encrypt(JSON.stringify(data));
+        const message = store.encryptor.encrypt(JSON.stringify(data));
 
         props.socket.emit('chat message', {
-          roomName: state.roomName,
+          roomName: store.roomName,
           message,
         });
 
-        state.addMessage(message);
+        store.addMessage(message);
 
         chatState.textMessage = '';
         chatState.selectionIsChecked = false;
@@ -92,7 +99,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       // set selection
       if (pmessage.type === 'selection') {
         const hasSelection = pmessage.payload.length > 0;
-        state.selection = hasSelection ? pmessage.payload : [];
+        store.selection = hasSelection ? pmessage.payload : [];
 
         if (!hasSelection) {
           chatState.selectionIsChecked = false;
@@ -117,20 +124,20 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
             : {}),
         };
 
-        state.secret = dataSecret;
-        state.roomName = dataRoomName;
-        state.messages = messages;
-        state.instanceId = instanceId;
-        state.selection = selection;
+        store.secret = dataSecret;
+        store.roomName = dataRoomName;
+        store.messages = messages;
+        store.instanceId = instanceId;
+        store.selection = selection;
 
-        state.persistSettings(settings, props.socket);
+        store.persistSettings(settings, props.socket);
       }
 
       if (pmessage.type === 'relaunch-message') {
         chatState.selectionIsChecked = true;
-        state.selection = pmessage.payload.selection || [];
+        store.selection = pmessage.payload.selection || [];
 
-        if (state.selection.length) {
+        if (store.selection.length) {
           sendMessage();
           sendMainMessage('notify', 'Selection sent successfully');
         }
@@ -139,15 +146,15 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
   };
 
   useEffect(() => {
-    setTimeout(state.scrollToBottom, 100);
+    setTimeout(() => store.scrollToBottom(), 100);
   }, []);
 
   const showMore = () => {
     if (
       chatState.filteredMessages.length + MAX_MESSAGES >=
-      state.messages.length
+      store.messages.length
     ) {
-      chatState.messagesToShow = state.messages.length;
+      chatState.messagesToShow = store.messages.length;
     } else {
       chatState.messagesToShow += MAX_MESSAGES;
     }
@@ -156,15 +163,15 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
   return (
     <>
       <Chat
-        color={state.settings.color}
-        hasSelection={state.selection.length > 0}
+        color={store.settings.color}
+        hasSelection={store.selection.length > 0}
       >
         {isConnected && (
           <FloatingButtonRight isSettings={isSettings}>
             <Online onClick={() => history.push('/user-list')}>
-              {state.online.length}
+              {store.online.length}
             </Online>
-            <Minimize onClick={state.toggleMinimizeChat} />
+            <Minimize onClick={() => store.toggleMinimizeChat()} />
           </FloatingButtonRight>
         )}
 
@@ -181,11 +188,11 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
           <Messages
             animationEnabled={animationEnabled}
             isSettings={isSettings}
-            ref={state.messagesRef}
+            ref={store.messagesRef}
             onWheel={() => {
-              const { current } = state.messagesRef;
+              const { current } = toJS(store.messagesRef);
 
-              state.disableAutoScroll =
+              store.disableAutoScroll =
                 current.scrollHeight -
                   (current.scrollTop + current.clientHeight) >
                 0;
@@ -196,10 +203,12 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
                 <CSSTransition
                   key={m.message.date}
                   timeout={400}
-                  classNames="message"
+                  classNames={`message-${
+                    m.id === store.instanceId ? 'self' : 'other'
+                  }`}
                 >
                   <>
-                    <Message data={m} instanceId={state.instanceId} />
+                    <Message data={m} instanceId={store.instanceId} />
                     {(i + 1) % MAX_MESSAGES === 0 &&
                     i + 1 !== chatState.filteredMessages.length ? (
                       <MessageSeperator />
@@ -243,11 +252,10 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
         </MessagesContainer>
 
         {(isSettings || (!isSettings && !containerIsHidden)) && (
-          <SettingsView init={props.init} />
+          <SettingsView />
         )}
 
         <Chatbar
-          init={props.init}
           sendMessage={sendMessage}
           setTextMessage={(text) => (chatState.textMessage = text)}
           textMessage={chatState.textMessage}
@@ -361,23 +369,45 @@ const Messages = styled.div`
     }
   }
   .message {
-    &-enter {
-      opacity: 0;
-      transform: translateX(60px);
+    &-self {
+      &-enter {
+        opacity: 0;
+        transform: translateX(60px);
+      }
+      &-enter-active {
+        opacity: 1;
+        transition: opacity 200ms ease-in, transform 200ms ease-in;
+        transform: translateX(0px);
+      }
+      &-exit {
+        opacity: 1;
+        transform: translateX(0px);
+      }
+      &-exit-active {
+        opacity: 0;
+        transition: opacity 200ms ease-in, transform 200ms ease-in;
+        transform: translateX(60px);
+      }
     }
-    &-enter-active {
-      opacity: 1;
-      transition: opacity 200ms ease-in, transform 200ms ease-in;
-      transform: translateX(0px);
-    }
-    &-exit {
-      opacity: 1;
-      transform: translateX(0px);
-    }
-    &-exit-active {
-      opacity: 0;
-      transition: opacity 200ms ease-in, transform 200ms ease-in;
-      transform: translateX(60px);
+    &-other {
+      &-enter {
+        opacity: 0;
+        transform: translateX(-60px);
+      }
+      &-enter-active {
+        opacity: 1;
+        transition: opacity 200ms ease-in, transform 200ms ease-in;
+        transform: translateX(0px);
+      }
+      &-exit {
+        opacity: 1;
+        transform: translateX(0px);
+      }
+      &-exit-active {
+        opacity: 0;
+        transition: opacity 200ms ease-in, transform 200ms ease-in;
+        transform: translateX(-60px);
+      }
     }
   }
 `;
@@ -420,4 +450,4 @@ const Minimize = styled.div`
   }
 `;
 
-export default withSocketContext(view(ChatView));
+export default withSocketContext(observer(ChatView));

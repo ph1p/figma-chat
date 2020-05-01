@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef, FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { state, view } from '../shared/state';
 import { colors } from '../shared/constants';
 import { withSocketContext } from '../shared/SocketProvider';
+// store
+import { observer } from 'mobx-react';
+import { useStore } from '../store';
 
 interface Props {
   socket?: SocketIOClient.Socket;
 }
 
-const ColorPicker: FunctionComponent<Props> = view((props) => {
+const ColorPicker: FunctionComponent<Props> = observer((props) => {
+  const store = useStore();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
 
@@ -27,7 +30,7 @@ const ColorPicker: FunctionComponent<Props> = view((props) => {
   return (
     <Wrapper ref={wrapperRef}>
       <CurrentColor
-        color={state.settings.color}
+        color={store.settings.color}
         onClick={() => setIsOpen(!isOpen)}
       />
 
@@ -37,14 +40,14 @@ const ColorPicker: FunctionComponent<Props> = view((props) => {
             key={color}
             onClick={() => {
               setIsOpen(false);
-              state.persistSettings(
+              store.persistSettings(
                 {
                   color,
                 },
                 props.socket
               );
             }}
-            className={`color ${state.settings.color === color && ' active'}`}
+            className={`color ${store.settings.color === color && ' active'}`}
             style={{ backgroundColor: color }}
           />
         ))}

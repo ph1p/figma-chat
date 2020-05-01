@@ -3,39 +3,45 @@ import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import { ConnectionEnum } from '../shared/interfaces';
-import { state, view } from '../shared/state';
 import { SharedIcon } from '../shared/style';
+// store
+import { observer } from 'mobx-react';
+import { useStore } from '../store';
 
-const MinimizedView: FunctionComponent = () => (
-  <>
-    <Header
-      title={
-        <Title color={state.settings.color || '#000'}>
-          {state.settings.name}
-        </Title>
-      }
-      left={<span></span>}
-      right={
-        <SharedIcon onClick={state.toggleMinimizeChat}>
-          <div className="icon icon--plus" />
-        </SharedIcon>
-      }
-    />
-    <Minimized>
-      {!state.isMinimized && <Redirect to="/" />}
-      {state.status === ConnectionEnum.ERROR && (
-        <Redirect to="/connection-error" />
-      )}
-      <Users>
-        {state.online.map(user => (
-          <User key={user.id} className="user" color={user.color || '#000'}>
-            {user.name.substr(0, 2)}
-          </User>
-        ))}
-      </Users>
-    </Minimized>
-  </>
-);
+const MinimizedView: FunctionComponent = () => {
+  const store = useStore();
+
+  return (
+    <>
+      <Header
+        title={
+          <Title color={store.settings.color || '#000'}>
+            {store.settings.name}
+          </Title>
+        }
+        left={<span></span>}
+        right={
+          <SharedIcon onClick={() => store.toggleMinimizeChat()}>
+            <div className="icon icon--plus" />
+          </SharedIcon>
+        }
+      />
+      <Minimized>
+        {!store.isMinimized && <Redirect to="/" />}
+        {store.status === ConnectionEnum.ERROR && (
+          <Redirect to="/connection-error" />
+        )}
+        <Users>
+          {store.online.map((user) => (
+            <User key={user.id} className="user" color={user.color || '#000'}>
+              {user.name.substr(0, 2)}
+            </User>
+          ))}
+        </Users>
+      </Minimized>
+    </>
+  );
+};
 
 const Minimized = styled.div`
   display: grid;
@@ -53,7 +59,7 @@ const Minimized = styled.div`
 
 const Title = styled.div`
   margin-left: 10px;
-  color: ${props => props.color};
+  color: ${(props) => props.color};
 `;
 
 const Users = styled.div`
@@ -72,7 +78,7 @@ const User = styled.div`
   text-align: center;
   border-radius: 100%;
   color: #fff;
-  background-color: ${props => props.color};
+  background-color: ${(props) => props.color};
 `;
 
-export default view(MinimizedView);
+export default observer(MinimizedView);

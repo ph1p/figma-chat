@@ -1,4 +1,4 @@
-export const sendMainMessage = (action, payload = {}) =>
+export const sendMainMessage = (action, payload = {}) => {
   parent.postMessage(
     {
       pluginMessage: {
@@ -8,7 +8,7 @@ export const sendMainMessage = (action, payload = {}) =>
     },
     '*'
   );
-
+}
 export const generateString = (length: number = 40): string => {
   const chars =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

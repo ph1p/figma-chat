@@ -21,7 +21,7 @@ const Notification: FunctionComponent<
   if (props.type === 'success') {
     typeClass = 'success';
   } else if (props.type === 'error') {
-    typeClass = 'visual-bell--error';
+    typeClass = 'error';
   }
 
   return (

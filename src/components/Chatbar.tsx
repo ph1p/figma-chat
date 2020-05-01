@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState, useEffect, useRef } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { state, view } from '../shared/state';
-import { sendMainMessage } from '../shared/utils';
 import ColorPicker from './ColorPicker';
-import { ConnectionEnum } from '../shared/interfaces';
+import { ConnectionEnum } from '../shared/interfaces'; // store
+import { observer } from 'mobx-react';
+import { useStore } from '../store';
 
 interface ChatProps {
   sendMessage: (event: any) => void;
@@ -12,18 +12,18 @@ interface ChatProps {
   textMessage: string;
   setSelectionIsChecked: (event: any) => void;
   selectionIsChecked: boolean;
-  init?: (url: string) => void;
 }
 
 const ChatBar: FunctionComponent<ChatProps> = (props) => {
+  const store = useStore();
   const isSettings = useRouteMatch('/settings');
-  const selection = state.selection.length;
+  const selection = store.selection.length;
   const hasSelection = Boolean(selection);
   const [show, setShow] = useState(hasSelection);
   const chatTextInput = useRef(null);
 
-  const isFailed = state.status === ConnectionEnum.ERROR;
-  const isConnected = state.status === ConnectionEnum.CONNECTED;
+  const isFailed = store.status === ConnectionEnum.ERROR;
+  const isConnected = store.status === ConnectionEnum.CONNECTED;
 
   useEffect(() => {
     if (hasSelection) {
@@ -48,8 +48,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
       <ConnectionInfo isConnected={isConnected}>
         {isFailed ? (
           <>
-            connection failed{' '}
-            <span onClick={() => props.init(state.url)}>retry</span>
+            connection failed 🙈
           </>
         ) : (
           'connecting...'
@@ -60,7 +59,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
         <ChatInput hasSelection={hasSelection}>
           <BellIcon
             onClick={() =>
-              (state.settings.enableNotificationSound = !state.settings
+              (store.settings.enableNotificationSound = !store.settings
                 .enableNotificationSound)
             }
           >
@@ -69,16 +68,16 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
               fill="none"
               viewBox="0 0 15 16"
             >
-              {state.settings.enableNotificationSound ? (
+              {store.settings.enableNotificationSound ? (
                 <path
-                  fill={state.settings.color}
+                  fill={store.settings.color}
                   fillRule="evenodd"
                   d="M11 5v4l1 1H2l1-1V5a4 4 0 018 0zm1 4a2 2 0 002 2H0a2 2 0 002-2V5a5 5 0 0110 0v4zm-5 5l-2-2H4a3 3 0 106 0H9l-2 2z"
                   clipRule="evenodd"
                 />
               ) : (
                 <path
-                  fill={state.settings.color}
+                  fill={store.settings.color}
                   fillRule="evenodd"
                   d="M4.998 11.472h9.475v-.882a1.76 1.76 0 01-1.764-1.765v-3.53a5.31 5.31 0 00-.134-1.188l-.88.854c.01.11.014.222.014.334v3.53c0 .617.202 1.187.544 1.647H6.027l-1.029 1zm5.718-8.924a4.295 4.295 0 00-7.597 2.747v3.53c0 .604-.194 1.162-.522 1.617l-1.06 1.03H.354v-.882a1.76 1.76 0 001.765-1.765v-3.53a5.295 5.295 0 019.315-3.445l-.718.698zm-5.009 9.807a1.706 1.706 0 103.413 0h1a2.706 2.706 0 11-5.413 0h1zM0 14.146l14-14 .707.708-14 14L0 14.146z"
                   clipRule="evenodd"
@@ -252,4 +251,4 @@ const SelectionCheckbox = styled.div`
   }
 `;
 
-export default view(ChatBar);
+export default observer(ChatBar);

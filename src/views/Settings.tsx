@@ -1,19 +1,18 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { store } from 'react-easy-state';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { version, repository } from '../../package.json';
 // shared
-import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/SocketProvider';
-import { state, view } from '../shared/state';
 import { DEFAULT_SERVER_URL } from '../shared/constants';
 // components
 import Checkbox from '../components/Checkbox';
+// store
+import { observer, useLocalStore } from 'mobx-react';
+import { useStore } from '../store';
 
 interface SettingsProps {
   socket: SocketIOClient.Socket;
-  init?: (serverUrl: any) => void;
 }
 
 const Flag = (props) => {
@@ -32,20 +31,22 @@ const Flag = (props) => {
 };
 
 const SettingsView: FunctionComponent<SettingsProps> = (props) => {
+  const store = useStore();
+
   const [flags, setFlag] = useState({
     username: false,
   });
 
   const history = useHistory();
-  const settings = store({
+  const settings = useLocalStore(() => ({
     name: '',
     url: '',
     enableNotificationTooltip: true,
-  });
+  }));
 
   useEffect(() => {
-    if (state.isMinimized) {
-      state.toggleMinimizeChat();
+    if (store.isMinimized) {
+      store.toggleMinimizeChat();
     }
 
     return () =>
@@ -55,21 +56,21 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    settings.name = state.settings.name;
-    settings.url = state.settings.url;
+    settings.name = store.settings.name;
+    settings.url = store.settings.url;
     settings.enableNotificationTooltip =
-      state.settings.enableNotificationTooltip;
-  }, [state.settings]);
+      store.settings.enableNotificationTooltip;
+  }, [store.settings]);
 
   const saveSettings = (shouldClose: boolean = true) => {
-    if (state.settings.name !== settings.name) {
+    if (store.settings.name !== settings.name) {
       setFlag({
         ...flags,
         username: true,
       });
     }
 
-    state.persistSettings(settings, props.socket, props.init);
+    store.persistSettings(settings, props.socket);
 
     if (shouldClose) {
       history.push('/');
@@ -86,10 +87,11 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <input
             type="text"
             value={settings.name}
-            onBlur={() => saveSettings(false)}
+            onBlur={() => saveSettings()}
             onChange={({ target }: any) =>
               (settings.name = target.value.substr(0, 20))
             }
+            onKeyDown={(e: any) => e.keyCode == 13 && e.target.blur()}
             placeholder="Username ..."
           />
           <br />
@@ -101,14 +103,19 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               checked={settings.enableNotificationTooltip}
               onChange={() => {
                 settings.enableNotificationTooltip = !settings.enableNotificationTooltip;
-                saveSettings(false);
+                saveSettings();
               }}
             />
           </Checkboxes>
 
           <h4>
             Server URL <Flag reset={setFlag} flags={flags} type="url" />
-            <span onClick={() => (settings.url = DEFAULT_SERVER_URL)}>
+            <span
+              onClick={() => {
+                settings.url = DEFAULT_SERVER_URL;
+                saveSettings(settings.url !== store.settings.url);
+              }}
+            >
               reset
             </span>
           </h4>
@@ -116,10 +123,13 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <input
             type="text"
             value={settings.url}
-            onBlur={() => saveSettings()}
+            onBlur={({ target }: any) =>
+              saveSettings(target.value !== store.settings.url)
+            }
             onChange={({ target }: any) =>
               (settings.url = target.value.substr(0, 255))
             }
+            onKeyDown={(e: any) => e.keyCode == 13 && e.target.blur()}
             placeholder="Server-URL ..."
           />
         </div>
@@ -127,7 +137,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
         <div className="delete-history">
           <button
             type="submit"
-            onClick={state.removeAllMessages}
+            onClick={store.removeAllMessages}
             className="button button--secondary"
           >
             Delete history
@@ -231,4 +241,4 @@ const Settings = styled.div`
   }
 `;
 
-export default withSocketContext(view(SettingsView));
+export default withSocketContext(observer(SettingsView));

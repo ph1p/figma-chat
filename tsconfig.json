@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "jsx": "react",
+    "experimentalDecorators": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true

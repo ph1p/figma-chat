@@ -1,4 +1,6 @@
-import React from 'react';
+import 'mobx-react-lite/batchingForReactDom';
+import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react';
 import * as ReactDOM from 'react-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import {
@@ -17,12 +19,14 @@ import Notifications from './components/Notifications';
 import { DEFAULT_SERVER_URL } from './shared/constants';
 import { ConnectionEnum } from './shared/interfaces';
 import { SocketProvider } from './shared/SocketProvider';
-import { state, view } from './shared/state';
 import { sendMainMessage } from './shared/utils';
 // views
 import ChatView from './views/Chat';
 import MinimizedView from './views/Minimized';
 import UserListView from './views/UserList';
+
+import { StoreProvider, useStore } from './store';
+import { reaction } from 'mobx';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
@@ -52,77 +56,105 @@ const AppWrapper = styled.div`
   overflow: hidden;
 `;
 
-let socket: SocketIOClient.Socket;
-
-const initSocketConnection = function (url) {
-  state.status = ConnectionEnum.NONE;
-  state.settings.url = url;
-
-  if (socket) {
-    socket.removeAllListeners();
-    socket.disconnect();
-  }
-
-  socket = io(url, {
-    reconnectionAttempts: 3,
-    forceNew: true,
-    transports: ['websocket'],
-  });
-
-  socket.on('connected', () => {
-    state.status = ConnectionEnum.CONNECTED;
-
-    socket.emit('set user', state.settings);
-    socket.emit('join room', {
-      room: state.roomName,
-      settings: state.settings,
-    });
-
-    sendMainMessage('ask-for-relaunch-message');
-  });
-
-  socket.on('connect_error', () => {
-    state.status = ConnectionEnum.ERROR;
-  });
-
-  socket.on('reconnect_error', () => {
-    state.status = ConnectionEnum.ERROR;
-  });
-
-  socket.on('chat message', (data) => {
-    state.addMessage(data);
-  });
-
-  socket.on('join leave message', (data) => {
-    const username = data.user.name || 'Anon';
-    let message = 'joins the conversation';
-
-    if (data.type === 'LEAVE') {
-      message = 'leaves the conversation';
-    }
-    state.addNotification(`${username} ${message}`);
-  });
-
-  socket.on('online', (data) => (state.online = data));
-
-  sendMainMessage('get-root-data');
-};
-
 const init = (serverUrl) => {
-  initSocketConnection(serverUrl);
+  const App = observer(() => {
+    const store = useStore();
+    let [socket, setSocket] = useState<SocketIOClient.Socket>(undefined);
 
-  // check focus
-  window.addEventListener('focus', () => {
-    sendMainMessage('focus', true);
-    state.isFocused = true;
-  });
+    function onFocus() {
+      sendMainMessage('focus', false);
 
-  window.addEventListener('blur', () => {
-    sendMainMessage('focus', false);
-    state.isFocused = false;
-  });
+      store.isFocused = false;
+    }
+    function onFocusOut() {
+      sendMainMessage('focus', false);
+      store.isFocused = false;
+    }
 
-  const App = view(() => {
+    function initSocketConnection() {
+      const url = store.settings.url || serverUrl;
+      store.status = ConnectionEnum.NONE;
+
+      if (socket) {
+        socket.removeAllListeners();
+        socket.disconnect();
+      }
+
+      setSocket(
+        io(url, {
+          reconnectionAttempts: 3,
+          forceNew: true,
+          transports: ['websocket'],
+        })
+      );
+
+      sendMainMessage('get-root-data');
+    }
+
+    useEffect(() => {
+      if (socket && store.status === ConnectionEnum.NONE) {
+        socket.on('connected', () => {
+          store.status = ConnectionEnum.CONNECTED;
+
+          socket.emit('set user', store.settings);
+          socket.emit('join room', {
+            room: store.roomName,
+            settings: store.settings,
+          });
+
+          sendMainMessage('ask-for-relaunch-message');
+        });
+
+        socket.on('connect_error', () => {
+          store.status = ConnectionEnum.ERROR;
+        });
+
+        socket.on('reconnect_error', () => {
+          store.status = ConnectionEnum.ERROR;
+        });
+
+        socket.on('chat message', (data) => {
+          store.addMessage(data);
+        });
+
+        socket.on('join leave message', (data) => {
+          const username = data.user.name || 'Anon';
+          let message = 'joins the conversation';
+
+          if (data.type === 'LEAVE') {
+            message = 'leaves the conversation';
+          }
+          store.addNotification(`${username} ${message}`);
+        });
+
+        socket.on('online', (data) => (store.online = data));
+      }
+
+      return () => {
+        if (socket) {
+          socket.removeAllListeners();
+          socket.disconnect();
+        }
+      };
+    }, [socket]);
+
+    useEffect(() => {
+      const serverUrlDisposer = reaction(
+        () => store.settings.url,
+        initSocketConnection
+      );
+
+      // check focus
+      window.addEventListener('focus', onFocus);
+      window.addEventListener('blur', onFocusOut);
+
+      return () => {
+        window.removeEventListener('focus', onFocus);
+        window.removeEventListener('blur', onFocusOut);
+        serverUrlDisposer();
+      };
+    }, []);
+
     return (
       <AppWrapper>
         <GlobalStyle />
@@ -130,7 +162,7 @@ const init = (serverUrl) => {
 
         <SocketProvider socket={socket}>
           <Router>
-            {state.isMinimized && <Redirect to="/minimized" />}
+            {store.isMinimized && <Redirect to="/minimized" />}
             <Switch>
               <Route exact path="/minimized">
                 <MinimizedView />
@@ -139,7 +171,7 @@ const init = (serverUrl) => {
                 <UserListView />
               </Route>
               <Route path="/">
-                <ChatView init={initSocketConnection} />
+                <ChatView />
               </Route>
             </Switch>
           </Router>
@@ -148,5 +180,10 @@ const init = (serverUrl) => {
     );
   });
 
-  ReactDOM.render(<App />, document.getElementById('app'));
+  ReactDOM.render(
+    <StoreProvider>
+      <App />
+    </StoreProvider>,
+    document.getElementById('app')
+  );
 };

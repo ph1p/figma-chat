@@ -100,18 +100,6 @@ const isValidShape = (node) =>
   node.type === 'INSTANCE' ||
   node.type === 'POLYGON';
 
-function iterateOverFile(node, cb) {
-  if ('children' in node) {
-    if (node.type !== 'INSTANCE') {
-      cb(node);
-      for (const child of node.children) {
-        cb(child);
-        iterateOverFile(child, cb);
-      }
-    }
-  }
-}
-
 let previousSelection = figma.currentPage.selection || [];
 
 main().then(({ roomName, secret, history, instanceId }) => {

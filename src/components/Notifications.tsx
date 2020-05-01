@@ -1,21 +1,25 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { NotificationParams } from '../shared/interfaces';
-import { state, view } from '../shared/state';
 import Notification from './Notification';
+// store
+import { observer } from 'mobx-react';
+import { useStore } from '../store';
 
 const Notifications: FunctionComponent = () => {
+  const store = useStore();
+
   const deleteNotification = (id: string) =>
-    state.notifications.splice(
-      state.notifications.findIndex((n) => n.id === id),
+    store.notifications.splice(
+      store.notifications.findIndex((n) => n.id === id),
       1
     );
 
-  if (state.notifications.length === 0) return null;
+  if (store.notifications.length === 0) return null;
 
   return (
     <NotificationsContainer>
-      {state.notifications.map((data: NotificationParams, key) => (
+      {store.notifications.map((data: NotificationParams, key) => (
         <Notification
           key={key}
           {...data}
@@ -36,4 +40,4 @@ const NotificationsContainer = styled.div`
   width: 100%;
 `;
 
-export default view(Notifications);
+export default observer(Notifications);

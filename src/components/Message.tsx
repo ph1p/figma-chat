@@ -5,6 +5,7 @@ import { sendMainMessage } from '../shared/utils';
 import TimeAgo from 'react-timeago';
 import nowStrings from 'react-timeago/lib/language-strings/en-short';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import { toJS } from 'mobx';
 
 const formatter = buildFormatter(nowStrings);
 
@@ -36,7 +37,7 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
           <span
             onClick={() =>
               sendMainMessage('focus-nodes', {
-                ids: selection,
+                ids: toJS(selection),
               })
             }
           >

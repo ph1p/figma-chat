@@ -1,15 +1,18 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import Header from '../components/Header';
-import { state, view } from '../shared/state';
-
+// store
+import { observer } from 'mobx-react';
+import { useStore } from '../store';
 const UserListView: FunctionComponent = () => {
+  const store = useStore();
+
   return (
     <>
       <Header title="Currently online" backButton />
       <UserList>
         <div className="users">
-          {state.online.map(user => (
+          {store.online.map((user) => (
             <div key={user.id} className="user">
               <div
                 className="color"
@@ -55,4 +58,4 @@ const UserList = styled.div`
   }
 `;
 
-export default view(UserListView);
+export default observer(UserListView);
