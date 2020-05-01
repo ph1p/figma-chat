@@ -32,7 +32,7 @@ async function main() {
     await figma.clientStorage.setAsync('id', instanceId);
   }
 
-  if(!roomName && !secret) {
+  if (!roomName && !secret) {
     figma.root.setPluginData('ownerId', instanceId);
   }
 
@@ -51,9 +51,6 @@ async function main() {
     history = '[]';
     figma.root.setPluginData('history', history);
   }
-
-
-
 
   return {
     roomName,
@@ -115,18 +112,32 @@ function iterateOverFile(node, cb) {
   }
 }
 
+let previousSelection = figma.currentPage.selection || [];
+
 main().then(({ roomName, secret, history, instanceId }) => {
   postMessage('ready');
 
   // events
   figma.on('selectionchange', () => {
-    iterateOverFile(figma.root, (node) => {
-      if (node.setRelaunchData && isValidShape(node)) {
-        node.setRelaunchData({
-          relaunch: '',
-        });
+    if (figma.currentPage.selection.length > 0) {
+      for (let node of figma.currentPage.selection) {
+        if (node.setRelaunchData && isValidShape(node)) {
+          node.setRelaunchData({
+            relaunch: '',
+          });
+        }
       }
-    });
+      previousSelection = figma.currentPage.selection;
+    } else {
+      if (previousSelection.length > 0) {
+        // tidy up 🧹
+        for (let node of previousSelection) {
+          if (node.setRelaunchData && isValidShape(node)) {
+            node.setRelaunchData({});
+          }
+        }
+      }
+    }
     if (triggerSelectionEvent) {
       sendSelection();
     }
