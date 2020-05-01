@@ -1,22 +1,35 @@
-## <small>2.4.1 (2020-04-06)</small>
+## 3.0.0 (2020-05-01)
 
-* fix(sound): create new instance to play sound immediately ([7d69be0](https://github.com/ph1p/figma-chat/commit/7d69be0))
-
-
-
-## 2.4.0 (2020-04-06)
-
-* fix(deps): audit fix some dependencies ([a5cb723](https://github.com/ph1p/figma-chat/commit/a5cb723))
-* 2.4.0 ([d53cd73](https://github.com/ph1p/figma-chat/commit/d53cd73))
-* feat(settings): add new notification settings and sound ([2d65d72](https://github.com/ph1p/figma-chat/commit/2d65d72))
-
-
-
-## <small>2.3.3 (2020-03-17)</small>
-
-* 2.3.3 ([3d610a3](https://github.com/ph1p/figma-chat/commit/3d610a3))
-* move expand icon to the right ([e71fb30](https://github.com/ph1p/figma-chat/commit/e71fb30))
+* refactor: change scroll to bottom behavior and add changelog link ([d00a86a](https://github.com/ph1p/figma-chat/commit/d00a86a))
+* refactor: remove props interface ([27e883f](https://github.com/ph1p/figma-chat/commit/27e883f))
+* refactor: update animations ([977b877](https://github.com/ph1p/figma-chat/commit/977b877))
 * refactor(minimized): move plus icon to the right ([33887ab](https://github.com/ph1p/figma-chat/commit/33887ab))
+* refactor(notification): update notification position ([5ab1ae4](https://github.com/ph1p/figma-chat/commit/5ab1ae4))
+* refactor(wording): add better wording ([6a1c31e](https://github.com/ph1p/figma-chat/commit/6a1c31e))
+* docs: add a gif instead of screenshots ([6196d75](https://github.com/ph1p/figma-chat/commit/6196d75))
+* fix(deps): audit fix some dependencies ([a5cb723](https://github.com/ph1p/figma-chat/commit/a5cb723))
+* fix(settings): do not close settings ([7769dda](https://github.com/ph1p/figma-chat/commit/7769dda))
+* fix(socket):  save settings correctly and add socket hoc to colorpicker ([5d2be34](https://github.com/ph1p/figma-chat/commit/5d2be34))
+* fix(sound): create new instance to play sound immediately ([7d69be0](https://github.com/ph1p/figma-chat/commit/7d69be0))
+* fix(spacing): remove some space ([d0f4597](https://github.com/ph1p/figma-chat/commit/d0f4597))
+* feat(animation): add message animation ([c956805](https://github.com/ph1p/figma-chat/commit/c956805))
+* feat(mobx): complete store rewrite and better socket handling ([997e4c9](https://github.com/ph1p/figma-chat/commit/997e4c9))
+* feat(notifications): update design and positioning ([8b5cb82](https://github.com/ph1p/figma-chat/commit/8b5cb82))
+* feat(owner): add owner id on create ([5442c42](https://github.com/ph1p/figma-chat/commit/5442c42))
+* feat(page-change): add the ability to change the page on selection ([b01fe05](https://github.com/ph1p/figma-chat/commit/b01fe05))
+* feat(redesign): start to implement a new chat design ([12b3ed6](https://github.com/ph1p/figma-chat/commit/12b3ed6))
+* feat(relaunch-data): cleanup relaunch data ([427a1d5](https://github.com/ph1p/figma-chat/commit/427a1d5))
+* feat(settings): add new notification settings and sound ([2d65d72](https://github.com/ph1p/figma-chat/commit/2d65d72))
+* feat(ui): update animations, remove full size connection view ([4abee19](https://github.com/ph1p/figma-chat/commit/4abee19))
+* feat(ui): update settings and fix animations ([deb7aab](https://github.com/ph1p/figma-chat/commit/deb7aab))
+* style: add more space ([8018b4d](https://github.com/ph1p/figma-chat/commit/8018b4d))
+* style: update pills ([52a6073](https://github.com/ph1p/figma-chat/commit/52a6073))
+* style(colorpicker): update positioning ([7381435](https://github.com/ph1p/figma-chat/commit/7381435))
+* chore(assets): add new logo and header ([8bb63b7](https://github.com/ph1p/figma-chat/commit/8bb63b7))
+* 2.3.3 ([3d610a3](https://github.com/ph1p/figma-chat/commit/3d610a3))
+* 2.4.0 ([d53cd73](https://github.com/ph1p/figma-chat/commit/d53cd73))
+* 2.4.1 ([1567022](https://github.com/ph1p/figma-chat/commit/1567022))
+* move expand icon to the right ([e71fb30](https://github.com/ph1p/figma-chat/commit/e71fb30))
 
 
 
