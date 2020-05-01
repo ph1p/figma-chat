@@ -194,7 +194,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
       case 'get-selection':
         sendSelection();
         break;
-      case 'remove-all-messages':
+      case 'clear-chat-history':
         figma.root.setPluginData('history', '[]');
 
         postMessage('history', JSON.parse('[]'));

@@ -98,14 +98,14 @@ class RootStore {
   }
 
   @action
-  removeAllMessages(cb: () => void) {
+  clearChatHistory(cb: () => void) {
     if (
-      (window as any).confirm('Remove all messages? (This cannot be undone)')
+      (window as any).confirm('Do you really want to delete the complete chat history? (This cannot be undone)')
     ) {
-      sendMainMessage('remove-all-messages');
+      sendMainMessage('clear-chat-history');
       this.messages = [];
       cb();
-      this.addNotification('Messages successfully removed');
+      this.addNotification('Chat history successfully deleted');
     }
   }
 

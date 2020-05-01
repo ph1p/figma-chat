@@ -137,10 +137,10 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
         <div className="delete-history">
           <button
             type="submit"
-            onClick={() => store.removeAllMessages(() => saveSettings(true))}
+            onClick={() => store.clearChatHistory(() => saveSettings(true))}
             className="button button--secondary"
           >
-            Delete history
+            Clear chat history
           </button>
         </div>
 
