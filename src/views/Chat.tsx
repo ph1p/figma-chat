@@ -27,8 +27,6 @@ interface ChatProps {
 
 const ChatView: FunctionComponent<ChatProps> = (props) => {
   const store = useStore();
-  const isConnected = store.status === ConnectionEnum.CONNECTED;
-
   const [animationEnabled, enableAnimation] = useState(false);
   const [containerIsHidden, setContainerIsHidden] = useState(false);
   const isSettings = useRouteMatch('/settings');
@@ -172,7 +170,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
         color={store.settings.color}
         hasSelection={store.selectionCount > 0}
       >
-        {isConnected && (
+        {store.status === ConnectionEnum.CONNECTED && (
           <FloatingButtonRight isSettings={isSettings}>
             <Online onClick={() => history.push('/user-list')}>
               {store.online.length}

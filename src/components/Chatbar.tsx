@@ -19,13 +19,22 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
   const store = useStore();
   const isSettings = useRouteMatch('/settings');
   const [hasSelection, setHasSelection] = useState(false);
+  const [isFailed, setIsFailed] = useState(
+    store.status === ConnectionEnum.ERROR
+  );
+  const [isConnected, setIsConnected] = useState(
+    store.status === ConnectionEnum.CONNECTED
+  );
   const chatTextInput = useRef(null);
 
-  const isFailed = store.status === ConnectionEnum.ERROR;
-  const isConnected = store.status === ConnectionEnum.CONNECTED;
-
   useEffect(
-    () => autorun(() => setHasSelection(Boolean(store.selectionCount))),
+    () =>
+      autorun(() => {
+        setIsFailed(store.status === ConnectionEnum.ERROR);
+        setIsConnected(store.status === ConnectionEnum.CONNECTED);
+
+        setHasSelection(Boolean(store.selectionCount));
+      }),
     []
   );
 
