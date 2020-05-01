@@ -152,8 +152,8 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
   };
 
   useEffect(() => {
-    setTimeout(() => store.scrollToBottom(), 100);
-  }, []);
+    store.scrollToBottom();
+  }, [store.messages]);
 
   const showMore = () => {
     if (

@@ -144,7 +144,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           </button>
         </div>
 
-        <VersionNote target="_blank" href={repository.url}>
+        <VersionNote target="_blank" href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md">
           version: {version}
         </VersionNote>
       </Settings>
