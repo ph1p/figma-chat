@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, Fragment, useState } from 'react';
 import { store } from 'react-easy-state';
-import { Redirect, useHistory, useRouteMatch, Route } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 // components
 import SettingsView from '../views/Settings';
@@ -11,8 +11,8 @@ import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
 import { withSocketContext } from '../shared/SocketProvider';
 import { state, view } from '../shared/state';
-import { SharedIcon } from '../shared/style';
 import { sendMainMessage } from '../shared/utils';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
@@ -38,7 +38,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       );
     },
     get filteredMessages() {
-      return state.messages.slice(-chatState.messagesToShow);
+      return [...state.messages].slice(-chatState.messagesToShow);
     },
   });
 
@@ -191,17 +191,25 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
                 0;
             }}
           >
-            {chatState.filteredMessages.map((m, i) => (
-              <Fragment key={i}>
-                <Message data={m} instanceId={state.instanceId} />
-                {(i + 1) % MAX_MESSAGES === 0 &&
-                i + 1 !== chatState.filteredMessages.length ? (
-                  <MessageSeperator />
-                ) : (
-                  ''
-                )}
-              </Fragment>
-            ))}
+            <TransitionGroup>
+              {chatState.filteredMessages.map((m, i) => (
+                <CSSTransition
+                  key={m.message.date}
+                  timeout={400}
+                  classNames="message"
+                >
+                  <>
+                    <Message data={m} instanceId={state.instanceId} />
+                    {(i + 1) % MAX_MESSAGES === 0 &&
+                    i + 1 !== chatState.filteredMessages.length ? (
+                      <MessageSeperator />
+                    ) : (
+                      ''
+                    )}
+                  </>
+                </CSSTransition>
+              ))}
+            </TransitionGroup>
           </Messages>
           <SettingsArrow
             isSettings={isSettings}
@@ -344,11 +352,32 @@ const MessagesContainer = styled.div`
 const Messages = styled.div`
   padding: 55px 10px 0;
   overflow: ${({ isSettings }) => (isSettings ? 'hidden' : 'auto')};
+  overflow-x: hidden;
   align-self: end;
   height: 100%;
   > div {
     &:last-child {
       margin-bottom: 22px;
+    }
+  }
+  .message {
+    &-enter {
+      opacity: 0;
+      transform: translateX(60px);
+    }
+    &-enter-active {
+      opacity: 1;
+      transition: opacity 200ms ease-in, transform 200ms ease-in;
+      transform: translateX(0px);
+    }
+    &-exit {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+    &-exit-active {
+      opacity: 0;
+      transition: opacity 200ms ease-in, transform 200ms ease-in;
+      transform: translateX(60px);
     }
   }
 `;
