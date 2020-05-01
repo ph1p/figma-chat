@@ -40,7 +40,17 @@ class RootStore {
   disableAutoScroll = false;
 
   @observable
-  selection = [];
+  selection = undefined;
+
+  @computed
+  get selectionCount() {
+    // fallback
+    if (this.selection?.length) {
+      return this.selection.length;
+    }
+
+    return this.selection?.nodes?.length || 0;
+  }
 
   @action
   scrollToBottom() {

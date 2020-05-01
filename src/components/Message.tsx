@@ -19,6 +19,9 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
   const colorClass = colors[data.user.color] || 'blue';
   const selection = data?.message?.selection;
   const isSelf = data.id === instanceId;
+  const pageName = selection?.page?.name || '';
+
+  const selectionCount = selection?.length || selection?.nodes?.length || 0;
 
   return (
     <MessageFlex isSelf={isSelf}>
@@ -35,16 +38,31 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
         )}
         {selection ? (
           <span
-            onClick={() =>
-              sendMainMessage('focus-nodes', {
-                ids: toJS(selection),
-              })
-            }
+            onClick={() => {
+              const messageSelection = toJS(selection);
+              let selectionData = null;
+
+              // fallback without page
+              if (messageSelection.length) {
+                selectionData = {
+                  ids: messageSelection,
+                };
+              } else {
+                selectionData = {
+                  ...messageSelection,
+                };
+              }
+
+              sendMainMessage('focus-nodes', selectionData);
+            }}
           >
-            {data.message.text}
+            {data.message.text && (
+              <div className="selection-text">{data.message.text}</div>
+            )}
             <button className="selection button button--secondary">
-              focus {selection.length} element
-              {selection.length > 1 ? 's' : ''}
+              {pageName ? pageName + ' - ' : ''}
+              focus {selectionCount} element
+              {selectionCount > 1 ? 's' : ''}
             </button>
           </span>
         ) : (
@@ -119,6 +137,14 @@ const MessageContainer = styled.div`
     background-color: transparent;
     border-color: #fff;
     color: #fff;
+    &:active {
+      border: 1px solid;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .selection-text {
+    margin-bottom: 10px;
   }
 
   &.lightblue header {
@@ -188,7 +214,7 @@ const MessageContainer = styled.div`
     color: #1c4856;
   }
   &.purple {
-    background-color: #7b61ff;
+    background-color: #5751ff;
     color: #ffffff;
   }
   &.green {

@@ -1,10 +1,11 @@
 import React, { FunctionComponent, useState, useEffect, useRef } from 'react';
 import { useRouteMatch } from 'react-router-dom';
+import { observer } from 'mobx-react';
+import { autorun } from 'mobx';
 import styled from 'styled-components';
 import ColorPicker from './ColorPicker';
-import { ConnectionEnum } from '../shared/interfaces'; // store
-import { observer } from 'mobx-react';
 import { useStore } from '../store';
+import { ConnectionEnum } from '../shared/interfaces';
 
 interface ChatProps {
   sendMessage: (event: any) => void;
@@ -17,25 +18,16 @@ interface ChatProps {
 const ChatBar: FunctionComponent<ChatProps> = (props) => {
   const store = useStore();
   const isSettings = useRouteMatch('/settings');
-  const selection = store.selection.length;
-  const hasSelection = Boolean(selection);
-  const [show, setShow] = useState(hasSelection);
+  const [hasSelection, setHasSelection] = useState(false);
   const chatTextInput = useRef(null);
 
   const isFailed = store.status === ConnectionEnum.ERROR;
   const isConnected = store.status === ConnectionEnum.CONNECTED;
 
-  useEffect(() => {
-    if (hasSelection) {
-      setShow(true);
-    }
-  }, [hasSelection]);
-
-  const onAnimationEnd = () => {
-    if (!hasSelection) {
-      setShow(false);
-    }
-  };
+  useEffect(
+    () => autorun(() => setHasSelection(Boolean(store.selectionCount))),
+    []
+  );
 
   return (
     <ChatBarForm
@@ -46,13 +38,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
       }}
     >
       <ConnectionInfo isConnected={isConnected}>
-        {isFailed ? (
-          <>
-            connection failed 🙈
-          </>
-        ) : (
-          'connecting...'
-        )}
+        {isFailed ? <>connection failed 🙈</> : 'connecting...'}
       </ConnectionInfo>
 
       <ChatInputWrapper isConnected={isConnected}>

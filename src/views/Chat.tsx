@@ -59,7 +59,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
         date: new Date(),
       };
 
-      if (store.selection.length > 0) {
+      if (store.selectionCount > 0) {
         if (chatState.selectionIsChecked) {
           data = {
             ...data,
@@ -98,8 +98,10 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
     if (pmessage) {
       // set selection
       if (pmessage.type === 'selection') {
-        const hasSelection = pmessage.payload.length > 0;
-        store.selection = hasSelection ? pmessage.payload : [];
+        const hasSelection =
+          pmessage.payload?.length > 0 || pmessage.payload?.nodes?.length > 0;
+
+        store.selection = hasSelection ? pmessage.payload : {};
 
         if (!hasSelection) {
           chatState.selectionIsChecked = false;
@@ -111,7 +113,10 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
           roomName: dataRoomName = '',
           secret: dataSecret = '',
           history: messages = [],
-          selection = [],
+          selection = {
+            page: '',
+            nodes: [],
+          },
           settings = {},
           instanceId = '',
         } = {
@@ -135,9 +140,12 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
 
       if (pmessage.type === 'relaunch-message') {
         chatState.selectionIsChecked = true;
-        store.selection = pmessage.payload.selection || [];
 
-        if (store.selection.length) {
+        console.log(pmessage.payload.selection);
+
+        store.selection = pmessage.payload.selection || {};
+
+        if (store.selectionCount) {
           sendMessage();
           sendMainMessage('notify', 'Selection sent successfully');
         }
@@ -164,7 +172,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
     <>
       <Chat
         color={store.settings.color}
-        hasSelection={store.selection.length > 0}
+        hasSelection={store.selectionCount > 0}
       >
         {isConnected && (
           <FloatingButtonRight isSettings={isSettings}>

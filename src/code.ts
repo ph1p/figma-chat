@@ -52,10 +52,15 @@ async function main() {
     figma.root.setPluginData('history', history);
   }
 
+  // Parse History
+  try {
+    history = typeof history === 'string' ? JSON.parse(history) : []
+  } catch { }
+
   return {
     roomName,
     secret,
-    history: typeof history === 'string' ? JSON.parse(history) : [],
+    history,
     instanceId,
   };
 }
@@ -71,7 +76,13 @@ const getSelectionIds = () => {
 };
 
 const sendSelection = () => {
-  postMessage('selection', getSelectionIds());
+  postMessage('selection', {
+    page: {
+      id: figma.currentPage.id,
+      name: figma.currentPage.name
+    },
+    nodes: getSelectionIds()
+  });
 };
 
 const sendRootData = async ({ roomName, secret, history, instanceId }) => {
@@ -99,6 +110,13 @@ const isValidShape = (node) =>
   node.type === 'COMPONENT' ||
   node.type === 'INSTANCE' ||
   node.type === 'POLYGON';
+
+
+function goToPage(id) {
+  if (figma.getNodeById(id)) {
+    figma.currentPage = figma.getNodeById(id) as PageNode;
+  }
+}
 
 let previousSelection = figma.currentPage.selection || [];
 
@@ -198,9 +216,19 @@ main().then(({ roomName, secret, history, instanceId }) => {
         }
         break;
       case 'focus-nodes':
+        let selectedNodes = [];
         triggerSelectionEvent = false;
+
+        // fallback for ids
+        if (message.payload.ids) {
+          selectedNodes = message.payload.ids
+        } else {
+          goToPage(message.payload?.page?.id);
+          selectedNodes = message.payload.nodes;
+        }
+
         const nodes = figma.currentPage.findAll(
-          (n) => message.payload.ids.indexOf(n.id) !== -1
+          (n) => selectedNodes.indexOf(n.id) !== -1
         );
 
         figma.currentPage.selection = nodes;
@@ -217,7 +245,13 @@ main().then(({ roomName, secret, history, instanceId }) => {
         if (isRelaunch && !alreadyAskedForRelaunchMessage) {
           alreadyAskedForRelaunchMessage = true;
           postMessage('relaunch-message', {
-            selection: getSelectionIds(),
+            selection: {
+              page: {
+                id: figma.currentPage.id,
+                name: figma.currentPage.name
+              },
+              nodes: getSelectionIds()
+            },
           });
         }
         break;
