@@ -87,7 +87,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <input
             type="text"
             value={settings.name}
-            onBlur={() => saveSettings()}
+            onBlur={() => saveSettings(false)}
             onChange={({ target }: any) =>
               (settings.name = target.value.substr(0, 20))
             }
@@ -103,7 +103,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               checked={settings.enableNotificationTooltip}
               onChange={() => {
                 settings.enableNotificationTooltip = !settings.enableNotificationTooltip;
-                saveSettings();
+                saveSettings(false);
               }}
             />
           </Checkboxes>
@@ -137,7 +137,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
         <div className="delete-history">
           <button
             type="submit"
-            onClick={store.removeAllMessages}
+            onClick={() => store.removeAllMessages(() => saveSettings(true))}
             className="button button--secondary"
           >
             Delete history
@@ -214,6 +214,9 @@ const Settings = styled.div`
     color: #fff;
     padding: 5px 4px;
     outline: none;
+    &::placeholder {
+      color: #fff;
+    }
   }
   .fields {
     margin-bottom: 20px;

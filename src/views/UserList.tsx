@@ -4,6 +4,7 @@ import Header from '../components/Header';
 // store
 import { observer } from 'mobx-react';
 import { useStore } from '../store';
+
 const UserListView: FunctionComponent = () => {
   const store = useStore();
 

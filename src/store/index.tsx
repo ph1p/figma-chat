@@ -98,13 +98,14 @@ class RootStore {
   }
 
   @action
-  removeAllMessages() {
+  removeAllMessages(cb: () => void) {
     if (
       (window as any).confirm('Remove all messages? (This cannot be undone)')
     ) {
       sendMainMessage('remove-all-messages');
-      (window as any).alert('Messages successfully removed');
       this.messages = [];
+      cb();
+      this.addNotification('Messages successfully removed');
     }
   }
 

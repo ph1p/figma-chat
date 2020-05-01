@@ -141,8 +141,6 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       if (pmessage.type === 'relaunch-message') {
         chatState.selectionIsChecked = true;
 
-        console.log(pmessage.payload.selection);
-
         store.selection = pmessage.payload.selection || {};
 
         if (store.selectionCount) {
