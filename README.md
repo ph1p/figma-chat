@@ -9,9 +9,10 @@ A plugin to chat in figma files. Fully **encrypted**! (https://github.com/sehrop
 There is no special installation process. Just install the plugin in figma.
 You can find it [**here**](https://www.figma.com/c/plugin/742073255743594050/Figma-Chat)
 
-### Screenshots
+### What does it look like?
 
-![](./assets/screenshots.png)
+![](./assets/presentation.gif)
+(And yes, I have chatted with myself)
 
 ### Encrypted? No login?
 
