@@ -137,6 +137,8 @@ const init = () => {
     }, [socket]);
 
     useEffect(() => {
+      initSocketConnection(store.settings.url);
+
       const serverUrlDisposer = reaction(
         () => store.settings.url,
         () => {
