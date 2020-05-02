@@ -133,7 +133,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
         store.instanceId = instanceId;
         store.selection = selection;
 
-        store.persistSettings(settings, props.socket);
+        store.persistSettings(settings, props.socket, true);
       }
 
       if (pmessage.type === 'relaunch-message') {

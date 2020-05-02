@@ -100,7 +100,9 @@ class RootStore {
   @action
   clearChatHistory(cb: () => void) {
     if (
-      (window as any).confirm('Do you really want to delete the complete chat history? (This cannot be undone)')
+      (window as any).confirm(
+        'Do you really want to delete the complete chat history? (This cannot be undone)'
+      )
     ) {
       sendMainMessage('clear-chat-history');
       this.messages = [];
@@ -110,7 +112,7 @@ class RootStore {
   }
 
   @action
-  persistSettings(settings, socket, init?) {
+  persistSettings(settings, socket, isInit = false) {
     const oldUrl = this.settings.url;
     this.settings = {
       ...this.settings,
@@ -118,23 +120,16 @@ class RootStore {
     };
 
     // save user settings in main
-    sendMainMessage('save-user-settings', Object.assign({}, this.settings));
+    sendMainMessage(
+      'save-user-settings',
+      Object.assign({}, toJS(this.settings))
+    );
 
-    if (settings.url && settings.url !== oldUrl) {
+    if (!isInit && settings.url && settings.url !== oldUrl) {
       // set server URL
       sendMainMessage('set-server-url', settings.url);
 
-      // re init main app and disconnect socket
-      // to prevent multiple sign in
-      if (init) {
-        if (socket && socket.connected) {
-          socket.disconnect();
-        }
-
-        init(settings.url);
-
-        this.addNotification('Updated server-URL');
-      }
+      this.addNotification('Updated server-URL');
     }
 
     if (socket && socket.connected) {

@@ -16,7 +16,6 @@ import './assets/figma-ui/main.min.css';
 // components
 import Notifications from './components/Notifications';
 // shared
-import { DEFAULT_SERVER_URL } from './shared/constants';
 import { ConnectionEnum } from './shared/interfaces';
 import { SocketProvider } from './shared/SocketProvider';
 import { sendMainMessage } from './shared/utils';
@@ -30,7 +29,7 @@ import { reaction } from 'mobx';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
-    const { type, payload } = message.data.pluginMessage;
+    const { type } = message.data.pluginMessage;
 
     // initialize
     if (type === 'ready') {
@@ -38,7 +37,7 @@ onmessage = (message) => {
     }
 
     if (type === 'initialize') {
-      init(payload !== '' ? payload : DEFAULT_SERVER_URL);
+      init();
     }
   }
 };
@@ -56,7 +55,7 @@ const AppWrapper = styled.div`
   overflow: hidden;
 `;
 
-const init = (serverUrl) => {
+const init = () => {
   const App = observer(() => {
     const store = useStore();
     let [socket, setSocket] = useState<SocketIOClient.Socket>(undefined);
@@ -71,8 +70,7 @@ const init = (serverUrl) => {
       store.isFocused = false;
     }
 
-    function initSocketConnection() {
-      const url = store.settings.url || serverUrl;
+    function initSocketConnection(url: string) {
       store.status = ConnectionEnum.NONE;
 
       if (socket) {
@@ -87,12 +85,12 @@ const init = (serverUrl) => {
           transports: ['websocket'],
         })
       );
-
-      sendMainMessage('get-root-data');
     }
 
     useEffect(() => {
       if (socket && store.status === ConnectionEnum.NONE) {
+        sendMainMessage('get-root-data');
+
         socket.on('connected', () => {
           store.status = ConnectionEnum.CONNECTED;
 
@@ -141,7 +139,9 @@ const init = (serverUrl) => {
     useEffect(() => {
       const serverUrlDisposer = reaction(
         () => store.settings.url,
-        initSocketConnection
+        () => {
+          initSocketConnection(store.settings.url);
+        }
       );
 
       // check focus
