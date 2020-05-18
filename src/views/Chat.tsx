@@ -20,6 +20,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { observer, useLocalStore } from 'mobx-react';
 import { useStore } from '../store';
 import { toJS } from 'mobx';
+import Header from '../components/Header';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
@@ -166,11 +167,9 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
 
   return (
     <>
-      <Chat
-        color={store.settings.color}
-        hasSelection={store.selectionCount > 0}
-      >
-        {store.status === ConnectionEnum.CONNECTED && (
+      <Header />
+      <Chat hasSelection={store.selectionCount > 0}>
+        {/* {store.status === ConnectionEnum.CONNECTED && (
           <FloatingButtonRight isSettings={isSettings}>
             <Online onClick={() => history.push('/user-list')}>
               {store.online.length}
@@ -183,25 +182,22 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
           <MoreButton isSettings={isSettings} onClick={showMore}>
             more
           </MoreButton>
-        )}
+        )} */}
         <MessagesContainer
           isSettings={isSettings}
           animationEnabled={animationEnabled}
           onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
-        >
-          <Messages
-            animationEnabled={animationEnabled}
-            isSettings={isSettings}
-            ref={store.messagesRef}
-            onWheel={() => {
-              const { current } = toJS(store.messagesRef);
+          ref={store.messagesRef}
+          onWheel={() => {
+            const { current } = toJS(store.messagesRef);
 
-              store.disableAutoScroll =
-                current.scrollHeight -
-                  (current.scrollTop + current.clientHeight) >
-                0;
-            }}
-          >
+            store.disableAutoScroll =
+              current.scrollHeight -
+                (current.scrollTop + current.clientHeight) >
+              0;
+          }}
+        >
+          <Messages animationEnabled={animationEnabled} isSettings={isSettings}>
             <TransitionGroup>
               {chatState.filteredMessages.map((m, i) => (
                 <CSSTransition
@@ -224,40 +220,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
               ))}
             </TransitionGroup>
           </Messages>
-          <SettingsArrow
-            isSettings={isSettings}
-            onClick={() => {
-              enableAnimation(true);
-              history.push(isSettings ? '/' : '/settings');
-            }}
-          >
-            {isSettings ? (
-              <svg
-                width="11"
-                height="7"
-                viewBox="0 0 11 7"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M9.99985 1L5.49985 5.5L0.999849 1" stroke="black" />
-              </svg>
-            ) : (
-              <svg
-                width="11"
-                height="6"
-                viewBox="0 0 11 6"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M1 5.5L5.5 1L10 5.5" stroke="black" />
-              </svg>
-            )}
-          </SettingsArrow>
         </MessagesContainer>
-
-        {(isSettings || (!isSettings && !containerIsHidden)) && (
-          <SettingsView />
-        )}
 
         <Chatbar
           sendMessage={sendMessage}
@@ -273,64 +236,6 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
   );
 };
 
-const slideUpMessages = keyframes`
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-318px);
-  }
-`;
-const slideDownMessages = keyframes`
-  from {
-    transform: translateY(-318px);
-  }
-  to {
-    transform: translateY(0px);
-  }
-`;
-
-const FloatingButtonRight = styled.div`
-  position: fixed;
-  z-index: 9;
-  right: 10px;
-  top: 10px;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  border-radius: 5px;
-  transition: transform 0.2s;
-  transform: translateX(${({ isSettings }) => (isSettings ? 150 : 0)}px);
-`;
-
-const SettingsArrow = styled.div`
-  position: absolute;
-  bottom: 0;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  cursor: pointer;
-  transition: rotate 0.3s;
-  width: 100%;
-  text-align: center;
-`;
-
-const MoreButton = styled.div`
-  position: fixed;
-  z-index: 9;
-  left: 10px;
-  top: 10px;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 5px;
-  color: #fff;
-  transition: transform 0.2s;
-  transform: translateX(${({ isSettings }) => (isSettings ? -150 : 0)}px);
-  padding: 5px 15px;
-  line-height: 14px;
-  cursor: pointer;
-  &:hover {
-    background-color: rgba(0, 0, 0, 18);
-  }
-`;
-
 const MessageSeperator = styled.div`
   border-width: 1px 0 0 0;
   border-color: #ececec;
@@ -339,37 +244,33 @@ const MessageSeperator = styled.div`
 `;
 
 const Chat = styled.div`
-  height: 100vh;
   width: 100vw;
-  background-color: ${({ color }) => color};
+  height: calc(100% - 37px);
+  display: grid;
+  grid-template-rows: 1fr 69px;
 `;
 
 const MessagesContainer = styled.div`
-  /* display: grid;
-  grid-template-rows: auto 26px; */
   position: relative;
   z-index: 2;
   margin: 0;
   background-color: #fff;
-  border-radius: 0 0 15px 15px;
+  padding-top: 14px;
   transition: transform 0.4s;
-  height: 371px;
-  animation: ${({ isSettings }) =>
-      isSettings ? slideUpMessages : slideDownMessages}
-    ease-in-out forwards;
-  animation-duration: ${({ animationEnabled }) =>
-    animationEnabled ? 0.2 : 0}s;
+  overflow: auto;
 `;
 
 const Messages = styled.div`
-  padding: 55px 10px 0;
-  overflow: ${({ isSettings }) => (isSettings ? 'hidden' : 'auto')};
+  padding: 0 14px 0;
   overflow-x: hidden;
   align-self: end;
-  height: 100%;
   > div {
-    &:last-child {
-      margin-bottom: 22px;
+    > div {
+      &:last-child {
+        .message {
+          margin-bottom: 0;
+        }
+      }
     }
   }
   .message {
@@ -413,44 +314,6 @@ const Messages = styled.div`
         transform: translateX(-60px);
       }
     }
-  }
-`;
-
-const Online = styled.div`
-  position: relative;
-  padding: 4px 5px 5px 20px;
-  align-self: center;
-  cursor: pointer;
-  font-weight: bold;
-  color: #fff;
-  &::after {
-    content: '';
-    left: 8px;
-    top: 10px;
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    border-radius: 100%;
-    background-color: #1bc47d;
-  }
-`;
-
-const Minimize = styled.div`
-  position: relative;
-  padding: 10px 0;
-  width: 24px;
-  align-self: center;
-  cursor: pointer;
-  font-weight: bold;
-  color: #fff;
-  &::after {
-    content: '';
-    left: 6px;
-    top: 9px;
-    position: absolute;
-    width: 11px;
-    height: 1px;
-    background-color: #fff;
   }
 `;
 

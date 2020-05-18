@@ -23,6 +23,7 @@ import { sendMainMessage } from './shared/utils';
 import ChatView from './views/Chat';
 import MinimizedView from './views/Minimized';
 import UserListView from './views/UserList';
+import SettingsView from './views/Settings';
 
 import { StoreProvider, useStore } from './store';
 import { reaction } from 'mobx';
@@ -170,10 +171,13 @@ const init = () => {
               <Route exact path="/minimized">
                 <MinimizedView />
               </Route>
-              <Route path="/user-list">
+              <Route exact path="/user-list">
                 <UserListView />
               </Route>
-              <Route path="/">
+              <Route exact path="/settings">
+                <SettingsView />
+              </Route>
+              <Route exact path="/">
                 <ChatView />
               </Route>
             </Switch>

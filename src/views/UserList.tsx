@@ -10,7 +10,7 @@ const UserListView: FunctionComponent = () => {
 
   return (
     <>
-      <Header title="Currently online" backButton />
+      <Header />
       <UserList>
         <div className="users">
           {store.online.map((user) => (

@@ -10,6 +10,7 @@ import Checkbox from '../components/Checkbox';
 // store
 import { observer, useLocalStore } from 'mobx-react';
 import { useStore } from '../store';
+import Header from '../components/Header';
 
 interface SettingsProps {
   socket: SocketIOClient.Socket;
@@ -79,6 +80,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
 
   return (
     <>
+      <Header />
       <Settings>
         <div className="fields">
           <h4>
@@ -144,7 +146,10 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           </button>
         </div>
 
-        <VersionNote target="_blank" href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md">
+        <VersionNote
+          target="_blank"
+          href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
+        >
           version: {version}
         </VersionNote>
       </Settings>
@@ -187,10 +192,8 @@ const Settings = styled.div`
   display: flex;
   flex-direction: column;
   z-index: 1;
-  transform: translateY(-318px);
   height: 362px;
   padding: 20px;
-  color: #fff;
 
   h4 {
     margin: 20px 0 15px;

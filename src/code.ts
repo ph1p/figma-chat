@@ -9,8 +9,8 @@ let triggerSelectionEvent = true;
 const isRelaunch = figma.command === 'relaunch';
 
 figma.showUI(__html__, {
-  width: 300,
-  height: 415,
+  width: 333,
+  height: 490,
   // visible: !isRelaunch
 });
 
@@ -204,7 +204,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
         sendNotifications = isMinimized;
 
         // resize window
-        figma.ui.resize(message.payload ? 180 : 300, message.payload ? 1 : 415);
+        figma.ui.resize(message.payload ? 180 : 333, message.payload ? 1 : 490);
         break;
       case 'focus':
         if (!isMinimized) {

@@ -51,8 +51,18 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
       </ConnectionInfo>
 
       <ChatInputWrapper isConnected={isConnected}>
+        <SelectionCheckbox
+          checked={props.selectionIsChecked}
+          hasSelection={hasSelection}
+          onClick={(e: any) => {
+            props.setSelectionIsChecked(!props.selectionIsChecked);
+            chatTextInput.current.focus();
+          }}
+        >
+          {store.selectionCount}
+        </SelectionCheckbox>
         <ChatInput hasSelection={hasSelection}>
-          <BellIcon
+          {/* <BellIcon
             onClick={() =>
               (store.settings.enableNotificationSound = !store.settings
                 .enableNotificationSound)
@@ -79,7 +89,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
                 />
               )}
             </svg>
-          </BellIcon>
+          </BellIcon> */}
           <input
             ref={chatTextInput}
             type="input"
@@ -90,31 +100,23 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
               props.selectionIsChecked ? '(optional)' : ''
             }`}
           />
-          <ColorPicker />
+          {/* <ColorPicker /> */}
+          <SendButton color={store.settings.color}>
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2.38396 1.47595H8.55196M8.55196 1.47595V7.64395M8.55196 1.47595L1.35596 8.67195"
+                stroke="white"
+                strokeWidth="1.028"
+              />
+            </svg>
+          </SendButton>
         </ChatInput>
-        <SelectionCheckbox
-          checked={props.selectionIsChecked}
-          hasSelection={hasSelection}
-          onClick={(e: any) => {
-            props.setSelectionIsChecked(!props.selectionIsChecked);
-            chatTextInput.current.focus();
-          }}
-        >
-          <svg
-            width="12"
-            height="12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M4 .5V3h4V.5h1V3h2.5v1H9v4h2.5v1H9v2.5H8V9H4v2.5H3V9H.5V8H3V4H.5V3H3V.5h1zM8 8V4H4v4h4z"
-              fill="#fff"
-            />
-          </svg>
-          <div></div>
-        </SelectionCheckbox>
       </ChatInputWrapper>
     </ChatBarForm>
   );
@@ -131,10 +133,10 @@ const ConnectionInfo = styled.div`
   z-index: 6;
   bottom: -5px;
   text-align: center;
-  color: #fff;
+  color: #000;
   font-weight: bold;
   transition: transform 0.2s;
-  transform: translateY(${({ isConnected }) => (isConnected ? 50 : 0)}px);
+  transform: translateY(${({ isConnected }) => (isConnected ? 69 : 0)}px);
   span {
     text-decoration: underline;
     cursor: pointer;
@@ -143,33 +145,17 @@ const ConnectionInfo = styled.div`
 `;
 
 const ChatBarForm = styled.form`
-  position: absolute;
+  padding: 14px;
   z-index: 3;
-  height: 37px;
-  padding-top: 7px;
-  right: 14px;
-  left: 14px;
-  bottom: 7px;
   margin: 0;
   transition: transform 0.2s;
-  transform: translateY(${({ isSettings }) => (isSettings ? 50 : 0)}px);
-`;
-
-const BellIcon = styled.div`
-  cursor: pointer;
-  position: absolute;
-  z-index: 3;
-  left: 9px;
-  top: 8px;
-  svg {
-    width: 15px;
-    height: 16px;
-  }
+  transform: translateY(${({ isSettings }) => (isSettings ? 69 : 0)}px);
 `;
 
 const ChatInputWrapper = styled.div`
+  display: flex;
   transition: transform 0.3s;
-  transform: translateY(${({ isConnected }) => (isConnected ? 0 : 50)}px);
+  transform: translateY(${({ isConnected }) => (isConnected ? 0 : 69)}px);
 `;
 
 const ChatInput = styled.div`
@@ -178,16 +164,26 @@ const ChatInput = styled.div`
   position: relative;
   z-index: 3;
   transition: width 0.3s;
-  width: ${(p) => (p.hasSelection ? '225px' : '100%')};
+  background-color: #eceff4;
+  border-radius: 10px 10px 0 10px;
+  /* width: ${(p) => (p.hasSelection ? '225px' : '100%')}; */
+  width: 100%;
+
   input {
     position: relative;
+    background-color: transparent;
     z-index: 2;
+    font-size: 11.5px;
+    font-weight: 300;
     border-radius: 6px;
     width: 100%;
     border: 0;
-    padding: 10px 30px 10px 30px;
-    height: 30px;
+    padding: 14px 30px 14px 18px;
+    height: 41px;
     outline: none;
+    &::placeholder {
+      color: #a2adc0;
+    }
   }
   button {
     border: 0;
@@ -206,25 +202,40 @@ const ChatInput = styled.div`
   }
 `;
 
-const SelectionCheckbox = styled.div`
+const SendButton = styled.div`
   position: absolute;
-  right: 0;
-  top: 0;
+  display: flex;
+  z-index: 3;
+  right: 4px;
+  top: 4px;
+  background-color: ${({ color }) => color};
+  width: 33px;
+  height: 33px;
+  border-radius: 9px 9px 4px 9px;
+  justify-content: center;
+  svg {
+    align-self: center;
+  }
+`;
+
+const SelectionCheckbox = styled.div`
   animation-delay: 0.2s;
   transition: all 0.2s;
-  color: #fff;
-  margin: 0;
-  transform: translateX(${(p) => (p.hasSelection ? 0 : -50)}px);
+  background-color: #eceff4;
+  border-radius: 10px;
+  height: 41px;
+  width: ${(p) => (p.hasSelection ? 49 : 0)}px;
+  margin-right: ${(p) => (p.hasSelection ? 8 : 0)}px;
+  opacity: ${(p) => (p.hasSelection ? 1 : 0)};
+  overflow: hidden;
   display: flex;
+  justify-items: center;
   align-items: center;
-  height: 100%;
   cursor: pointer;
   div {
     position: relative;
     width: 16px;
     height: 16px;
-    border: 1px solid
-      rgba(255, 255, 255, ${({ checked }) => (checked ? 1 : 0.5)});
     border-radius: 3px;
     margin-left: 6px;
     &::after {

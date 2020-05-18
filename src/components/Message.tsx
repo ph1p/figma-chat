@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { colors } from '../shared/constants';
 import { sendMainMessage } from '../shared/utils';
 import TimeAgo from 'react-timeago';
-import nowStrings from 'react-timeago/lib/language-strings/en-short';
+import nowStrings from 'react-timeago/lib/language-strings/en';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import { toJS } from 'mobx';
 
@@ -25,50 +25,52 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
 
   return (
     <MessageFlex isSelf={isSelf}>
-      <MessageDate>
-        {data.message.date && (
-          <TimeAgo date={data.message.date} formatter={formatter} />
-        )}
-      </MessageDate>
-      <MessageContainer className={`message ${isSelf ? 'me' : colorClass}`}>
-        {data.id !== instanceId && username && (
-          <MessageHeader>
-            <div className="user">{username}</div>
-          </MessageHeader>
-        )}
-        {selection ? (
-          <span
-            onClick={() => {
-              const messageSelection = toJS(selection);
-              let selectionData = null;
+      <MessageWrapper className="message" isSelf={isSelf}>
+        <MessageContainer className={`${isSelf ? 'me' : colorClass}`}>
+          {data.id !== instanceId && username && (
+            <MessageHeader>
+              <div className="user">{username}</div>
+            </MessageHeader>
+          )}
+          {selection ? (
+            <span
+              onClick={() => {
+                const messageSelection = toJS(selection);
+                let selectionData = null;
 
-              // fallback without page
-              if (messageSelection.length) {
-                selectionData = {
-                  ids: messageSelection,
-                };
-              } else {
-                selectionData = {
-                  ...messageSelection,
-                };
-              }
+                // fallback without page
+                if (messageSelection.length) {
+                  selectionData = {
+                    ids: messageSelection,
+                  };
+                } else {
+                  selectionData = {
+                    ...messageSelection,
+                  };
+                }
 
-              sendMainMessage('focus-nodes', selectionData);
-            }}
-          >
-            {data.message.text && (
-              <div className="selection-text">{data.message.text}</div>
-            )}
-            <button className="selection button button--secondary">
-              {pageName ? pageName + ' - ' : ''}
-              focus {selectionCount} element
-              {selectionCount > 1 ? 's' : ''}
-            </button>
-          </span>
-        ) : (
-          <span>{data.message.text}</span>
-        )}
-      </MessageContainer>
+                sendMainMessage('focus-nodes', selectionData);
+              }}
+            >
+              {data.message.text && (
+                <div className="selection-text">{data.message.text}</div>
+              )}
+              <button className="selection button button--secondary">
+                {pageName ? pageName + ' - ' : ''}
+                focus {selectionCount} element
+                {selectionCount > 1 ? 's' : ''}
+              </button>
+            </span>
+          ) : (
+            <span>{data.message.text}</span>
+          )}
+        </MessageContainer>
+        <MessageDate>
+          {data.message.date && (
+            <TimeAgo date={data.message.date} formatter={formatter} />
+          )}
+        </MessageDate>
+      </MessageWrapper>
     </MessageFlex>
   );
 };
@@ -92,29 +94,36 @@ const MessageDate = styled.div`
 
 const MessageFlex = styled.div`
   display: flex;
+  flex-direction: row;
   justify-content: flex-end;
   flex-direction: ${({ isSelf }) => (isSelf ? 'row' : 'row-reverse')};
 `;
 
+const MessageWrapper = styled.div`
+  margin: 0 0 10px 0;
+  ${MessageDate} {
+    text-align: ${({ isSelf }) => (isSelf ? 'right' : 'left')};
+  }
+`;
+
 const MessageContainer = styled.div`
   background-color: #18a0fb;
-  border-radius: 2px 14px 14px 14px;
+  border-radius: 3px 14px 14px 14px;
   color: #fff;
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 16px;
-  padding: 7px 9px 6px;
-  margin: 0 10px 7px 0;
+  padding: 11px 16px 11px;
   word-break: break-word;
+  margin-bottom: 4px;
 
   &.me {
     color: #000;
-    margin: 0 0 7px 10px;
-    padding: 7px 9px;
+    padding: 11px 16px;
     background-color: #ebebeb;
-    border-radius: 14px 14px 2px 14px;
+    border-radius: 14px 14px 3px 14px;
     header {
       color: #000;
     }
@@ -131,7 +140,7 @@ const MessageContainer = styled.div`
   }
 
   .selection {
-    margin: 8px 0 0 0;
+    margin: 0;
     cursor: pointer;
     width: 100%;
     background-color: transparent;
