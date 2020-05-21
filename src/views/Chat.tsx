@@ -244,10 +244,8 @@ const MessageSeperator = styled.div`
 `;
 
 const Chat = styled.div`
-  width: 100vw;
-  height: calc(100% - 37px);
   display: grid;
-  grid-template-rows: 1fr 69px;
+  grid-template-rows: 383px 69px;
 `;
 
 const MessagesContainer = styled.div`

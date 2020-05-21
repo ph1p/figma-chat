@@ -1,4 +1,10 @@
-import React, { FunctionComponent, useState, useEffect, useRef } from 'react';
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useRef,
+  forwardRef,
+} from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
@@ -6,6 +12,7 @@ import styled from 'styled-components';
 import ColorPicker from './ColorPicker';
 import { useStore } from '../store';
 import { ConnectionEnum } from '../shared/interfaces';
+import Tooltip from './Tooltip';
 
 interface ChatProps {
   sendMessage: (event: any) => void;
@@ -26,6 +33,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
     store.status === ConnectionEnum.CONNECTED
   );
   const chatTextInput = useRef(null);
+  const emojiTooltipRef = React.createRef<any>();
 
   useEffect(
     () =>
@@ -59,7 +67,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
             chatTextInput.current.focus();
           }}
         >
-          {store.selectionCount}
+          <div>{store.selectionCount}</div>
         </SelectionCheckbox>
         <ChatInput hasSelection={hasSelection}>
           {/* <BellIcon
@@ -101,6 +109,52 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
             }`}
           />
           {/* <ColorPicker /> */}
+
+          <Tooltip
+            id="emoji"
+            ref={emojiTooltipRef}
+            horizontalSpacing={30}
+            // position="bottom"
+            handler={React.forwardRef((props, ref) => (
+              <EmojiPickerStyled
+                data-for="emoji"
+                data-tip="custom show"
+                data-effect="solid"
+                data-event="click"
+                {...props}
+                ref={ref}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="none"
+                >
+                  <path
+                    fill="#A2ADC0"
+                    d="M9.153 13.958a5.532 5.532 0 01-5.122-3.41.394.394 0 01.585-.482.396.396 0 01.146.178 4.741 4.741 0 004.391 2.923c.625 0 1.244-.124 1.82-.365a4.72 4.72 0 002.558-2.558.396.396 0 01.73.305 5.51 5.51 0 01-2.984 2.983 5.499 5.499 0 01-2.124.426z"
+                  />
+                  <path
+                    fill="#A2ADC0"
+                    d="M9 18c-4.963 0-9-4.037-9-9s4.037-9 9-9 9 4.037 9 9-4.037 9-9 9zM9 .75C4.451.75.75 4.451.75 9c0 4.549 3.701 8.25 8.25 8.25 4.549 0 8.25-3.701 8.25-8.25C17.25 4.451 13.549.75 9 .75z"
+                  />
+                  <circle cx="11.646" cy="6" r="1" fill="#A2ADC0" />
+                  <circle cx="6.646" cy="6" r="1" fill="#A2ADC0" />
+                </svg>
+              </EmojiPickerStyled>
+            ))}
+          >
+            <EmojiList>
+              <span data-emoji="😂" />
+              <span data-emoji="😊" />
+              <span data-emoji="👍" />
+              <span data-emoji="🙈" />
+              <span data-emoji="🔥" />
+              <span data-emoji="🤔" />
+              <span data-emoji="💩" />
+            </EmojiList>
+          </Tooltip>
+
           <SendButton color={store.settings.color}>
             <svg
               width="10"
@@ -121,6 +175,27 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
     </ChatBarForm>
   );
 };
+
+const EmojiList = styled.div`
+  display: flex;
+  font-size: 25px;
+  width: 240px;
+  justify-content: space-between;
+  span {
+    cursor: pointer;
+    &::after {
+      content: attr(data-emoji);
+    }
+  }
+`;
+
+const EmojiPickerStyled = styled.div`
+  position: absolute;
+  right: 51px;
+  top: 11px;
+  z-index: 5;
+  cursor: pointer;
+`;
 
 const ConnectionInfo = styled.div`
   display: flex;
@@ -148,20 +223,21 @@ const ChatBarForm = styled.form`
   padding: 14px;
   z-index: 3;
   margin: 0;
-  transition: transform 0.2s;
-  transform: translateY(${({ isSettings }) => (isSettings ? 69 : 0)}px);
+  transition: opacity 0.2s;
+  position: relative;
+  opacity: ${({ isSettings }) => (isSettings ? 0 : 1)};
 `;
 
 const ChatInputWrapper = styled.div`
   display: flex;
-  transition: transform 0.3s;
-  transform: translateY(${({ isConnected }) => (isConnected ? 0 : 69)}px);
+  transition: opacity 0.3s;
+  opacity: ${({ isConnected }) => (isConnected ? 1 : 0)};
+  position: relative;
 `;
 
 const ChatInput = styled.div`
   display: flex;
   margin: 0;
-  position: relative;
   z-index: 3;
   transition: width 0.3s;
   background-color: #eceff4;
@@ -170,7 +246,6 @@ const ChatInput = styled.div`
   width: 100%;
 
   input {
-    position: relative;
     background-color: transparent;
     z-index: 2;
     font-size: 11.5px;
@@ -232,24 +307,42 @@ const SelectionCheckbox = styled.div`
   justify-items: center;
   align-items: center;
   cursor: pointer;
+  &:hover {
+    div {
+      opacity: 1;
+    }
+  }
   div {
     position: relative;
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-    margin-left: 6px;
+    min-width: 12px;
+    height: 12px;
+    padding: 0 2px;
+    text-align: center;
+    margin: 0 auto;
+    background-color: #a2adc0;
+    color: #eceff4;
+    font-weight: bold;
+    font-size: 10px;
+    opacity: ${(p) => (p.checked ? 1 : 0.5)};
     &::after {
       content: '';
-      width: 7px;
-      height: 3px;
       position: absolute;
-      border-width: 0px 0px 1px 1px;
-      border-color: #fff;
-      border-style: solid;
-      left: 3px;
-      top: 4px;
-      opacity: ${({ checked }) => (checked ? 1 : 0)};
-      transform: rotate(-45deg);
+      height: 1px;
+      top: 0;
+      left: -3px;
+      right: -3px;
+      background-color: #a2adc0;
+      box-shadow: 0 11px 0px #a2adc0;
+    }
+    &::before {
+      content: '';
+      position: absolute;
+      width: 1px;
+      left: 0;
+      top: -3px;
+      bottom: -3px;
+      background-color: #a2adc0;
+      box-shadow: 11px 0px 0px #a2adc0;
     }
     &:hover {
       border-color: rgba(255, 255, 255, 1);
