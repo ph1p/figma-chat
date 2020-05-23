@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import nowStrings from 'react-timeago/lib/language-strings/en';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { colors } from '../shared/constants';
 import { sendMainMessage } from '../shared/utils';
 
@@ -56,9 +56,7 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
                 sendMainMessage('focus-nodes', selectionData);
               }}
             >
-              {data.message.text && (
-                <div>{data.message.text}</div>
-              )}
+              {data.message.text && <div>{data.message.text}</div>}
               <button className="selection button button--secondary">
                 {pageName ? pageName + ' - ' : ''}
                 focus {selectionCount} element
@@ -156,7 +154,21 @@ const MessageContainer = styled.div`
     }
   }
 
-  &.lightblue header {
+  ${Object.keys(colors).map(
+    (color) => css`
+      &.${colors[color]} {
+        color: #fff;
+        background-color: ${color};
+        header {
+          color: #fff;
+        }
+        .selection {
+          border-color: #fff;
+          color: #fff;
+        }
+      }
+    `
+  )}/* &.lightblue header {
     color: #1c4856;
   }
   &.lightblue .selection {
@@ -249,7 +261,7 @@ const MessageContainer = styled.div`
   &.pink {
     background-color: #f47e9a;
     color: #ffffff;
-  }
+  } */
 `;
 
 export default Message;
