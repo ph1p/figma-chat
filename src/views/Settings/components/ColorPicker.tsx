@@ -102,4 +102,4 @@ const ColorPicker = styled.div`
   }
 `;
 
-export default observer(withSocketContext(ColorPickerComponent));
+export default withSocketContext(observer(ColorPickerComponent));

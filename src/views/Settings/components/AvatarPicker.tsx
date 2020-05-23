@@ -80,4 +80,4 @@ const AvatarPicker = styled.div`
   }
 `;
 
-export default observer(withSocketContext(AvatarPickerComponent));
+export default withSocketContext(observer(AvatarPickerComponent));

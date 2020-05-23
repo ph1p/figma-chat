@@ -84,6 +84,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
       history.push('/');
     }
   };
+  console.log(store.settings);
 
   return (
     <>
@@ -314,4 +315,4 @@ const Settings = styled.div`
   }
 `;
 
-export default observer(withSocketContext(SettingsView));
+export default withSocketContext(observer(SettingsView));
