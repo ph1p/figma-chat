@@ -37,7 +37,6 @@ const NotificationContainer = styled.div`
   border-radius: 5px;
   height: auto;
   margin-bottom: 5px;
-  width: 100%;
   background-color: #000;
   &.success {
     background-color: #1bc47d;

@@ -57,7 +57,7 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
               }}
             >
               {data.message.text && (
-                <div className="selection-text">{data.message.text}</div>
+                <div>{data.message.text}</div>
               )}
               <button className="selection button button--secondary">
                 {pageName ? pageName + ' - ' : ''}
@@ -144,7 +144,7 @@ const MessageContainer = styled.div`
   }
 
   .selection {
-    margin: 0;
+    margin: 5px 0 0 0;
     cursor: pointer;
     width: 100%;
     background-color: transparent;
@@ -154,10 +154,6 @@ const MessageContainer = styled.div`
       border: 1px solid;
       box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
     }
-  }
-
-  .selection-text {
-    margin-bottom: 10px;
   }
 
   &.lightblue header {

@@ -156,6 +156,7 @@ class RootStore {
         newMessage = {
           id: this.instanceId,
           user: {
+            avatar: this.settings.avatar,
             color: this.settings.color,
             name: this.settings.name,
           },

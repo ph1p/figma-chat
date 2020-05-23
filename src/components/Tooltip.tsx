@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, FunctionComponent } from 'react';
-import styled, { css } from 'styled-components';
 import { usePopper } from 'react-popper';
+import styled from 'styled-components';
 
 interface Props {
   handler: any;

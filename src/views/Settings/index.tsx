@@ -3,21 +3,19 @@ import { observer, useLocalStore } from 'mobx-react';
 import React, { useEffect, useState, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { repository, version } from '../../../package.json';
+import BellIcon from '../../assets/icons/Bell';
+import MessageIcon from '../../assets/icons/Message';
+import ThemeIcon from '../../assets/icons/Theme';
+import TrashIcon from '../../assets/icons/Trash';
 // components
-import Checkbox from '../../components/Checkbox';
 import Header from '../../components/Header';
 import Tooltip from '../../components/Tooltip';
 // shared
 import { withSocketContext } from '../../shared/SocketProvider';
 import { DEFAULT_SERVER_URL } from '../../shared/constants';
 import { useStore } from '../../store';
-import BellIcon from '../../assets/icons/Bell';
-import MessageIcon from '../../assets/icons/Message';
-import TrashIcon from '../../assets/icons/Trash';
-import ThemeIcon from '../../assets/icons/Theme';
-import ColorPicker from './components/ColorPicker';
 import AvatarPicker from './components/AvatarPicker';
+import ColorPicker from './components/ColorPicker';
 
 interface SettingsProps {
   socket: SocketIOClient.Socket;
@@ -84,7 +82,6 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
       history.push('/');
     }
   };
-  console.log(store.settings);
 
   return (
     <>

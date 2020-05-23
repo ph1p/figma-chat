@@ -1,20 +1,17 @@
 import { toJS } from 'mobx';
-// store
+
 import { observer, useLocalStore } from 'mobx-react';
 import React, { useEffect, useState, FunctionComponent } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Chatbar from '../components/Chatbar';
 import Header from '../components/Header';
 import Message from '../components/Message';
 import { withSocketContext } from '../shared/SocketProvider';
-// shared
+
 import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
 import { sendMainMessage } from '../shared/utils';
 import { useStore } from '../store';
-// components
-import SettingsView from '../views/Settings';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
@@ -22,11 +19,8 @@ interface ChatProps {
 
 const ChatView: FunctionComponent<ChatProps> = (props) => {
   const store = useStore();
-  const [animationEnabled, enableAnimation] = useState(false);
   const [containerIsHidden, setContainerIsHidden] = useState(false);
-  const isSettings = useRouteMatch('/settings');
 
-  const history = useHistory();
   const chatState = useLocalStore(() => ({
     textMessage: '',
     selectionIsChecked: false,
@@ -163,35 +157,21 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
     <>
       <Header />
       <Chat hasSelection={store.selectionCount > 0}>
-        {/* {store.status === ConnectionEnum.CONNECTED && (
-          <FloatingButtonRight isSettings={isSettings}>
-            <Online onClick={() => history.push('/user-list')}>
-              {store.online.length}
-            </Online>
-            <Minimize onClick={() => store.toggleMinimizeChat()} />
-          </FloatingButtonRight>
-        )}
-
-        {!chatState.hideMoreButton && (
-          <MoreButton isSettings={isSettings} onClick={showMore}>
-            more
-          </MoreButton>
-        )} */}
         <MessagesContainer
-          isSettings={isSettings}
-          animationEnabled={animationEnabled}
           onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
           ref={store.messagesRef}
-          onWheel={() => {
+          onWheel={(e) => {
             const { current } = toJS(store.messagesRef);
-
+            if (current.scrollTop <= current.scrollHeight * 0.2) {
+              showMore();
+            }
             store.disableAutoScroll =
               current.scrollHeight -
                 (current.scrollTop + current.clientHeight) >
               0;
           }}
         >
-          <Messages animationEnabled={animationEnabled} isSettings={isSettings}>
+          <Messages>
             <TransitionGroup>
               {chatState.filteredMessages.map((m, i) => (
                 <CSSTransition

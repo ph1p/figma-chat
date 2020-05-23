@@ -27,22 +27,23 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
       )}
     >
       <AvatarPicker>
-        <div className="empty"></div>
-        {['🐵', '🐮', '🐷', '🐨', '🦊', '🐻', '🐶', '🐸', '🐹'].map((emoji) => (
-          <div
-            key={emoji}
-            onClick={() => {
-              store.persistSettings(
-                {
-                  avatar: emoji,
-                },
-                props.socket
-              );
-            }}
-          >
-            {emoji}
-          </div>
-        ))}
+        {['', '🐵', '🐮', '🐷', '🐨', '🦊', '🐻', '🐶', '🐸', '🐹'].map(
+          (emoji) => (
+            <div
+              key={emoji}
+              onClick={() => {
+                store.persistSettings(
+                  {
+                    avatar: emoji,
+                  },
+                  props.socket
+                );
+              }}
+            >
+              {emoji}
+            </div>
+          )
+        )}
       </AvatarPicker>
     </Tooltip>
   );
@@ -71,7 +72,7 @@ const AvatarPicker = styled.div`
     width: 41px;
     height: 41px;
     border: 1px solid #383168;
-    border-radius: 18px 18px 3px 18px;
+    border-radius: 14px 14px 3px 14px;
     text-align: center;
     font-size: 18px;
     line-height: 40px;

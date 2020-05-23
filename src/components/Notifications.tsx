@@ -1,4 +1,3 @@
-import { autorun, reaction } from 'mobx';
 // store
 import { observer } from 'mobx-react';
 import React, { useEffect, useState, FunctionComponent } from 'react';
@@ -42,10 +41,11 @@ const NotificationsContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
   position: absolute;
-  bottom: ${(props) => (props.isRoot ? 39 : 0)}px;
+  top: 39px;
   z-index: 11;
   padding: 10px;
   width: 100%;
+  align-items: center;
 `;
 
 export default observer(Notifications);

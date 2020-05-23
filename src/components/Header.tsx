@@ -1,7 +1,10 @@
+import { observer } from 'mobx-react';
 import React, { FunctionComponent } from 'react';
-import { useHistory, useRouteMatch, Link } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { SharedIcon } from '../shared/style';
+import ChatIcon from '../assets/icons/Chat';
+import SettingsIcon from '../assets/icons/Settings';
+import { ConnectionEnum } from '../shared/interfaces';
 import { useStore } from '../store';
 
 interface Props {
@@ -36,53 +39,35 @@ function CustomLink({ children, to, style = {}, className = '' }) {
 
 const Header: FunctionComponent<Props> = (props) => {
   const store = useStore();
+
   return (
     <Head>
       <CustomLink className="item" to="/">
         <div className="icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="13"
-            height="10"
-            fill="none"
-          >
-            <path
-              stroke="#000"
-              d="M6.5 1H9a3 3 0 013 3v2H6.5a2.5 2.5 0 010-5z"
-            />
-            <path
-              fill="#fff"
-              stroke="#000"
-              d="M5.5 4H4a3 3 0 00-3 3v2h4.5a2.5 2.5 0 000-5z"
-            />
-          </svg>
+          <ChatIcon />
         </div>
         <span>Chatroom</span>
       </CustomLink>
       <CustomLink className="item" to="/settings">
         <div className="icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="8"
-            height="8"
-            fill="none"
-          >
-            <circle cx="4" cy="4" r="1.5" stroke="#000" />
-            <circle cx="4" cy="4" r="3.5" stroke="#000" />
-          </svg>
+          <SettingsIcon />
         </div>
         <span>Settings</span>
       </CustomLink>
-      <CustomLink style={{ marginLeft: 'auto' }} to="/user-list">
-        <Users>
-          <UserChips>
-            <Chip />
-            <Chip />
-            <Chip />
-          </UserChips>
-          <Chip>+4</Chip>
-        </Users>
-      </CustomLink>
+      {store.status === ConnectionEnum.CONNECTED && (
+        <CustomLink style={{ marginLeft: 'auto' }} to="/user-list">
+          <Users>
+            <UserChips>
+              {store.online
+                .filter((_, i) => i < 4)
+                .map((user) => (
+                  <Chip key={user.id} style={{ backgroundColor: user.color }} />
+                ))}
+            </UserChips>
+            {store.online.length > 5 && <Chip>+{store.online.length - 5}</Chip>}
+          </Users>
+        </CustomLink>
+      )}
       <div className="minus" onClick={() => store.toggleMinimizeChat()}></div>
     </Head>
   );
@@ -161,4 +146,4 @@ const Head = styled.div`
   }
 `;
 
-export default Header;
+export default observer(Header);

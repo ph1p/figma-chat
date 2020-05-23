@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import Tooltip from '../../../components/Tooltip';
 // shared
 import { withSocketContext } from '../../../shared/SocketProvider';
-import { useStore } from '../../../store';
 import { colors } from '../../../shared/constants';
+import { useStore } from '../../../store';
 
 interface SettingsProps {
   socket: SocketIOClient.Socket;
@@ -82,7 +82,7 @@ const ColorPicker = styled.div`
     margin: 5px 0;
     width: 41px;
     height: 41px;
-    border-radius: 18px 18px 3px 18px;
+    border-radius: 14px 14px 3px 14px;
     cursor: pointer;
     position: relative;
     &.active {

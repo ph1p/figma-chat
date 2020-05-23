@@ -106,7 +106,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
             </EmojiList>
           </Tooltip>
 
-          <SendButton color={store.settings.color}>
+          <SendButton color={store.settings.color} onClick={sendMessage}>
             <svg
               width="10"
               height="10"
