@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { useEffect, useState, FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { NotificationParams } from '../shared/interfaces';
 

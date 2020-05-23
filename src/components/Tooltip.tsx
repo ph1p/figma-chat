@@ -1,42 +1,50 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState, FunctionComponent } from 'react';
 import styled, { css } from 'styled-components';
-import { useStore } from '../store';
+import { usePopper } from 'react-popper';
 
 interface Props {
   handler: any;
-  id: string;
+  hover?: boolean;
   children: any;
-  position?: 'top' | 'bottom';
-  spacing?: number;
-  arrowSpacing?: number;
-  horizontalSpacing?: number;
+  placement?: 'top' | 'bottom';
 }
 
-const TooltipComponent = React.forwardRef<HTMLDivElement, Props>(
-  (props, forwardedRef) => {
-    const FIGMA_HEADER_HEIGHT = 41;
-    const [isOpen, setIsOpen] = useState(false);
-    const { handler: HandlerComp } = props;
-    const [arrowPosition, setArrowPosition] = useState({
-      left: 0,
-      top: 0,
-    });
-    const [tooltipPosition, setTooltipPosition] = useState({
-      top: 0,
-      left: 0,
-    });
+const TooltipComponent: FunctionComponent<Props> = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { handler: HandlerComp } = props;
 
-    const [handleStyle, setHandleStyle] = useState({
-      top: 0,
-      left: 0,
-      width: 0,
-      height: 0,
-    });
-    const wrapperRef = useRef(null);
-    const tooltipRef = useRef(null);
-    const handlerRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const handlerRef = useRef(null);
 
-    useEffect(() => {
+  const [popperElement, setPopperElement] = useState(null);
+  const [arrowElement, setArrowElement] = useState(null);
+  const { styles, attributes } = usePopper(handlerRef.current, popperElement, {
+    placement: props.placement || 'top',
+    strategy: 'fixed',
+    modifiers: [
+      {
+        name: 'arrow',
+        options: {
+          element: arrowElement,
+        },
+      },
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 14],
+        },
+      },
+      {
+        name: 'preventOverflow',
+        options: {
+          padding: 14,
+        },
+      },
+    ],
+  });
+
+  useEffect(() => {
+    if (!props.hover) {
       function handleClick(event) {
         if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
           setIsOpen(false);
@@ -45,132 +53,68 @@ const TooltipComponent = React.forwardRef<HTMLDivElement, Props>(
 
       document.addEventListener('mousedown', handleClick);
       return () => document.removeEventListener('mousedown', handleClick);
-    }, [wrapperRef]);
+    }
+  }, [wrapperRef]);
 
-    useEffect(() => {
-      if (handlerRef.current) {
-        const {
-          top,
-          left,
-          width,
-          height,
-        } = handlerRef.current.getBoundingClientRect();
-
-        setHandleStyle({
-          top,
-          left,
-          width,
-          height,
-        });
-      }
-    }, [isOpen]);
-
-    useEffect(() => {
-      if (tooltipRef.current) {
-        const {
-          top,
-          left,
-          width,
-          height,
-        } = tooltipRef.current.getBoundingClientRect();
-
-        const spacing = props.spacing || 14;
-        const arrowSpacing = props.arrowSpacing || 0;
-        const horizontalSpacing = props.horizontalSpacing || 0;
-
-        const tooltipPaddingRight = 17;
-        const tooltipPaddingTop = 11;
-
-        const arrowSize = 19;
-
-        if (!props.position || props.position === 'top') {
-          setArrowPosition({
-            left:
-              width -
-              arrowSize -
-              tooltipPaddingRight +
-              arrowSpacing -
-              horizontalSpacing,
-            top: height - arrowSize,
-          });
-
-          // top left
-          setTooltipPosition({
-            left:
-              handleStyle.left -
-              width +
-              tooltipPaddingRight * 2 +
-              horizontalSpacing,
-            top:
-              handleStyle.top -
-              FIGMA_HEADER_HEIGHT -
-              handleStyle.height -
-              spacing,
-          });
-        } else if (props.position === 'bottom') {
-          setArrowPosition({
-            left:
-              width -
-              arrowSize -
-              tooltipPaddingRight +
-              arrowSpacing -
-              horizontalSpacing,
-            top: -3,
-          });
-
-          // top left
-          setTooltipPosition({
-            left:
-              handleStyle.left -
-              handleStyle.width -
-              width +
-              tooltipPaddingRight * 2 +
-              tooltipPaddingRight +
-              horizontalSpacing,
-            top:
-              handleStyle.top +
-              FIGMA_HEADER_HEIGHT +
-              handleStyle.height * 2 +
-              spacing,
-          });
-        }
-
-        console.log(tooltipRef.current.getBoundingClientRect());
-      }
-    }, [isOpen, handleStyle]);
-
-    return (
-      <div ref={forwardedRef}>
-        <Wrapper ref={wrapperRef}>
-          <HandlerComp ref={handlerRef} onClick={() => setIsOpen(!isOpen)} />
-          {isOpen && (
-            <Tooltip
-              id={props.id}
-              style={tooltipPosition}
-              arrowTop={arrowPosition.top}
-              arrowLeft={arrowPosition.left}
-              ref={tooltipRef}
-            >
-              <TooltipContent onClick={(e) => e.stopPropagation()}>
-                {props.children}
-              </TooltipContent>
-            </Tooltip>
-          )}
-        </Wrapper>
+  return (
+    <div ref={wrapperRef}>
+      <div
+        onClick={() => !props.hover && setIsOpen(!isOpen)}
+        onMouseEnter={() => props.hover && setIsOpen(!isOpen)}
+        onMouseLeave={() => props.hover && setIsOpen(!isOpen)}
+      >
+        <HandlerComp ref={handlerRef} />
       </div>
-    );
-  }
-);
 
-const Wrapper = styled.div``;
-const Handler = styled.div`
-  width: auto;
-  height: auto;
-`;
+      {isOpen && (
+        <Tooltip
+          ref={setPopperElement}
+          style={styles.popper}
+          {...attributes.popper}
+        >
+          <TooltipContent>{props.children}</TooltipContent>
+          <Arrow ref={setArrowElement} style={styles.arrow}>
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 28 28"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="-1"
+                y="14.0002"
+                width="21.2135"
+                height="21.2135"
+                rx="3"
+                transform="rotate(-45 -1 14.0002)"
+                fill="#1E1940"
+              />
+            </svg>
+          </Arrow>
+        </Tooltip>
+      )}
+    </div>
+  );
+};
 
 const TooltipContent = styled.div`
   padding: 11px 17px;
 `;
+
+const Arrow = styled.div`
+  position: absolute;
+  width: 21px;
+  height: 21px;
+  overflow: hidden;
+  border-radius: 4px;
+  pointer-events: none;
+  svg {
+    height: 21px;
+    width: 21px;
+  }
+`;
+
 const Tooltip = styled.div`
   position: fixed;
   background-color: #1e1940;
@@ -178,24 +122,21 @@ const Tooltip = styled.div`
   opacity: 1;
   z-index: 4;
   color: #fff;
+  box-shadow: 0 10px 34px rgba(30, 25, 64, 0.34);
+  &[data-popper-placement^='top'] {
+    ${Arrow} {
+      bottom: -7px;
+    }
+  }
+  &[data-popper-placement^='bottom'] {
+    ${Arrow} {
+      top: -7px;
+    }
+  }
   &.place-left {
     &::after {
       margin-top: -10px;
     }
-  }
-
-  &::after {
-    content: ' ';
-    position: absolute;
-    left: ${(p) => p.arrowLeft}px;
-    top: ${(p) => p.arrowTop}px;
-    width: 21px;
-    height: 21px;
-    background-color: #1e1940;
-    transform: rotate(45deg);
-    border-radius: 4px;
-    pointer-events: none;
-    z-index: -1;
   }
 `;
 

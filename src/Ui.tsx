@@ -1,8 +1,7 @@
+import { observer } from 'mobx-react';
 import 'mobx-react-lite/batchingForReactDom';
 import React, { useEffect, useState } from 'react';
-import { observer } from 'mobx-react';
 import * as ReactDOM from 'react-dom';
-import styled, { createGlobalStyle } from 'styled-components';
 import {
   MemoryRouter as Router,
   Redirect,
@@ -10,23 +9,24 @@ import {
   Switch,
 } from 'react-router-dom';
 import io from 'socket.io-client';
+import styled, { createGlobalStyle } from 'styled-components';
 // styles
 import './assets/css/ui.css';
 import './assets/figma-ui/main.min.css';
 // components
 import Notifications from './components/Notifications';
+import { SocketProvider } from './shared/SocketProvider';
 // shared
 import { ConnectionEnum } from './shared/interfaces';
-import { SocketProvider } from './shared/SocketProvider';
 import { sendMainMessage } from './shared/utils';
 // views
 import ChatView from './views/Chat';
 import MinimizedView from './views/Minimized';
-import UserListView from './views/UserList';
 import SettingsView from './views/Settings';
+import UserListView from './views/UserList';
 
-import { StoreProvider, useStore } from './store';
 import { reaction } from 'mobx';
+import { useStore, StoreProvider } from './store';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
@@ -56,7 +56,7 @@ const AppWrapper = styled.div`
 const init = () => {
   const App = observer(() => {
     const store = useStore();
-    let [socket, setSocket] = useState<SocketIOClient.Socket>(undefined);
+    const [socket, setSocket] = useState<SocketIOClient.Socket>(undefined);
 
     function onFocus() {
       sendMainMessage('focus', false);

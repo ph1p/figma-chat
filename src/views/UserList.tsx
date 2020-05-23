@@ -1,8 +1,8 @@
+// store
+import { observer } from 'mobx-react';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import Header from '../components/Header';
-// store
-import { observer } from 'mobx-react';
 import { useStore } from '../store';
 
 const UserListView: FunctionComponent = () => {

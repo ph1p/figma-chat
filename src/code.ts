@@ -25,7 +25,7 @@ async function main() {
   let history = figma.root.getPluginData('history');
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
-  let ownerId = figma.root.getPluginData('ownerId');
+  const ownerId = figma.root.getPluginData('ownerId');
 
   if (!instanceId) {
     instanceId = 'user-' + uniqid() + '-' + generateString(15);
@@ -37,7 +37,7 @@ async function main() {
   }
 
   if (!roomName) {
-    let randomRoomName = uniqid() + '-' + generateString(15);
+    const randomRoomName = uniqid() + '-' + generateString(15);
     figma.root.setPluginData('roomName', randomRoomName);
     roomName = randomRoomName;
   }
@@ -126,7 +126,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
   // events
   figma.on('selectionchange', () => {
     if (figma.currentPage.selection.length > 0) {
-      for (let node of figma.currentPage.selection) {
+      for (const node of figma.currentPage.selection) {
         if (node.setRelaunchData && isValidShape(node)) {
           node.setRelaunchData({
             relaunch: '',
@@ -137,7 +137,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
     } else {
       if (previousSelection.length > 0) {
         // tidy up 🧹
-        for (let node of previousSelection) {
+        for (const node of previousSelection) {
           if (node.setRelaunchData && isValidShape(node)) {
             node.setRelaunchData({});
           }
@@ -158,19 +158,17 @@ main().then(({ roomName, secret, history, instanceId }) => {
         break;
       case 'add-message-to-history':
         {
-          const history = JSON.parse(figma.root.getPluginData('history'));
+          const messageHistory = JSON.parse(figma.root.getPluginData('history'));
 
           figma.root.setPluginData(
             'history',
-            JSON.stringify(history.concat(message.payload))
+            JSON.stringify(messageHistory.concat(message.payload))
           );
         }
         break;
       case 'get-history':
         {
-          const history = figma.root.getPluginData('history');
-
-          postMessage('history', JSON.parse(history));
+          postMessage('history', JSON.parse(figma.root.getPluginData('history')));
         }
         break;
       case 'notify':

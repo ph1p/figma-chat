@@ -1,12 +1,12 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import { autorun, reaction } from 'mobx';
+// store
+import { observer } from 'mobx-react';
+import React, { useEffect, useState, FunctionComponent } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { NotificationParams } from '../shared/interfaces';
-import Notification from './Notification';
-// store
-import { observer } from 'mobx-react';
 import { useStore } from '../store';
-import { autorun, reaction } from 'mobx';
+import Notification from './Notification';
 
 const Notifications: FunctionComponent = () => {
   const store = useStore();

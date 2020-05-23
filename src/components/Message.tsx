@@ -1,11 +1,11 @@
+import { toJS } from 'mobx';
 import React, { FunctionComponent } from 'react';
+import TimeAgo from 'react-timeago';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import nowStrings from 'react-timeago/lib/language-strings/en';
 import styled from 'styled-components';
 import { colors } from '../shared/constants';
 import { sendMainMessage } from '../shared/utils';
-import TimeAgo from 'react-timeago';
-import nowStrings from 'react-timeago/lib/language-strings/en';
-import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
-import { toJS } from 'mobx';
 
 const formatter = buildFormatter(nowStrings);
 
@@ -16,6 +16,7 @@ interface Props {
 
 const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
   const username = data.user.name || '';
+  const avatar = data.user.avatar || '';
   const colorClass = colors[data.user.color] || 'blue';
   const selection = data?.message?.selection;
   const isSelf = data.id === instanceId;
@@ -27,9 +28,12 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
     <MessageFlex isSelf={isSelf}>
       <MessageWrapper className="message" isSelf={isSelf}>
         <MessageContainer className={`${isSelf ? 'me' : colorClass}`}>
-          {data.id !== instanceId && username && (
+          {!isSelf && username && (
             <MessageHeader>
-              <div className="user">{username}</div>
+              <div className="user">
+                {avatar && avatar + ' '}
+                {username}
+              </div>
             </MessageHeader>
           )}
           {selection ? (

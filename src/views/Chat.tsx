@@ -1,26 +1,20 @@
-import React, {
-  FunctionComponent,
-  useEffect,
-  useState,
-  createRef,
-} from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
-// components
-import SettingsView from '../views/Settings';
-import Message from '../components/Message';
-import Chatbar from '../components/Chatbar';
-//shared
-import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
-import { ConnectionEnum } from '../shared/interfaces';
-import { withSocketContext } from '../shared/SocketProvider';
-import { sendMainMessage } from '../shared/utils';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { toJS } from 'mobx';
 // store
 import { observer, useLocalStore } from 'mobx-react';
-import { useStore } from '../store';
-import { toJS } from 'mobx';
+import React, { useEffect, useState, FunctionComponent } from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import styled, { keyframes } from 'styled-components';
+import Chatbar from '../components/Chatbar';
 import Header from '../components/Header';
+import Message from '../components/Message';
+import { withSocketContext } from '../shared/SocketProvider';
+// shared
+import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
+import { sendMainMessage } from '../shared/utils';
+import { useStore } from '../store';
+// components
+import SettingsView from '../views/Settings';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;

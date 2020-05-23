@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
+import { useHistory, useRouteMatch, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { SharedIcon } from '../shared/style';
 import { useStore } from '../store';
 
@@ -13,7 +13,7 @@ interface Props {
 
 function CustomLink({ children, to, style = {}, className = '' }) {
   const history = useHistory();
-  let match = useRouteMatch({
+  const match = useRouteMatch({
     path: to,
     exact: true,
   });
