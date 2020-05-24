@@ -217,7 +217,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
 
 const MessageSeperator = styled.div`
   border-width: 1px 0 0 0;
-  border-color: #ececec;
+  border-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-style: dotted;
   margin: 5px 0 10px;
 `;
