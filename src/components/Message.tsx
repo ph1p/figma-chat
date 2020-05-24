@@ -1,5 +1,6 @@
 import { toJS } from 'mobx';
 import React, { FunctionComponent } from 'react';
+import Linkify from 'linkifyjs/react';
 import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import nowStrings from 'react-timeago/lib/language-strings/en';
@@ -56,7 +57,16 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
                 sendMainMessage('focus-nodes', selectionData);
               }}
             >
-              {data.message.text && <div>{data.message.text}</div>}
+              {data.message.text && (
+                <Linkify
+                  tagName="div"
+                  options={{
+                    defaultProtocol: 'https',
+                  }}
+                >
+                  {data.message.text}
+                </Linkify>
+              )}
               <button className="selection button button--secondary">
                 {pageName ? pageName + ' - ' : ''}
                 focus {selectionCount} element
@@ -64,7 +74,14 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
               </button>
             </span>
           ) : (
-            <span>{data.message.text}</span>
+            <Linkify
+              tagName="span"
+              options={{
+                defaultProtocol: 'https',
+              }}
+            >
+              {data.message.text}
+            </Linkify>
           )}
         </MessageContainer>
         <MessageDate>
@@ -114,7 +131,7 @@ const MessageContainer = styled.div`
   color: #fff;
   font-family: Inter;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 12px;
   line-height: 16px;
   padding: 11px 16px 11px;
@@ -125,12 +142,21 @@ const MessageContainer = styled.div`
     margin-bottom: 4px;
   }
 
+  .linkified {
+    color: #fff;
+    font-weight: 600;
+  }
+
   &.me {
     color: #000;
     padding: 11px 16px;
     background-color: #ebebeb;
     border-radius: 14px 14px 3px 14px;
     header {
+      color: #000;
+    }
+
+    .linkified {
       color: #000;
     }
 

@@ -3,6 +3,7 @@ import { observer, useLocalStore } from 'mobx-react';
 import React, { useEffect, useState, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { version } from '../../../package.json';
 import BellIcon from '../../assets/icons/Bell';
 import MessageIcon from '../../assets/icons/Message';
 import ThemeIcon from '../../assets/icons/Theme';
@@ -14,7 +15,6 @@ import Tooltip from '../../components/Tooltip';
 import { withSocketContext } from '../../shared/SocketProvider';
 import { DEFAULT_SERVER_URL } from '../../shared/constants';
 import { useStore } from '../../store';
-import { version } from '../../../package.json';
 import AvatarPicker from './components/AvatarPicker';
 import ColorPicker from './components/ColorPicker';
 
