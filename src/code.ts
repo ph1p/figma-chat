@@ -202,7 +202,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
         sendNotifications = isMinimized;
 
         // resize window
-        figma.ui.resize(message.payload ? 180 : 333, message.payload ? 1 : 490);
+        figma.ui.resize(message.payload ? 180 : 333, message.payload ? 108 : 490);
         break;
       case 'focus':
         if (!isMinimized) {

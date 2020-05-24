@@ -26,8 +26,8 @@ import SettingsView from './views/Settings';
 import UserListView from './views/UserList';
 
 import { reaction } from 'mobx';
-import { useStore, StoreProvider } from './store';
 import theme from './shared/theme';
+import { useStore, StoreProvider } from './store';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {

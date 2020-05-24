@@ -3,8 +3,8 @@ import { observer } from 'mobx-react';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import Header from '../components/Header';
-import { useStore } from '../store';
 import { withSocketContext } from '../shared/SocketProvider';
+import { useStore } from '../store';
 
 interface UserListProps {
   socket: SocketIOClient.Socket;

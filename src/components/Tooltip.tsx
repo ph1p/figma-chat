@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, FunctionComponent } from 'react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
 
@@ -9,7 +9,7 @@ interface Props {
   placement?: 'top' | 'bottom';
 }
 
-const TooltipComponent: FunctionComponent<Props> = (props) => {
+const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const { handler: HandlerComp } = props;
 
@@ -42,6 +42,12 @@ const TooltipComponent: FunctionComponent<Props> = (props) => {
       },
     ],
   });
+
+  useImperativeHandle(ref, () => ({
+    hide() {
+      setIsOpen(false);
+    },
+  }));
 
   useEffect(() => {
     if (!props.hover) {
@@ -96,7 +102,7 @@ const TooltipComponent: FunctionComponent<Props> = (props) => {
       )}
     </div>
   );
-};
+});
 
 const TooltipContent = styled.div`
   padding: 11px 17px;

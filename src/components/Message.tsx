@@ -1,6 +1,6 @@
+import Linkify from 'linkifyjs/react';
 import { toJS } from 'mobx';
 import React, { FunctionComponent } from 'react';
-import Linkify from 'linkifyjs/react';
 import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import nowStrings from 'react-timeago/lib/language-strings/en';
@@ -9,6 +9,15 @@ import { colors } from '../shared/constants';
 import { sendMainMessage } from '../shared/utils';
 
 const formatter = buildFormatter(nowStrings);
+
+function isOnlyEmoji(str: string) {
+  return (
+    str.replace(
+      /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g,
+      ''
+    ) === ''
+  );
+}
 
 interface Props {
   data: any;
@@ -25,10 +34,17 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
 
   const selectionCount = selection?.length || selection?.nodes?.length || 0;
 
+  const text = data.message.text;
+  const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
+
   return (
     <MessageFlex isSelf={isSelf}>
       <MessageWrapper className="message" isSelf={isSelf}>
-        <MessageContainer className={`${isSelf ? 'me' : colorClass}`}>
+        <MessageContainer
+          className={`${isSelf ? 'me' : colorClass} ${
+            isSingleEmoji && 'emoji'
+          }`}
+        >
           {!isSelf && username && (
             <MessageHeader>
               <div className="user">
@@ -57,14 +73,14 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
                 sendMainMessage('focus-nodes', selectionData);
               }}
             >
-              {data.message.text && (
+              {text && (
                 <Linkify
                   tagName="div"
                   options={{
                     defaultProtocol: 'https',
                   }}
                 >
-                  {data.message.text}
+                  {text}
                 </Linkify>
               )}
               <button className="selection button button--secondary">
@@ -75,12 +91,12 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
             </span>
           ) : (
             <Linkify
-              tagName="span"
+              tagName="div"
               options={{
                 defaultProtocol: 'https',
               }}
             >
-              {data.message.text}
+              {text}
             </Linkify>
           )}
         </MessageContainer>
@@ -135,7 +151,7 @@ const MessageContainer = styled.div`
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
-  padding: 11px 16px 11px;
+  padding: 11px 16px;
   word-break: break-word;
   margin-bottom: 4px;
   max-width: 240px;
@@ -170,6 +186,10 @@ const MessageContainer = styled.div`
         opacity: 1;
       }
     }
+
+    &.emoji {
+      text-align: right;
+    }
   }
 
   .selection {
@@ -200,6 +220,17 @@ const MessageContainer = styled.div`
       }
     `
   )}
+
+  &.emoji {
+    padding: 11px 0;
+    background-color: transparent;
+    font-size: 30px;
+    text-align: left;
+    header {
+      margin-bottom: 10px;
+      color: ${(p) => p.theme.fontColor};
+    }
+  }
 `;
 
 export default Message;

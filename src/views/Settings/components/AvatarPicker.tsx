@@ -1,6 +1,6 @@
 // store
 import { observer } from 'mobx-react';
-import React, { FunctionComponent } from 'react';
+import React, { useRef, FunctionComponent } from 'react';
 import styled from 'styled-components';
 // components
 import Tooltip from '../../../components/Tooltip';
@@ -14,9 +14,11 @@ interface SettingsProps {
 
 const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
   const store = useStore();
+  const pickerRef = useRef(null);
 
   return (
     <Tooltip
+      ref={pickerRef}
       placement="bottom"
       handler={observer(
         React.forwardRef((p, ref) => (
@@ -32,6 +34,7 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
             <div
               key={emoji}
               onClick={() => {
+                pickerRef.current.hide();
                 store.persistSettings(
                   {
                     avatar: emoji,

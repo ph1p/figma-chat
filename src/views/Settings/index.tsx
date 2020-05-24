@@ -247,7 +247,7 @@ const Tile = styled.div`
       return css`
         svg {
           path:last-child {
-            stroke: ${(p) => p.theme.secondaryBackgroundColor};
+            stroke: ${({ theme }) => theme.secondaryBackgroundColor};
           }
         }
       `;
@@ -257,7 +257,7 @@ const Tile = styled.div`
       return css`
         svg {
           path {
-            stroke: ${(p) => p.theme.secondaryBackgroundColor};
+            stroke: ${({ theme }) => theme.secondaryBackgroundColor};
           }
         }
       `;

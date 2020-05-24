@@ -4,6 +4,7 @@ import React, { FunctionComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/Header';
+import Tooltip from '../components/Tooltip';
 import { ConnectionEnum } from '../shared/interfaces';
 import { useStore } from '../store';
 
@@ -20,9 +21,24 @@ const MinimizedView: FunctionComponent = () => {
         )}
         <Users>
           {store.online.map((user) => (
-            <User key={user.id} className="user" color={user.color || '#000'}>
-              {user.avatar || user.name.substr(0, 2)}
-            </User>
+            <Tooltip
+              hover
+              key={user.id}
+              handler={observer(
+                React.forwardRef((_, ref) => (
+                  <User
+                    key={user.id}
+                    ref={ref}
+                    className="user"
+                    color={user.color || '#000'}
+                  >
+                    {user.avatar || user.name.substr(0, 2)}
+                  </User>
+                ))
+              )}
+            >
+              {user.name}
+            </Tooltip>
           ))}
         </Users>
       </Minimized>
@@ -33,7 +49,7 @@ const MinimizedView: FunctionComponent = () => {
 const Minimized = styled.div`
   display: grid;
   text-align: center;
-  min-height: calc(100vh - 33px);
+  min-height: calc(100vh - 37px);
   max-width: 100vw;
   font-size: 14px;
   div {
@@ -49,7 +65,7 @@ const Users = styled.div`
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(3, 1fr);
-  padding: 10px;
+  padding: 14px;
 `;
 
 const User = styled.div`
