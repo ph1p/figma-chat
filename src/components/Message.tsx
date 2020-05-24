@@ -162,8 +162,8 @@ const MessageContainer = styled.div`
     }
 
     .selection {
-      border-color: #000;
-      color: #000;
+      border-color: ${(p) => p.theme.fontColor};
+      color: ${(p) => p.theme.fontColor};
       opacity: 0.7;
       margin-top: 0;
       &:hover {
@@ -177,8 +177,8 @@ const MessageContainer = styled.div`
     cursor: pointer;
     width: 100%;
     background-color: transparent;
-    border-color: #fff;
-    color: #fff;
+    border-color: ${(p) => p.theme.fontColor};
+    color: ${(p) => p.theme.fontColor};
     &:active {
       border: 1px solid;
       box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
