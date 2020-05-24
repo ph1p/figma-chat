@@ -157,7 +157,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
     <>
       <Header />
       <Chat hasSelection={store.selectionCount > 0}>
-        <MessagesContainer
+        <Messages
           onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
           ref={store.messagesRef}
           onWheel={() => {
@@ -171,30 +171,30 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
               0;
           }}
         >
-          <Messages>
-            <TransitionGroup>
-              {chatState.filteredMessages.map((m, i) => (
-                <CSSTransition
-                  key={m.message.date}
-                  timeout={400}
-                  classNames={`message-${
-                    m.id === store.instanceId ? 'self' : 'other'
-                  }`}
-                >
-                  <>
-                    <Message data={m} instanceId={store.instanceId} />
-                    {(i + 1) % MAX_MESSAGES === 0 &&
-                    i + 1 !== chatState.filteredMessages.length ? (
-                      <MessageSeperator />
-                    ) : (
-                      ''
-                    )}
-                  </>
-                </CSSTransition>
-              ))}
-            </TransitionGroup>
-          </Messages>
-        </MessagesContainer>
+          {/* <Messages> */}
+          <TransitionGroup>
+            {chatState.filteredMessages.map((m, i) => (
+              <CSSTransition
+                key={m.message.date}
+                timeout={400}
+                classNames={`message-${
+                  m.id === store.instanceId ? 'self' : 'other'
+                }`}
+              >
+                <>
+                  <Message data={m} instanceId={store.instanceId} />
+                  {(i + 1) % MAX_MESSAGES === 0 &&
+                  i + 1 !== chatState.filteredMessages.length ? (
+                    <MessageSeperator />
+                  ) : (
+                    ''
+                  )}
+                </>
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
+          {/* </Messages> */}
+        </Messages>
 
         <Chatbar
           sendMessage={sendMessage}
@@ -222,22 +222,15 @@ const Chat = styled.div`
   grid-template-rows: 383px 69px;
 `;
 
-const MessagesContainer = styled.div`
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  background-color: #fff;
-  padding-top: 14px;
-  transition: transform 0.4s;
-  overflow: auto;
-`;
-
 const Messages = styled.div`
-  padding: 0 14px 0;
+  padding: 14px 14px 0;
   overflow-x: hidden;
-  align-self: end;
+  overflow-y: auto;
+  display: grid;
   > div {
+    align-self: end;
     > div {
+      width: 100%;
       &:last-child {
         .message {
           margin-bottom: 0;

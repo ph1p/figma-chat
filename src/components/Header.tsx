@@ -59,19 +59,23 @@ const Header: FunctionComponent<Props> = (props) => {
         </div>
         <span>Settings</span>
       </CustomLink>
-      {store.status === ConnectionEnum.CONNECTED && (
+      {store.status === ConnectionEnum.CONNECTED ? (
         <CustomLink style={{ marginLeft: 'auto' }} to="/user-list">
           <Users>
             <UserChips>
               {store.online
                 .filter((_, i) => i < 5)
                 .map((user) => (
-                  <Chip key={user.id} style={{ backgroundColor: user.color }} />
+                  <Chip key={user.id} style={{ backgroundColor: user.color }}>
+                    {user?.avatar || ''}
+                  </Chip>
                 ))}
             </UserChips>
             {store.online.length > 5 && <Chip>+{store.online.length - 5}</Chip>}
           </Users>
         </CustomLink>
+      ) : (
+        <Users />
       )}
       <div className="minus" onClick={() => store.toggleMinimizeChat()}></div>
     </Head>
@@ -101,7 +105,9 @@ const UserChips = styled.div`
   margin-right: 4px;
   ${Chip} {
     margin-left: -10px;
-    box-shadow: 1px 0px 1px #ddd;
+    line-height: 15px;
+    font-size: 9px;
+    text-align: center;
   }
 `;
 

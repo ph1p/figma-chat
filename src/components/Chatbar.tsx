@@ -2,10 +2,11 @@ import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useEffect, useRef, useState, FunctionComponent } from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ConnectionEnum } from '../shared/interfaces';
 import { useStore } from '../store';
 import Tooltip from './Tooltip';
+import EmojiIcon from '../assets/icons/Emoji';
 
 interface ChatProps {
   sendMessage: (event: any) => void;
@@ -58,7 +59,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
             chatTextInput.current.focus();
           }}
         >
-          <div>{store.selectionCount}</div>
+          <div>{store.selectionCount < 10 && store.selectionCount}</div>
         </SelectionCheckbox>
         <ChatInput hasSelection={hasSelection}>
           <input
@@ -96,30 +97,14 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
             ))}
           >
             <EmojiList>
-              <span data-emoji="😂" />
-              <span data-emoji="😊" />
-              <span data-emoji="👍" />
-              <span data-emoji="🙈" />
-              <span data-emoji="🔥" />
-              <span data-emoji="🤔" />
-              <span data-emoji="💩" />
+              {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩'].map((emoji) => (
+                <span key={emoji} data-emoji={emoji} />
+              ))}
             </EmojiList>
           </Tooltip>
 
           <SendButton color={store.settings.color} onClick={sendMessage}>
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2.38396 1.47595H8.55196M8.55196 1.47595V7.64395M8.55196 1.47595L1.35596 8.67195"
-                stroke="white"
-                strokeWidth="1.028"
-              />
-            </svg>
+            <EmojiIcon />
           </SendButton>
         </ChatInput>
       </ChatInputWrapper>
@@ -193,7 +178,6 @@ const ChatInput = styled.div`
   transition: width 0.3s;
   background-color: #eceff4;
   border-radius: 10px 10px 0 10px;
-  /* width: ${(p) => (p.hasSelection ? '225px' : '100%')}; */
   width: 100%;
 
   input {
@@ -259,10 +243,18 @@ const SelectionCheckbox = styled.div`
   justify-items: center;
   align-items: center;
   cursor: pointer;
+  ${(p) =>
+    p.checked &&
+    css`
+      box-shadow: inset 0px 0px 0px 1px #a2adc0;
+    `};
   &:hover {
     div {
       opacity: 1;
     }
+  }
+  &:active {
+    opacity: 0.8;
   }
   div {
     position: relative;

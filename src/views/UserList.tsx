@@ -4,8 +4,13 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import { useStore } from '../store';
+import { withSocketContext } from '../shared/SocketProvider';
 
-const UserListView: FunctionComponent = () => {
+interface UserListProps {
+  socket: SocketIOClient.Socket;
+}
+
+const UserListView: FunctionComponent<UserListProps> = (props) => {
   const store = useStore();
 
   return (
@@ -14,19 +19,22 @@ const UserListView: FunctionComponent = () => {
       <UserList>
         <h5>Active Users</h5>
         <div className="users">
-          {store.online.map((user) => (
-            <div key={user.id} className="user">
-              <div
-                className="color"
-                style={{ backgroundColor: user.color || '#000' }}
-              >
-                {user.avatar}
+          {store.online.map((user) => {
+            return (
+              <div key={user.id} className="user">
+                <div
+                  className="color"
+                  style={{ backgroundColor: user.color || '#000' }}
+                >
+                  {user.avatar}
+                </div>
+                <div className={`name ${!user.name ? 'empty' : ''}`}>
+                  {user.name || 'Anon'}
+                  {user.id === props.socket.id && <p>you</p>}
+                </div>
               </div>
-              <div className={`name ${!user.name ? 'empty' : ''}`}>
-                {user.name || 'Anon'}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </UserList>
     </>
@@ -58,6 +66,12 @@ const UserList = styled.div`
           font-weight: normal;
           font-style: italic;
         }
+        p {
+          color: #999;
+          font-size: 10px;
+          margin: 2px 0 0 0;
+          font-weight: 300;
+        }
       }
       .color {
         border-radius: 14px 14px 3px 14px;
@@ -72,4 +86,4 @@ const UserList = styled.div`
   }
 `;
 
-export default observer(UserListView);
+export default withSocketContext(observer(UserListView));
