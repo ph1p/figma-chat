@@ -181,7 +181,6 @@ const MessageContainer = styled.div`
       border-color: ${(p) => p.theme.fontColor};
       color: ${(p) => p.theme.fontColor};
       opacity: 0.7;
-      margin-top: 0;
       &:hover {
         opacity: 1;
       }
@@ -192,8 +191,11 @@ const MessageContainer = styled.div`
     }
   }
 
+  div + .selection {
+    margin-top: 8px;
+  }
+
   .selection {
-    margin: 5px 0 0 0;
     cursor: pointer;
     width: 100%;
     background-color: transparent;
