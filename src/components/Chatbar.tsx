@@ -53,7 +53,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
         <SelectionCheckbox
           checked={props.selectionIsChecked}
           hasSelection={hasSelection}
-          onClick={(e: any) => {
+          onClick={() => {
             props.setSelectionIsChecked(!props.selectionIsChecked);
             chatTextInput.current.focus();
           }}
@@ -204,7 +204,7 @@ const ChatInput = styled.div`
     border-radius: 6px;
     width: 100%;
     border: 0;
-    padding: 14px 30px 14px 18px;
+    padding: 14px 82px 14px 18px;
     height: 41px;
     outline: none;
     &::placeholder {

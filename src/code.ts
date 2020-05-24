@@ -25,7 +25,7 @@ async function main() {
   let history = figma.root.getPluginData('history');
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
-  const ownerId = figma.root.getPluginData('ownerId');
+  // const ownerId = figma.root.getPluginData('ownerId');
 
   if (!instanceId) {
     instanceId = 'user-' + uniqid() + '-' + generateString(15);

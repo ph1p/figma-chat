@@ -160,7 +160,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
         <MessagesContainer
           onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
           ref={store.messagesRef}
-          onWheel={(e) => {
+          onWheel={() => {
             const { current } = toJS(store.messagesRef);
             if (current.scrollTop <= current.scrollHeight * 0.2) {
               showMore();

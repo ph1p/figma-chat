@@ -8,10 +8,7 @@ import { ConnectionEnum } from '../shared/interfaces';
 import { useStore } from '../store';
 
 interface Props {
-  title?: any;
-  left?: any;
-  right?: any;
-  backButton?: boolean;
+  minimized?: boolean;
 }
 
 function CustomLink({ children, to, style = {}, className = '' }) {
@@ -40,6 +37,14 @@ function CustomLink({ children, to, style = {}, className = '' }) {
 const Header: FunctionComponent<Props> = (props) => {
   const store = useStore();
 
+  if (props.minimized) {
+    return (
+      <Head>
+        <div className="plus" onClick={() => store.toggleMinimizeChat()}></div>
+      </Head>
+    );
+  }
+
   return (
     <Head>
       <CustomLink className="item" to="/">
@@ -59,7 +64,7 @@ const Header: FunctionComponent<Props> = (props) => {
           <Users>
             <UserChips>
               {store.online
-                .filter((_, i) => i < 4)
+                .filter((_, i) => i < 5)
                 .map((user) => (
                   <Chip key={user.id} style={{ backgroundColor: user.color }} />
                 ))}
@@ -101,9 +106,9 @@ const UserChips = styled.div`
 `;
 
 const Head = styled.div`
+  display: flex;
   height: 37px;
   border-bottom: 1px solid #e4e4e4;
-  position: sticky;
   top: 0;
   z-index: 9;
   background-color: #fff;
@@ -111,8 +116,6 @@ const Head = styled.div`
   padding: 0 16px;
   font-size: 11px;
 
-  display: flex;
-  width: 100%;
   .icon {
     margin-right: 6px;
   }
@@ -125,10 +128,11 @@ const Head = styled.div`
     }
   }
 
-  .minus {
+  .minus,
+  .plus {
     position: relative;
     padding: 18px 0;
-    margin-left: 19px;
+    margin-left: 14px;
     width: 11px;
     align-self: center;
     cursor: pointer;
@@ -141,6 +145,18 @@ const Head = styled.div`
       position: absolute;
       width: 11px;
       height: 1px;
+      background-color: #000;
+    }
+  }
+  .plus {
+    margin-left: auto;
+    &::before {
+      content: '';
+      left: 5px;
+      top: 12px;
+      position: absolute;
+      width: 1px;
+      height: 11px;
       background-color: #000;
     }
   }

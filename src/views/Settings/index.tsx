@@ -14,6 +14,7 @@ import Tooltip from '../../components/Tooltip';
 import { withSocketContext } from '../../shared/SocketProvider';
 import { DEFAULT_SERVER_URL } from '../../shared/constants';
 import { useStore } from '../../store';
+import { version } from '../../../package.json';
 import AvatarPicker from './components/AvatarPicker';
 import ColorPicker from './components/ColorPicker';
 
@@ -204,12 +205,12 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
             </Tooltip>
           </ShortcutTiles>
 
-          {/* <VersionNote
+          <VersionNote
             target="_blank"
             href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
           >
-            version: {version}
-          </VersionNote> */}
+            v{version}
+          </VersionNote>
         </div>
       </Settings>
     </>
@@ -252,9 +253,13 @@ const SavedFlag = styled.span`
 `;
 
 const VersionNote = styled.a`
+  position: absolute;
+  left: 0;
+  text-align: center;
+  color: #999;
+  bottom: 10px;
   margin-top: 5px;
   width: 100%;
-  text-align: right;
   text-decoration: none;
   font-size: 10px;
   display: block;

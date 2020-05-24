@@ -120,6 +120,10 @@ const MessageContainer = styled.div`
   padding: 11px 16px 11px;
   word-break: break-word;
   margin-bottom: 4px;
+  max-width: 240px;
+  header {
+    margin-bottom: 4px;
+  }
 
   &.me {
     color: #000;
@@ -168,100 +172,7 @@ const MessageContainer = styled.div`
         }
       }
     `
-  )}/* &.lightblue header {
-    color: #1c4856;
-  }
-  &.lightblue .selection {
-    border-color: #1c4856;
-    color: #1c4856;
-  }
-
-  &.lightgreen header {
-    color: #3a8459;
-  }
-  &.lightgreen .selection {
-    border-color: #3a8459;
-    color: #3a8459;
-  }
-
-  &.purple header {
-    color: #ffffff;
-  }
-  &.purple .selection {
-    border-color: #ffffff;
-    color: #ffffff;
-  }
-
-  &.red header {
-    color: #ffffff;
-  }
-  &.red .selection {
-    border-color: #ffffff;
-    color: #ffffff;
-  }
-
-  &.green header {
-    color: #0d6540;
-  }
-  &.green .selection {
-    border-color: #0d6540;
-    color: #0d6540;
-  }
-
-  &.orange header {
-    color: #865427;
-  }
-  &.orange .selection {
-    border-color: #865427;
-    color: #865427;
-  }
-
-  &.beige header {
-    color: #564432;
-  }
-  &.beige .selection {
-    border-color: #564432;
-    color: #564432;
-  }
-
-  &.gray {
-    background-color: #4f4f4f;
-  }
-  &.blue {
-    background-color: #18a0fb;
-  }
-  &.lightblue {
-    background-color: #56ccf2;
-    color: #1c4856;
-  }
-  &.purple {
-    background-color: #5751ff;
-    color: #ffffff;
-  }
-  &.green {
-    background-color: #1bc47d;
-    color: #0d6540;
-  }
-  &.lightgreen {
-    background-color: #6fcf97;
-    color: #3a8459;
-  }
-  &.red {
-    background-color: #f24822;
-    color: #ffffff;
-  }
-  &.orange {
-    background-color: #f2994a;
-    color: #865427;
-  }
-  &.beige {
-    background-color: #e7b889;
-    color: #564432;
-  }
-  &.pink {
-    background-color: #f47e9a;
-    color: #ffffff;
-  } */
+  )}
 `;
 
 export default Message;
