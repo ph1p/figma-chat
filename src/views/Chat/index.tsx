@@ -4,14 +4,15 @@ import { observer, useLocalStore } from 'mobx-react';
 import React, { useEffect, useState, FunctionComponent } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
-import Chatbar from '../components/Chatbar';
-import Header from '../components/Header';
-import Message from '../components/Message';
-import { withSocketContext } from '../shared/SocketProvider';
+import Chatbar from '../../components/Chatbar';
+import Header from '../../components/Header';
+import Message from '../../components/Message';
+import { withSocketContext } from '../../shared/SocketProvider';
 
-import { IS_PROD, MAX_MESSAGES } from '../shared/constants';
-import { sendMainMessage } from '../shared/utils';
-import { useStore } from '../store';
+import { IS_PROD, MAX_MESSAGES } from '../../shared/constants';
+import { sendMainMessage } from '../../shared/utils';
+import { useStore } from '../../store';
+import TodoList from './components/TodoList';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
@@ -156,56 +157,60 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
   return (
     <>
       <Header />
-      <Chat hasSelection={store.selectionCount > 0}>
-        <Messages
-          onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
-          ref={store.messagesRef}
-          onWheel={() => {
-            const { current } = toJS(store.messagesRef);
-            if (current.scrollTop <= current.scrollHeight * 0.2) {
-              showMore();
-            }
-            store.disableAutoScroll =
-              current.scrollHeight -
-                (current.scrollTop + current.clientHeight) >
-              0;
-          }}
-        >
-          {/* <Messages> */}
-          <TransitionGroup>
-            {chatState.filteredMessages.map((m, i) => (
-              <CSSTransition
-                key={m.message.date}
-                timeout={400}
-                classNames={`message-${
-                  m.id === store.instanceId ? 'self' : 'other'
-                }`}
-              >
-                <>
-                  <Message data={m} instanceId={store.instanceId} />
-                  {(i + 1) % MAX_MESSAGES === 0 &&
-                  i + 1 !== chatState.filteredMessages.length ? (
-                    <MessageSeperator />
-                  ) : (
-                    ''
-                  )}
-                </>
-              </CSSTransition>
-            ))}
-          </TransitionGroup>
-          {/* </Messages> */}
-        </Messages>
+      {!store.settings.name ? (
+        <TodoList />
+      ) : (
+        <Chat hasSelection={store.selectionCount > 0}>
+          <Messages
+            onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
+            ref={store.messagesRef}
+            onWheel={() => {
+              const { current } = toJS(store.messagesRef);
+              if (current.scrollTop <= current.scrollHeight * 0.2) {
+                showMore();
+              }
+              store.disableAutoScroll =
+                current.scrollHeight -
+                  (current.scrollTop + current.clientHeight) >
+                0;
+            }}
+          >
+            {/* <Messages> */}
+            <TransitionGroup>
+              {chatState.filteredMessages.map((m, i) => (
+                <CSSTransition
+                  key={m.message.date}
+                  timeout={400}
+                  classNames={`message-${
+                    m.id === store.instanceId ? 'self' : 'other'
+                  }`}
+                >
+                  <>
+                    <Message data={m} instanceId={store.instanceId} />
+                    {(i + 1) % MAX_MESSAGES === 0 &&
+                    i + 1 !== chatState.filteredMessages.length ? (
+                      <MessageSeperator />
+                    ) : (
+                      ''
+                    )}
+                  </>
+                </CSSTransition>
+              ))}
+            </TransitionGroup>
+            {/* </Messages> */}
+          </Messages>
 
-        <Chatbar
-          sendMessage={sendMessage}
-          setTextMessage={(text) => (chatState.textMessage = text)}
-          textMessage={chatState.textMessage}
-          setSelectionIsChecked={(isChecked) =>
-            (chatState.selectionIsChecked = isChecked)
-          }
-          selectionIsChecked={chatState.selectionIsChecked}
-        />
-      </Chat>
+          <Chatbar
+            sendMessage={sendMessage}
+            setTextMessage={(text) => (chatState.textMessage = text)}
+            textMessage={chatState.textMessage}
+            setSelectionIsChecked={(isChecked) =>
+              (chatState.selectionIsChecked = isChecked)
+            }
+            selectionIsChecked={chatState.selectionIsChecked}
+          />
+        </Chat>
+      )}
     </>
   );
 };

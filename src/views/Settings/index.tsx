@@ -1,6 +1,6 @@
 // store
 import { observer, useLocalStore } from 'mobx-react';
-import React, { useEffect, useState, FunctionComponent } from 'react';
+import React, { useEffect, FunctionComponent, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { version } from '../../../package.json';
@@ -22,28 +22,10 @@ interface SettingsProps {
   socket: SocketIOClient.Socket;
 }
 
-const Flag = (props) => {
-  return props.flags[props.type] ? (
-    <SavedFlag
-      onClick={() =>
-        props.reset({
-          ...props.flags,
-          [props.type]: false,
-        })
-      }
-    >
-      saved!
-    </SavedFlag>
-  ) : null;
-};
-
 const SettingsView: FunctionComponent<SettingsProps> = (props) => {
   const store = useStore();
 
-  const [flags, setFlag] = useState({
-    username: false,
-  });
-
+  const nameInputRef = useRef(null);
   const history = useHistory();
   const settings = useLocalStore(() => ({
     name: '',
@@ -55,11 +37,9 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     if (store.isMinimized) {
       store.toggleMinimizeChat();
     }
-
-    return () =>
-      setFlag({
-        username: true,
-      });
+    if(!store.settings.name) {
+      nameInputRef.current.focus();
+    }
   }, []);
 
   useEffect(() => {
@@ -71,10 +51,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
 
   const saveSettings = (shouldClose: boolean = true) => {
     if (store.settings.name !== settings.name) {
-      setFlag({
-        ...flags,
-        username: true,
-      });
+      store.addNotification(`Name successfully updated`);
     }
 
     store.persistSettings(settings, props.socket);
@@ -94,11 +71,10 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
         </Picker>
 
         <div>
-          <label>
-            Username <Flag reset={setFlag} flags={flags} type="username" />
-          </label>
+          <label>Username</label>
           <input
             type="text"
+            ref={nameInputRef}
             value={settings.name}
             onBlur={() => saveSettings(false)}
             onChange={({ target }: any) =>
@@ -109,7 +85,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
         </div>
         <div>
           <label htmlFor="server-url">
-            Server-URL <Flag reset={setFlag} flags={flags} type="url" />
+            Server-URL
             <span
               onClick={() => {
                 settings.url = DEFAULT_SERVER_URL;
@@ -246,8 +222,22 @@ const Tile = styled.div`
     if (p.name === 'trash') {
       return css`
         svg {
+          path {
+            fill: ${({ theme }) => theme.thirdFontColor};
+            stroke: ${({ theme }) => theme.thirdFontColor};
+          }
           path:last-child {
             stroke: ${({ theme }) => theme.secondaryBackgroundColor};
+          }
+        }
+      `;
+    }
+
+    if (p.name === 'theme') {
+      return css`
+        svg {
+          path {
+            fill: ${({ theme }) => theme.thirdFontColor};
           }
         }
       `;
@@ -257,7 +247,10 @@ const Tile = styled.div`
       return css`
         svg {
           path {
-            stroke: ${({ theme }) => theme.secondaryBackgroundColor};
+            fill: ${({ theme }) => theme.thirdFontColor};
+            &:last-child {
+              stroke: ${({ theme }) => theme.secondaryBackgroundColor};
+            }
           }
         }
       `;
@@ -270,13 +263,6 @@ const ShortcutTiles = styled.div`
   width: 207px;
   justify-content: space-between;
   margin: 0 auto;
-`;
-
-const SavedFlag = styled.span`
-  background-color: #fff;
-  color: #000;
-  padding: 4px 7px;
-  border-radius: 5px;
 `;
 
 const VersionNote = styled.a`
