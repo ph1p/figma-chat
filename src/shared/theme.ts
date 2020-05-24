@@ -1,5 +1,6 @@
 const darkTheme = {
   fontColor: "#fff",
+  secondaryFontColor: "#615e73",
   fontColorInverse: "#000",
   backgroundColor: '#0D0B1C',
   secondaryBackgroundColor: '#1F2538',
@@ -9,6 +10,7 @@ const darkTheme = {
 
 const theme = {
   fontColor: "#000",
+  secondaryFontColor: "#cecece",
   fontColorInverse: "#fff",
   backgroundColor: '#fff',
   secondaryBackgroundColor: '#eceff4',

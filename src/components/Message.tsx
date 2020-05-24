@@ -107,8 +107,9 @@ const MessageHeader = styled.header`
 
 const MessageDate = styled.div`
   font-weight: normal;
-  color: #b3b3b3;
+  color: ${(p) => p.theme.secondaryFontColor};
   font-size: 9px;
+  font-weight: 600;
 `;
 
 const MessageFlex = styled.div`

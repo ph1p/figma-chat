@@ -140,7 +140,8 @@ const Head = styled.div`
     opacity: 0.4;
     font-weight: bold;
     margin-right: 16px;
-    &.active {
+    &.active,
+    &:hover {
       opacity: 1;
     }
   }
