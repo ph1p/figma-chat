@@ -191,6 +191,7 @@ const ChatInput = styled.div`
     padding: 14px 82px 14px 18px;
     height: 41px;
     outline: none;
+    color: ${(p) => p.theme.fontColor};
     &::placeholder {
       color: #a2adc0;
     }
