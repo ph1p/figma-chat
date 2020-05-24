@@ -37,7 +37,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     if (store.isMinimized) {
       store.toggleMinimizeChat();
     }
-    if(!store.settings.name) {
+    if (!store.settings.name) {
       nameInputRef.current.focus();
     }
   }, []);
@@ -248,7 +248,7 @@ const Tile = styled.div`
         svg {
           path {
             fill: ${({ theme }) => theme.thirdFontColor};
-            &:last-child {
+            &:nth-child(2) {
               stroke: ${({ theme }) => theme.secondaryBackgroundColor};
             }
           }
