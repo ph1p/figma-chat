@@ -130,13 +130,13 @@ const MessageDate = styled.div`
 
 const MessageFlex = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   flex-direction: ${({ isSelf }) => (isSelf ? 'row' : 'row-reverse')};
 `;
 
 const MessageWrapper = styled.div`
   margin: 0 0 10px 0;
+  text-align: ${({ isSelf }) => (isSelf ? 'right' : 'left')};
   ${MessageDate} {
     text-align: ${({ isSelf }) => (isSelf ? 'right' : 'left')};
   }
@@ -155,6 +155,8 @@ const MessageContainer = styled.div`
   word-break: break-word;
   margin-bottom: 4px;
   max-width: 240px;
+  display: inline-block;
+  text-align: left;
   header {
     margin-bottom: 4px;
   }
