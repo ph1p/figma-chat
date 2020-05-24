@@ -112,17 +112,21 @@ const Arrow = styled.div`
   svg {
     height: 21px;
     width: 21px;
+    rect {
+      fill: ${(p) => p.theme.tooltipBackgroundColor};
+    }
   }
 `;
 
 const Tooltip = styled.div`
   position: fixed;
-  background-color: #1e1940;
+  background-color: ${(p) => p.theme.tooltipBackgroundColor};
   border-radius: 20px;
   opacity: 1;
   z-index: 4;
-  color: #fff;
+  color: ${(p) => p.theme.fontColorInverse};
   box-shadow: 0 10px 34px rgba(30, 25, 64, 0.34);
+
   &[data-popper-placement^='top'] {
     ${Arrow} {
       bottom: -7px;

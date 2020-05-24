@@ -62,6 +62,7 @@ const UserList = styled.div`
       display: flex;
       align-items: center;
       .name {
+        color: ${(p) => p.theme.fontColor};
         &.empty {
           font-weight: normal;
           font-style: italic;

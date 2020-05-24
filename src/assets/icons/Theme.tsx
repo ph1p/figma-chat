@@ -8,48 +8,21 @@ const ThemeIcon: FunctionComponent<Props> = (props) => {
   if (props.active) {
     return (
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="30"
-        height="31"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
         fill="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <g filter="url(#filter0_d)">
-          <circle cx="15" cy="12" r="5" fill="#626E81" />
-          <circle
-            cx="15"
-            cy="12"
-            r="10"
-            stroke="#626E81"
-            strokeDasharray="1 10"
-            strokeWidth="2"
-          />
-        </g>
-        <defs>
-          <filter
-            id="filter0_d"
-            width="32"
-            height="32"
-            x="-1"
-            y="0"
-            colorInterpolationFilters="sRGB"
-            filterUnits="userSpaceOnUse"
-          >
-            <feFlood flood-opacity="0" result="BackgroundImageFix" />
-            <feColorMatrix
-              in="SourceAlpha"
-              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-            />
-            <feOffset dy="4" />
-            <feGaussianBlur stdDeviation="2" />
-            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-            <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
-            <feBlend
-              in="SourceGraphic"
-              in2="effect1_dropShadow"
-              result="shape"
-            />
-          </filter>
-        </defs>
+        <circle cx="12" cy="12" r="5" fill="#A2ADC0" />
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="#A2ADC0"
+          strokeWidth="2"
+          strokeDasharray="1 10"
+        />
       </svg>
     );
   }

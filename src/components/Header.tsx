@@ -92,7 +92,7 @@ const Chip = styled.div`
   min-width: 19px;
   min-height: 19px;
   max-height: 19px;
-  background-color: #efeff3;
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 40px;
   padding: 2px 2px;
   text-align: center;
@@ -114,18 +114,29 @@ const UserChips = styled.div`
 const Head = styled.div`
   display: flex;
   height: 37px;
-  border-bottom: 1px solid #e4e4e4;
+
+  border-bottom: 1px solid ${(p) => p.theme.borderColor};
   top: 0;
   z-index: 9;
-  background-color: #fff;
   display: flex;
   padding: 0 16px;
   font-size: 11px;
 
   .icon {
     margin-right: 6px;
+    svg {
+      path {
+        fill: ${(p) => p.theme.backgroundColor};
+      }
+      circle,
+      path {
+        stroke: ${(p) => p.theme.fontColor};
+      }
+    }
   }
+
   .item {
+    color: ${(p) => p.theme.fontColor};
     opacity: 0.4;
     font-weight: bold;
     margin-right: 16px;
@@ -143,7 +154,6 @@ const Head = styled.div`
     align-self: center;
     cursor: pointer;
     font-weight: bold;
-    color: #fff;
     &::after {
       content: '';
       left: 0;
@@ -151,7 +161,7 @@ const Head = styled.div`
       position: absolute;
       width: 11px;
       height: 1px;
-      background-color: #000;
+      background-color: ${(p) => p.theme.fontColor};
     }
   }
   .plus {
@@ -163,7 +173,7 @@ const Head = styled.div`
       position: absolute;
       width: 1px;
       height: 11px;
-      background-color: #000;
+      background-color: ${(p) => p.theme.fontColor};
     }
   }
 `;

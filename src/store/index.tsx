@@ -77,6 +77,7 @@ class RootStore {
     url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     enableNotificationSound: true,
+    isDarkTheme: false,
   };
 
   @observable

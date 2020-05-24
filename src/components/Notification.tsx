@@ -37,12 +37,10 @@ const NotificationContainer = styled.div`
   border-radius: 5px;
   height: auto;
   margin-bottom: 5px;
-  background-color: #000;
-  &.success {
-    background-color: #1bc47d;
-  }
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
+  color: ${(p) => p.theme.fontColor};
   span {
-    color: #fff;
+    color: ${(p) => p.theme.fontColor};
     font-size: 12px;
   }
 `;

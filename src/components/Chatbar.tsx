@@ -176,7 +176,7 @@ const ChatInput = styled.div`
   margin: 0;
   z-index: 3;
   transition: width 0.3s;
-  background-color: #eceff4;
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 10px 10px 0 10px;
   width: 100%;
 
@@ -195,6 +195,7 @@ const ChatInput = styled.div`
       color: #a2adc0;
     }
   }
+
   button {
     border: 0;
     padding: 6px 5px;
@@ -232,7 +233,7 @@ const SendButton = styled.div`
 const SelectionCheckbox = styled.div`
   animation-delay: 0.2s;
   transition: all 0.2s;
-  background-color: #eceff4;
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 10px;
   height: 41px;
   width: ${(p) => (p.hasSelection ? 49 : 0)}px;
@@ -264,7 +265,7 @@ const SelectionCheckbox = styled.div`
     text-align: center;
     margin: 0 auto;
     background-color: #a2adc0;
-    color: #eceff4;
+    color: ${(p) => p.theme.secondaryBackgroundColor};
     font-weight: bold;
     font-size: 10px;
     opacity: ${(p) => (p.checked ? 1 : 0.5)};

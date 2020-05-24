@@ -52,7 +52,7 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
 const AvatarPickerAction = styled.div`
   width: 59px;
   height: 59px;
-  background-color: #eceff4;
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 18px 18px 3px 18px;
   font-size: 28px;
   text-align: center;

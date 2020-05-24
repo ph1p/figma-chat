@@ -2,7 +2,7 @@
 import { observer, useLocalStore } from 'mobx-react';
 import React, { useEffect, useState, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { version } from '../../../package.json';
 import BellIcon from '../../assets/icons/Bell';
 import MessageIcon from '../../assets/icons/Message';
@@ -105,7 +105,6 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               (settings.name = target.value.substr(0, 20))
             }
             onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
-            placeholder="Username ..."
           />
         </div>
         <div>
@@ -132,7 +131,6 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               (settings.url = target.value.substr(0, 255))
             }
             onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
-            placeholder="Server-URL ..."
           />
         </div>
 
@@ -143,6 +141,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               handler={observer(
                 React.forwardRef((_, ref) => (
                   <Tile
+                    name="trash"
                     ref={ref}
                     onClick={() =>
                       store.clearChatHistory(() => saveSettings(true))
@@ -160,6 +159,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               handler={observer(
                 React.forwardRef((_, ref) => (
                   <Tile
+                    name="message"
                     ref={ref}
                     onClick={() => {
                       settings.enableNotificationTooltip = !settings.enableNotificationTooltip;
@@ -177,8 +177,15 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               hover
               handler={observer(
                 React.forwardRef((_, ref) => (
-                  <Tile ref={ref}>
-                    <ThemeIcon />
+                  <Tile
+                    name="theme"
+                    ref={ref}
+                    onClick={() => {
+                      store.settings.isDarkTheme = !store.settings.isDarkTheme;
+                      saveSettings(false);
+                    }}
+                  >
+                    <ThemeIcon active={!store.settings.isDarkTheme} />
                   </Tile>
                 ))
               )}
@@ -190,11 +197,13 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
               handler={observer(
                 React.forwardRef((_, ref) => (
                   <Tile
+                    name="bell"
                     ref={ref}
-                    onClick={() =>
-                      (store.settings.enableNotificationSound = !store.settings
-                        .enableNotificationSound)
-                    }
+                    onClick={() => {
+                      store.settings.enableNotificationSound = !store.settings
+                        .enableNotificationSound;
+                      saveSettings(false);
+                    }}
                   >
                     <BellIcon active={store.settings.enableNotificationSound} />
                   </Tile>
@@ -227,15 +236,33 @@ const Picker = styled.div`
 const Tile = styled.div`
   width: 45px;
   height: 45px;
-  background-color: #eceff4;
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  &:hover {
-    background-color: #eee;
-  }
+  ${(p) => {
+    if (p.name === 'trash') {
+      return css`
+        svg {
+          path:last-child {
+            stroke: ${(p) => p.theme.secondaryBackgroundColor};
+          }
+        }
+      `;
+    }
+
+    if (p.name === 'bell' || p.name === 'message') {
+      return css`
+        svg {
+          path {
+            stroke: ${(p) => p.theme.secondaryBackgroundColor};
+          }
+        }
+      `;
+    }
+  }}
 `;
 
 const ShortcutTiles = styled.div`
@@ -301,10 +328,10 @@ const Settings = styled.div`
     text-align: center;
     width: 100%;
     border-width: 1px;
-    border-color: #eceff4;
+    border-color: ${(p) => p.theme.secondaryBackgroundColor};
     border-style: solid;
-    background-color: #fff;
-    color: #000;
+    background-color: transparent;
+    color: ${(p) => p.theme.fontColor};
     padding: 9px 18px;
     outline: none;
     border-radius: 7px;

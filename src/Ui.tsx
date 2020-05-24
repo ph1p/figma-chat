@@ -9,7 +9,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import io from 'socket.io-client';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 // styles
 import './assets/css/ui.css';
 import './assets/figma-ui/main.min.css';
@@ -27,6 +27,7 @@ import UserListView from './views/UserList';
 
 import { reaction } from 'mobx';
 import { useStore, StoreProvider } from './store';
+import theme from './shared/theme';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
@@ -46,6 +47,7 @@ onmessage = (message) => {
 const GlobalStyle = createGlobalStyle`
   body {
     overflow: hidden;
+    background-color: ${p => p.theme.backgroundColor};
   }
 `;
 
@@ -156,31 +158,33 @@ const init = () => {
     }, []);
 
     return (
-      <AppWrapper>
-        <GlobalStyle />
+      <ThemeProvider theme={theme(store.settings.isDarkTheme)}>
+        <AppWrapper>
+          <GlobalStyle />
 
-        <SocketProvider socket={socket}>
-          <Router>
-            <Notifications />
+          <SocketProvider socket={socket}>
+            <Router>
+              <Notifications />
 
-            {store.isMinimized && <Redirect to="/minimized" />}
-            <Switch>
-              <Route exact path="/minimized">
-                <MinimizedView />
-              </Route>
-              <Route exact path="/user-list">
-                <UserListView />
-              </Route>
-              <Route exact path="/settings">
-                <SettingsView />
-              </Route>
-              <Route exact path="/">
-                <ChatView />
-              </Route>
-            </Switch>
-          </Router>
-        </SocketProvider>
-      </AppWrapper>
+              {store.isMinimized && <Redirect to="/minimized" />}
+              <Switch>
+                <Route exact path="/minimized">
+                  <MinimizedView />
+                </Route>
+                <Route exact path="/user-list">
+                  <UserListView />
+                </Route>
+                <Route exact path="/settings">
+                  <SettingsView />
+                </Route>
+                <Route exact path="/">
+                  <ChatView />
+                </Route>
+              </Switch>
+            </Router>
+          </SocketProvider>
+        </AppWrapper>
+      </ThemeProvider>
     );
   });
 

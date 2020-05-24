@@ -148,9 +148,9 @@ const MessageContainer = styled.div`
   }
 
   &.me {
-    color: #000;
+    color: ${(p) => p.theme.fontColor};
     padding: 11px 16px;
-    background-color: #ebebeb;
+    background-color: ${(p) => p.theme.secondaryBackgroundColor};
     border-radius: 14px 14px 3px 14px;
     header {
       color: #000;
