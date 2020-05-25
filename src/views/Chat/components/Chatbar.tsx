@@ -5,9 +5,9 @@ import { useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import EmojiIcon from '../../../assets/icons/Emoji';
 import SendArrowIcon from '../../../assets/icons/SendArrow';
+import Tooltip, { RefTooltip } from '../../../components/Tooltip';
 import { ConnectionEnum } from '../../../shared/interfaces';
 import { useStore } from '../../../store';
-import Tooltip, { RefTooltip } from '../../../components/Tooltip';
 
 interface ChatProps {
   sendMessage: (event: any) => void;

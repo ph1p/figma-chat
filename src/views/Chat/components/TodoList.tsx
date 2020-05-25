@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
-import styled from 'styled-components';
 import React, { FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { withSocketContext } from '../../../shared/SocketProvider';
 

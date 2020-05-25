@@ -4,10 +4,10 @@ import { observer, useLocalStore } from 'mobx-react';
 import React, { useEffect, useState, FunctionComponent } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
-import Chatbar from './components/Chatbar';
 import Header from '../../components/Header';
 import Message from '../../components/Message';
 import { withSocketContext } from '../../shared/SocketProvider';
+import Chatbar from './components/Chatbar';
 
 import { IS_PROD, MAX_MESSAGES } from '../../shared/constants';
 import { sendMainMessage } from '../../shared/utils';

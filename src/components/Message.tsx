@@ -5,9 +5,9 @@ import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import nowStrings from 'react-timeago/lib/language-strings/en-short';
 import styled, { css } from 'styled-components';
+import HashIcon from '../assets/icons/Hash';
 import { colors } from '../shared/constants';
 import { sendMainMessage } from '../shared/utils';
-import HashIcon from '../assets/icons/Hash';
 
 const formatter = buildFormatter(nowStrings);
 

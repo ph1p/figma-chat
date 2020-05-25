@@ -1,6 +1,6 @@
 // store
 import { observer, useLocalStore } from 'mobx-react';
-import React, { useEffect, FunctionComponent, useRef } from 'react';
+import React, { useEffect, useRef, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { version } from '../../../package.json';
