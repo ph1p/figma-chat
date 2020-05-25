@@ -176,7 +176,6 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
                 0;
             }}
           >
-            {/* <Messages> */}
             <TransitionGroup>
               {chatState.filteredMessages.map((m, i) => (
                 <CSSTransition
@@ -200,7 +199,6 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
                 </CSSTransition>
               ))}
             </TransitionGroup>
-            {/* </Messages> */}
           </Messages>
 
           <Chatbar

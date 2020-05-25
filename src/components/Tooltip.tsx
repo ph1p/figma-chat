@@ -58,6 +58,7 @@ export const RefTooltip = React.forwardRef<any, Props>((props, ref: any) => {
     <div ref={wrapperRef}>
       {isOpen && (
         <Tooltip
+          isOpen={isOpen}
           hover={props.hover}
           ref={setPopperElement}
           style={styles.popper}
@@ -138,6 +139,7 @@ const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
 
       {isOpen && (
         <Tooltip
+          isOpen={isOpen}
           hover={props.hover}
           ref={setPopperElement}
           style={styles.popper}
@@ -183,10 +185,27 @@ const Tooltip = styled.div`
   position: fixed;
   background-color: ${(p) => p.theme.tooltipBackgroundColor};
   border-radius: ${(p) => (p.hover ? 4 : 20)}px;
-  opacity: 1;
+  /* opacity: ${(p) => (p.isOpen ? 1 : 0)}; */
+  visibility: ${(p) => (p.isOpen ? 'visible' : 'hidden')};
+  pointer-events: ${(p) => (p.isOpen ? 'all' : 'none')};
   z-index: 4;
   color: ${(p) => p.theme.fontColorInverse};
   /* box-shadow: 0px 24px 34px rgba(30, 25, 64, 0.34); */
+
+  &-enter {
+    opacity: 0;
+  }
+  &-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease-in, transform 200ms ease-in;
+  }
+  &-exit {
+    opacity: 1;
+  }
+  &-exit-active {
+    opacity: 0;
+    transition: opacity 200ms ease-in, transform 200ms ease-in;
+  }
 
   &[data-popper-placement^='top'] {
     ${Arrow} {
