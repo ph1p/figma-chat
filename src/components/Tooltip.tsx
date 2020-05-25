@@ -3,11 +3,75 @@ import { usePopper } from 'react-popper';
 import styled from 'styled-components';
 
 interface Props {
-  handler: any;
+  handler?: any;
   hover?: boolean;
   children: any;
+  style?: any;
   placement?: 'top' | 'bottom';
 }
+
+export const RefTooltip = React.forwardRef<any, Props>((props, ref: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [popperElement, setPopperElement] = useState(null);
+  const [arrowElement, setArrowElement] = useState(null);
+  const { styles, attributes } = usePopper(
+    props.handler.current,
+    popperElement,
+    {
+      placement: props.placement || 'top',
+      strategy: 'fixed',
+      modifiers: [
+        {
+          name: 'arrow',
+          options: {
+            element: arrowElement,
+          },
+        },
+        {
+          name: 'offset',
+          options: {
+            offset: [0, props.hover ? 7 : 14],
+          },
+        },
+        {
+          name: 'preventOverflow',
+          options: {
+            padding: 14,
+          },
+        },
+      ],
+    }
+  );
+
+  const wrapperRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    show() {
+      setIsOpen(true);
+    },
+    hide() {
+      setIsOpen(false);
+    },
+  }));
+
+  return (
+    <div ref={wrapperRef}>
+      {isOpen && (
+        <Tooltip
+          hover={props.hover}
+          ref={setPopperElement}
+          style={styles.popper}
+          {...attributes.popper}
+        >
+          <TooltipContent hover={props.hover} style={props.style}>
+            {props.children}
+          </TooltipContent>
+          <Arrow ref={setArrowElement} style={styles.arrow} />
+        </Tooltip>
+      )}
+    </div>
+  );
+});
 
 const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +95,7 @@ const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
       {
         name: 'offset',
         options: {
-          offset: [0, 14],
+          offset: [0, props.hover ? 7 : 14],
         },
       },
       {
@@ -74,30 +138,15 @@ const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
 
       {isOpen && (
         <Tooltip
+          hover={props.hover}
           ref={setPopperElement}
           style={styles.popper}
           {...attributes.popper}
         >
-          <TooltipContent>{props.children}</TooltipContent>
-          <Arrow ref={setArrowElement} style={styles.arrow}>
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 28 28"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x="-1"
-                y="14.0002"
-                width="21.2135"
-                height="21.2135"
-                rx="3"
-                transform="rotate(-45 -1 14.0002)"
-                fill="#1E1940"
-              />
-            </svg>
-          </Arrow>
+          <TooltipContent hover={props.hover} style={props.style}>
+            {props.children}
+          </TooltipContent>
+          <Arrow ref={setArrowElement} style={styles.arrow} />
         </Tooltip>
       )}
     </div>
@@ -105,42 +154,48 @@ const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
 });
 
 const TooltipContent = styled.div`
-  padding: 11px 17px;
+  padding: ${(p) => (p.hover ? '5px 10px' : 15)};
+  position: relative;
+  z-index: 1;
+  font-weight: normal;
 `;
 
 const Arrow = styled.div`
   position: absolute;
   width: 21px;
   height: 21px;
-  overflow: hidden;
-  border-radius: 4px;
   pointer-events: none;
-  svg {
-    height: 21px;
+  &::before {
+    content: '';
+    position: absolute;
     width: 21px;
-    rect {
-      fill: ${(p) => p.theme.tooltipBackgroundColor};
-    }
+    height: 21px;
+    background-color: ${(p) => p.theme.tooltipBackgroundColor};
+    transform: rotate(45deg);
+    top: 0px;
+    left: 0px;
+    border-radius: 4px;
+    z-index: -1;
   }
 `;
 
 const Tooltip = styled.div`
   position: fixed;
   background-color: ${(p) => p.theme.tooltipBackgroundColor};
-  border-radius: 20px;
+  border-radius: ${(p) => (p.hover ? 4 : 20)}px;
   opacity: 1;
   z-index: 4;
   color: ${(p) => p.theme.fontColorInverse};
-  box-shadow: 0 10px 34px rgba(30, 25, 64, 0.34);
+  /* box-shadow: 0px 24px 34px rgba(30, 25, 64, 0.34); */
 
   &[data-popper-placement^='top'] {
     ${Arrow} {
-      bottom: -7px;
+      bottom: ${(p) => (p.hover ? -1 : -4)}px;
     }
   }
   &[data-popper-placement^='bottom'] {
     ${Arrow} {
-      top: -7px;
+      top: ${(p) => (p.hover ? -1 : -4)}px;
     }
   }
   &.place-left {

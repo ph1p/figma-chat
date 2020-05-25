@@ -10,9 +10,6 @@ import {
 } from 'react-router-dom';
 import io from 'socket.io-client';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
-// styles
-import './assets/css/ui.css';
-import './assets/figma-ui/main.min.css';
 // components
 import Notifications from './components/Notifications';
 import { SocketProvider } from './shared/SocketProvider';
@@ -45,9 +42,70 @@ onmessage = (message) => {
 };
 
 const GlobalStyle = createGlobalStyle`
+  * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  /*  Typography */
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('https://rsms.me/inter/font-files/Inter-Regular.woff2?v=3.7')
+        format('woff2'),
+      url('https://rsms.me/inter/font-files/Inter-Regular.woff?v=3.7')
+        format('woff');
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    src: url('https://rsms.me/inter/font-files/Inter-Medium.woff2?v=3.7')
+        format('woff2'),
+      url('https://rsms.me/inter/font-files/Inter-Medium.woff2?v=3.7')
+        format('woff');
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    src: url('https://rsms.me/inter/font-files/Inter-SemiBold.woff2?v=3.7')
+        format('woff2'),
+      url('https://rsms.me/inter/font-files/Inter-SemiBold.woff2?v=3.7')
+        format('woff');
+  }
+
   body {
     overflow: hidden;
-    background-color: ${p => p.theme.backgroundColor};
+    background-color: ${(p) => p.theme.backgroundColor};
+    font-family: Inter;
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .main {
+    position: relative;
+    height: 100%;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${(p) => p.theme.secondaryBackgroundColor};
+    border-radius: 6px;
   }
 `;
 

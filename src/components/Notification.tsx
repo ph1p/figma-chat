@@ -33,14 +33,14 @@ const Notification: FunctionComponent<
 
 const NotificationContainer = styled.div`
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 5px 10px;
   border-radius: 5px;
   height: auto;
   margin-bottom: 5px;
-  background-color: ${(p) => p.theme.secondaryBackgroundColor};
-  color: ${(p) => p.theme.fontColor};
+  background-color: ${(p) => p.theme.tooltipBackgroundColor};
+  color: ${(p) => p.theme.fontColorInverse};
   span {
-    color: ${(p) => p.theme.fontColor};
+    color: ${(p) => p.theme.fontColorInverse};
     font-size: 12px;
   }
 `;

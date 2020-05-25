@@ -70,7 +70,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <ColorPicker />
         </Picker>
 
-        <div>
+        <Username>
           <label>Username</label>
           <input
             type="text"
@@ -82,7 +82,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
             }
             onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
           />
-        </div>
+        </Username>
         <div>
           <label htmlFor="server-url">
             Server-URL
@@ -161,7 +161,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
                       saveSettings(false);
                     }}
                   >
-                    <ThemeIcon active={!store.settings.isDarkTheme} />
+                    <ThemeIcon active={store.settings.isDarkTheme} />
                   </Tile>
                 ))
               )}
@@ -201,6 +201,10 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     </>
   );
 };
+
+const Username = styled.div`
+  margin: 44px 0 34px;
+`;
 
 const Picker = styled.div`
   display: flex;
@@ -262,7 +266,7 @@ const ShortcutTiles = styled.div`
   display: flex;
   width: 207px;
   justify-content: space-between;
-  margin: 0 auto;
+  margin: 51px auto 64px;
 `;
 
 const VersionNote = styled.a`
@@ -288,7 +292,7 @@ const Settings = styled.div`
   justify-content: space-between;
   z-index: 1;
   height: calc(100vh - 37px);
-  padding: 34px;
+  padding: 49px 32px 0;
 
   h4 {
     margin: 20px 0 15px;
@@ -303,14 +307,14 @@ const Settings = styled.div`
     cursor: pointer;
   }
   label {
-    margin: 5px 0;
+    margin: 0 0 5px;
     color: #a2adc0;
     text-align: center;
     font-size: 10px;
     display: block;
   }
   input[type='text'] {
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
     width: 100%;
     border-width: 1px;
@@ -318,7 +322,7 @@ const Settings = styled.div`
     border-style: solid;
     background-color: transparent;
     color: ${(p) => p.theme.fontColor};
-    padding: 9px 18px;
+    padding: 8px 18px 9px;
     outline: none;
     border-radius: 7px;
     &::placeholder {

@@ -3,10 +3,11 @@ import { toJS } from 'mobx';
 import React, { FunctionComponent } from 'react';
 import TimeAgo from 'react-timeago';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
-import nowStrings from 'react-timeago/lib/language-strings/en';
+import nowStrings from 'react-timeago/lib/language-strings/en-short';
 import styled, { css } from 'styled-components';
 import { colors } from '../shared/constants';
 import { sendMainMessage } from '../shared/utils';
+import HashIcon from '../assets/icons/Hash';
 
 const formatter = buildFormatter(nowStrings);
 
@@ -83,11 +84,12 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
                   {text}
                 </Linkify>
               )}
-              <button className="selection button button--secondary">
+              <SelectionButton isSelf={isSelf}>
+                <HashIcon />
                 {pageName ? pageName + ' - ' : ''}
                 focus {selectionCount} element
                 {selectionCount > 1 ? 's' : ''}
-              </button>
+              </SelectionButton>
             </span>
           ) : (
             <Linkify
@@ -142,16 +144,47 @@ const MessageWrapper = styled.div`
   }
 `;
 
+const SelectionButton = styled.button`
+  cursor: pointer;
+  width: 100%;
+  font-size: 11px;
+  background-color: transparent;
+  border-color: ${(p) =>
+    p.isSelf ? p.theme.fontColor : 'rgba(255, 255, 255, 0.4)'};
+  color: ${(p) => (p.isSelf ? p.theme.fontColor : '#fff')};
+  border-radius: 9px;
+  padding: 5px 10px;
+  display: flex;
+  font-weight: 500;
+  line-height: 11px;
+  svg {
+    margin-right: 5px;
+    path {
+      fill: ${(p) => (p.isSelf ? p.theme.fontColor : '#fff')};
+    }
+  }
+  &:hover {
+    border-color: transparent;
+    background-color: rgba(0, 0, 0, ${(p) => (p.isSelf ? 0.1 : 0.2)});
+  }
+  &:active,
+  &:focus {
+    border-color: transparent;
+    outline: none;
+    background-color: rgba(0, 0, 0, ${(p) => (p.isSelf ? 0.2 : 0.3)});
+  }
+`;
+
 const MessageContainer = styled.div`
   background-color: #18a0fb;
-  border-radius: 3px 14px 14px 14px;
+  border-radius: 4px 14px 14px 14px;
   color: #fff;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
-  padding: 11px 16px;
+  padding: 10px;
   word-break: break-word;
   margin-bottom: 4px;
   max-width: 240px;
@@ -168,9 +201,8 @@ const MessageContainer = styled.div`
 
   &.me {
     color: ${(p) => p.theme.fontColor};
-    padding: 11px 16px;
     background-color: ${(p) => p.theme.secondaryBackgroundColor};
-    border-radius: 14px 14px 3px 14px;
+    border-radius: 14px 14px 4px 14px;
     header {
       color: #000;
     }
@@ -179,34 +211,13 @@ const MessageContainer = styled.div`
       color: #000;
     }
 
-    .selection {
-      border-color: ${(p) => p.theme.fontColor};
-      color: ${(p) => p.theme.fontColor};
-      opacity: 0.7;
-      &:hover {
-        opacity: 1;
-      }
-    }
-
     &.emoji {
       text-align: right;
     }
   }
 
-  div + .selection {
+  div + ${SelectionButton} {
     margin-top: 8px;
-  }
-
-  .selection {
-    cursor: pointer;
-    width: 100%;
-    background-color: transparent;
-    border-color: ${(p) => p.theme.fontColor};
-    color: ${(p) => p.theme.fontColor};
-    &:active {
-      border: 1px solid;
-      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
-    }
   }
 
   ${Object.keys(colors).map(

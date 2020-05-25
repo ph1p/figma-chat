@@ -8,6 +8,7 @@ const darkTheme = {
   backgroundColorInverse: '#E7E7E7',
   borderColor: '#272D36',
   tooltipBackgroundColor: '#fff',
+  placeholder: '#626E81',
 };
 
 const theme = {
@@ -19,7 +20,8 @@ const theme = {
   secondaryBackgroundColor: '#eceff4',
   backgroundColorInverse: '#383168',
   borderColor: '#e4e4e4',
-  tooltipBackgroundColor: '#1e1940'
+  tooltipBackgroundColor: '#1e1940',
+  placeholder: '#a2adc0',
 };
 
 export default (isDarkTheme) => isDarkTheme ? darkTheme : theme;

@@ -41,9 +41,9 @@ const NotificationsContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
   position: absolute;
-  top: 39px;
+  top: 37px;
   z-index: 11;
-  padding: 10px;
+  padding: 11px;
   width: 100%;
   align-items: center;
 `;

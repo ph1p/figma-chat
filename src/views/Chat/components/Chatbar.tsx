@@ -2,12 +2,12 @@ import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { useEffect, useRef, useState, FunctionComponent } from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import styled, { css } from 'styled-components';
-import EmojiIcon from '../assets/icons/Emoji';
-import SendArrowIcon from '../assets/icons/SendArrow';
-import { ConnectionEnum } from '../shared/interfaces';
-import { useStore } from '../store';
-import Tooltip from './Tooltip';
+import styled from 'styled-components';
+import EmojiIcon from '../../../assets/icons/Emoji';
+import SendArrowIcon from '../../../assets/icons/SendArrow';
+import { ConnectionEnum } from '../../../shared/interfaces';
+import { useStore } from '../../../store';
+import Tooltip, { RefTooltip } from '../../../components/Tooltip';
 
 interface ChatProps {
   sendMessage: (event: any) => void;
@@ -21,6 +21,10 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
   const store = useStore();
   const isSettings = useRouteMatch('/settings');
   const emojiPickerRef = useRef(null);
+
+  const selectionRef = useRef(null);
+  const selectionTooltipRef = useRef(null);
+
   const [hasSelection, setHasSelection] = useState(false);
   const [isFailed, setIsFailed] = useState(
     store.status === ConnectionEnum.ERROR
@@ -53,9 +57,17 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
       </ConnectionInfo>
 
       <ChatInputWrapper isConnected={isConnected}>
+        <RefTooltip hover ref={selectionTooltipRef} handler={selectionRef}>
+          Add selection ({store.selectionCount} elements)
+        </RefTooltip>
+
         <SelectionCheckbox
+          ref={selectionRef}
+          color={store.settings.color}
           checked={props.selectionIsChecked}
           hasSelection={hasSelection}
+          onMouseEnter={() => selectionTooltipRef.current.show()}
+          onMouseLeave={() => selectionTooltipRef.current.hide()}
           onClick={() => {
             props.setSelectionIsChecked(!props.selectionIsChecked);
             chatTextInput.current.focus();
@@ -63,6 +75,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
         >
           <div>{store.selectionCount < 10 && store.selectionCount}</div>
         </SelectionCheckbox>
+
         <ChatInput hasSelection={hasSelection}>
           <input
             ref={chatTextInput}
@@ -77,6 +90,12 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
 
           <Tooltip
             ref={emojiPickerRef}
+            style={{
+              paddingTop: 11,
+              paddingBottom: 11,
+              paddingLeft: 17,
+              paddingRight: 17,
+            }}
             handler={React.forwardRef((p, ref) => (
               <EmojiPickerStyled {...p} ref={ref}>
                 <EmojiIcon />
@@ -151,7 +170,7 @@ const ConnectionInfo = styled.div`
 `;
 
 const ChatBarForm = styled.form`
-  padding: 14px;
+  padding: 0 14px;
   z-index: 3;
   margin: 0;
   transition: opacity 0.2s;
@@ -188,7 +207,7 @@ const ChatInput = styled.div`
     outline: none;
     color: ${(p) => p.theme.fontColor};
     &::placeholder {
-      color: #a2adc0;
+      color: ${(p) => p.theme.placeholder};
     }
   }
 
@@ -240,11 +259,6 @@ const SelectionCheckbox = styled.div`
   justify-items: center;
   align-items: center;
   cursor: pointer;
-  ${(p) =>
-    p.checked &&
-    css`
-      box-shadow: inset 0px 0px 0px 1px #a2adc0;
-    `};
   &:hover {
     div {
       opacity: 1;
@@ -260,11 +274,12 @@ const SelectionCheckbox = styled.div`
     padding: 0 2px;
     text-align: center;
     margin: 0 auto;
-    background-color: #a2adc0;
+    background-color: ${(p) => (p.checked ? p.color : '#a2adc0')};
     color: ${(p) => p.theme.secondaryBackgroundColor};
     font-weight: bold;
     font-size: 10px;
     opacity: ${(p) => (p.checked ? 1 : 0.5)};
+
     &::after {
       content: '';
       position: absolute;
@@ -272,8 +287,8 @@ const SelectionCheckbox = styled.div`
       top: 0;
       left: -3px;
       right: -3px;
-      background-color: #a2adc0;
-      box-shadow: 0 11px 0px #a2adc0;
+      background-color: ${(p) => (p.checked ? p.color : '#a2adc0')};
+      box-shadow: 0 11px 0px ${(p) => (p.checked ? p.color : '#a2adc0')};
     }
     &::before {
       content: '';
@@ -282,8 +297,8 @@ const SelectionCheckbox = styled.div`
       left: 0;
       top: -3px;
       bottom: -3px;
-      background-color: #a2adc0;
-      box-shadow: 11px 0px 0px #a2adc0;
+      background-color: ${(p) => (p.checked ? p.color : '#a2adc0')};
+      box-shadow: 11px 0px 0px ${(p) => (p.checked ? p.color : '#a2adc0')};
     }
     &:hover {
       border-color: rgba(255, 255, 255, 1);
