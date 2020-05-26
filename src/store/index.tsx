@@ -1,13 +1,12 @@
-import { computed, observable, action, toJS } from 'mobx';
-import { createRef } from 'react';
+import { action, computed, observable, toJS } from 'mobx';
+import React, { createRef } from 'react';
 
 import SimpleEncryptor from 'simple-encryptor';
-import { DEFAULT_SERVER_URL, colors } from '../shared/constants';
-import { sendMainMessage } from '../shared/utils';
+import { DEFAULT_SERVER_URL } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
+import { sendMainMessage } from '../shared/utils';
 
 import MessageSound from '../assets/sound.mp3';
-import React from 'react';
 
 class RootStore {
   @computed
@@ -73,10 +72,12 @@ class RootStore {
   @observable
   settings = {
     name: '',
-    color: colors['#4F4F4F'],
+    avatar: '',
+    color: '#4F4F4F',
     url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     enableNotificationSound: true,
+    isDarkTheme: false,
   };
 
   @observable
@@ -120,10 +121,7 @@ class RootStore {
     };
 
     // save user settings in main
-    sendMainMessage(
-      'save-user-settings',
-      Object.assign({}, toJS(this.settings))
-    );
+    sendMainMessage('save-user-settings', { ...toJS(this.settings) });
 
     if (!isInit && settings.url && settings.url !== oldUrl) {
       // set server URL
@@ -159,6 +157,7 @@ class RootStore {
         newMessage = {
           id: this.instanceId,
           user: {
+            avatar: this.settings.avatar,
             color: this.settings.color,
             name: this.settings.name,
           },

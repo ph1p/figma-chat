@@ -1,8 +1,7 @@
+import { observer } from 'mobx-react';
 import 'mobx-react-lite/batchingForReactDom';
 import React, { useEffect, useState } from 'react';
-import { observer } from 'mobx-react';
 import * as ReactDOM from 'react-dom';
-import styled, { createGlobalStyle } from 'styled-components';
 import {
   MemoryRouter as Router,
   Redirect,
@@ -10,22 +9,22 @@ import {
   Switch,
 } from 'react-router-dom';
 import io from 'socket.io-client';
-// styles
-import './assets/css/ui.css';
-import './assets/figma-ui/main.min.css';
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 // components
 import Notifications from './components/Notifications';
+import { SocketProvider } from './shared/SocketProvider';
 // shared
 import { ConnectionEnum } from './shared/interfaces';
-import { SocketProvider } from './shared/SocketProvider';
 import { sendMainMessage } from './shared/utils';
 // views
 import ChatView from './views/Chat';
 import MinimizedView from './views/Minimized';
+import SettingsView from './views/Settings';
 import UserListView from './views/UserList';
 
-import { StoreProvider, useStore } from './store';
 import { reaction } from 'mobx';
+import theme from './shared/theme';
+import { useStore, StoreProvider } from './store';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
@@ -43,11 +42,70 @@ onmessage = (message) => {
 };
 
 const GlobalStyle = createGlobalStyle`
+  * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  /*  Typography */
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('https://rsms.me/inter/font-files/Inter-Regular.woff2?v=3.7')
+        format('woff2'),
+      url('https://rsms.me/inter/font-files/Inter-Regular.woff?v=3.7')
+        format('woff');
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    src: url('https://rsms.me/inter/font-files/Inter-Medium.woff2?v=3.7')
+        format('woff2'),
+      url('https://rsms.me/inter/font-files/Inter-Medium.woff2?v=3.7')
+        format('woff');
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    src: url('https://rsms.me/inter/font-files/Inter-SemiBold.woff2?v=3.7')
+        format('woff2'),
+      url('https://rsms.me/inter/font-files/Inter-SemiBold.woff2?v=3.7')
+        format('woff');
+  }
+
   body {
     overflow: hidden;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
-    text-rendering: optimizeLegibility !important;
-    -webkit-font-smoothing: antialiased !important;
+    background-color: ${(p) => p.theme.backgroundColor};
+    font-family: Inter;
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .main {
+    position: relative;
+    height: 100%;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${(p) => p.theme.scrollbarColor};
+    border-radius: 6px;
   }
 `;
 
@@ -58,7 +116,7 @@ const AppWrapper = styled.div`
 const init = () => {
   const App = observer(() => {
     const store = useStore();
-    let [socket, setSocket] = useState<SocketIOClient.Socket>(undefined);
+    const [socket, setSocket] = useState<SocketIOClient.Socket>(undefined);
 
     function onFocus() {
       sendMainMessage('focus', false);
@@ -158,28 +216,33 @@ const init = () => {
     }, []);
 
     return (
-      <AppWrapper>
-        <GlobalStyle />
+      <ThemeProvider theme={theme(store.settings.isDarkTheme)}>
+        <AppWrapper>
+          <GlobalStyle color={store.settings.color}/>
 
-        <SocketProvider socket={socket}>
-          <Router>
-            <Notifications />
+          <SocketProvider socket={socket}>
+            <Router>
+              <Notifications />
 
-            {store.isMinimized && <Redirect to="/minimized" />}
-            <Switch>
-              <Route exact path="/minimized">
-                <MinimizedView />
-              </Route>
-              <Route path="/user-list">
-                <UserListView />
-              </Route>
-              <Route path="/">
-                <ChatView />
-              </Route>
-            </Switch>
-          </Router>
-        </SocketProvider>
-      </AppWrapper>
+              {store.isMinimized && <Redirect to="/minimized" />}
+              <Switch>
+                <Route exact path="/minimized">
+                  <MinimizedView />
+                </Route>
+                <Route exact path="/user-list">
+                  <UserListView />
+                </Route>
+                <Route exact path="/settings">
+                  <SettingsView />
+                </Route>
+                <Route exact path="/">
+                  <ChatView />
+                </Route>
+              </Switch>
+            </Router>
+          </SocketProvider>
+        </AppWrapper>
+      </ThemeProvider>
     );
   });
 

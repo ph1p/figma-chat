@@ -1,12 +1,11 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+// store
+import { observer } from 'mobx-react';
+import React, { useEffect, useState, FunctionComponent } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { NotificationParams } from '../shared/interfaces';
-import Notification from './Notification';
-// store
-import { observer } from 'mobx-react';
 import { useStore } from '../store';
-import { autorun, reaction } from 'mobx';
+import Notification from './Notification';
 
 const Notifications: FunctionComponent = () => {
   const store = useStore();
@@ -42,10 +41,11 @@ const NotificationsContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
   position: absolute;
-  bottom: ${(props) => (props.isRoot ? 39 : 0)}px;
+  top: 37px;
   z-index: 11;
-  padding: 10px;
+  padding: 11px;
   width: 100%;
+  align-items: center;
 `;
 
 export default observer(Notifications);

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { useEffect, useState, FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { NotificationParams } from '../shared/interfaces';
 
@@ -33,17 +33,14 @@ const Notification: FunctionComponent<
 
 const NotificationContainer = styled.div`
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 5px 10px;
   border-radius: 5px;
   height: auto;
   margin-bottom: 5px;
-  width: 100%;
-  background-color: #000;
-  &.success {
-    background-color: #1bc47d;
-  }
+  background-color: ${(p) => p.theme.tooltipBackgroundColor};
+  color: ${(p) => p.theme.fontColorInverse};
   span {
-    color: #fff;
+    color: ${(p) => p.theme.fontColorInverse};
     font-size: 12px;
   }
 `;
