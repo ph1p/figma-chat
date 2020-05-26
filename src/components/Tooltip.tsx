@@ -38,7 +38,7 @@ export const RefTooltip = React.forwardRef<any, Props>((props, ref: any) => {
         {
           name: 'preventOverflow',
           options: {
-            padding: props.offsetHorizontal || 14,
+            padding: props.offsetHorizontal || 14,
           },
         },
       ],
@@ -105,7 +105,7 @@ const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
       {
         name: 'preventOverflow',
         options: {
-          padding: props.offsetHorizontal || 14,
+          padding: props.offsetHorizontal || 14,
         },
       },
     ],
@@ -197,7 +197,7 @@ const Tooltip = styled.div`
   ${(p) =>
     p.shadow
       ? css`
-          box-shadow: 0px 24px 34px ${(p) => p.theme.toolipShadow};
+          box-shadow: 0px 24px 34px ${({ theme }) => theme.toolipShadow};
         `
       : ''}
 
