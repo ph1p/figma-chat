@@ -59,6 +59,7 @@
     ]
   },
   "dependencies": {
+    "@figma/plugin-typings": "^1.15.0",
     "@popperjs/core": "^2.4.0",
     "@types/react-transition-group": "^4.2.4",
     "linkifyjs": "^2.1.9",
