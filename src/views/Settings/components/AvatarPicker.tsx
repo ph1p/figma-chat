@@ -35,7 +35,10 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
           (emoji) => (
             <div
               key={emoji}
-              className={emoji === store.settings.avatar ? 'active' : ''}
+              className={
+                (emoji === '' ? 'empty ' : ' ') +
+                (emoji === store.settings.avatar ? 'active' : '')
+              }
               onClick={() => {
                 pickerRef.current.hide();
                 store.persistSettings(
@@ -74,6 +77,7 @@ const AvatarPicker = styled.div`
   flex-wrap: wrap;
   margin: -5px 0;
   div {
+    position: relative;
     margin: 5px 0;
     width: 41px;
     height: 41px;
@@ -86,6 +90,18 @@ const AvatarPicker = styled.div`
     cursor: pointer;
     &.active {
       background-color: ${(p) => p.theme.backgroundColorInverse};
+    }
+    &.empty {
+      &::after {
+        content: '';
+        position: absolute;
+        left: 19px;
+        top: 13px;
+        height: 14px;
+        width: 1px;
+        background-color: ${(p) => p.theme.backgroundColorInverse};
+        transform: rotate(45deg);
+      }
     }
   }
 `;
