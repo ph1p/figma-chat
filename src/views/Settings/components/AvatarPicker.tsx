@@ -18,7 +18,9 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
 
   return (
     <Tooltip
+      shadow
       ref={pickerRef}
+      offsetHorizontal={29}
       placement="bottom"
       handler={observer(
         React.forwardRef((p, ref) => (

@@ -71,7 +71,7 @@ const UserList = styled.div`
           color: #999;
           font-size: 10px;
           margin: 2px 0 0 0;
-          font-weight: 300;
+          font-weight: 400;
         }
       }
       .color {

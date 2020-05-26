@@ -204,7 +204,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
 
 const ServerUrl = styled.div`
   input[type='text'] {
-    color: ${(p) => p.theme.placeholder} !important;
+    color: ${(p) => p.theme.brighterInputFont} !important;
   }
 `;
 
@@ -331,6 +331,7 @@ const Settings = styled.div`
     padding: 8px 18px 9px;
     outline: none;
     border-radius: 7px;
+    font-weight: 400;
     &::placeholder {
       color: #999;
     }

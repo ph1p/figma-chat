@@ -198,7 +198,7 @@ const ChatInput = styled.div`
     background-color: transparent;
     z-index: 2;
     font-size: 11.5px;
-    font-weight: 300;
+    font-weight: 400;
     border-radius: 6px;
     width: 100%;
     border: 0;

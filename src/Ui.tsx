@@ -104,7 +104,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${(p) => p.theme.secondaryBackgroundColor};
+    background-color: ${(p) => p.theme.scrollbarColor};
     border-radius: 6px;
   }
 `;
@@ -218,7 +218,7 @@ const init = () => {
     return (
       <ThemeProvider theme={theme(store.settings.isDarkTheme)}>
         <AppWrapper>
-          <GlobalStyle />
+          <GlobalStyle color={store.settings.color}/>
 
           <SocketProvider socket={socket}>
             <Router>

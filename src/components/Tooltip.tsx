@@ -1,12 +1,14 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { usePopper } from 'react-popper';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 interface Props {
   handler?: any;
   hover?: boolean;
+  shadow?: boolean;
   children: any;
   style?: any;
+  offsetHorizontal?: number;
   placement?: 'top' | 'bottom';
 }
 
@@ -36,7 +38,7 @@ export const RefTooltip = React.forwardRef<any, Props>((props, ref: any) => {
         {
           name: 'preventOverflow',
           options: {
-            padding: 14,
+            padding: props.offsetHorizontal || 14,
           },
         },
       ],
@@ -60,6 +62,7 @@ export const RefTooltip = React.forwardRef<any, Props>((props, ref: any) => {
         <Tooltip
           isOpen={isOpen}
           hover={props.hover}
+          shadow={props.shadow}
           ref={setPopperElement}
           style={styles.popper}
           {...attributes.popper}
@@ -102,7 +105,7 @@ const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
       {
         name: 'preventOverflow',
         options: {
-          padding: 14,
+          padding: props.offsetHorizontal || 14,
         },
       },
     ],
@@ -141,6 +144,7 @@ const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
         <Tooltip
           isOpen={isOpen}
           hover={props.hover}
+          shadow={props.shadow}
           ref={setPopperElement}
           style={styles.popper}
           {...attributes.popper}
@@ -184,13 +188,18 @@ const Arrow = styled.div`
 const Tooltip = styled.div`
   position: fixed;
   background-color: ${(p) => p.theme.tooltipBackgroundColor};
-  border-radius: ${(p) => (p.hover ? 4 : 20)}px;
-  /* opacity: ${(p) => (p.isOpen ? 1 : 0)}; */
+  border-radius: ${(p) => (p.hover ? 6 : 20)}px;
   visibility: ${(p) => (p.isOpen ? 'visible' : 'hidden')};
   pointer-events: ${(p) => (p.isOpen ? 'all' : 'none')};
   z-index: 4;
   color: ${(p) => p.theme.fontColorInverse};
-  /* box-shadow: 0px 24px 34px rgba(30, 25, 64, 0.34); */
+
+  ${(p) =>
+    p.shadow
+      ? css`
+          box-shadow: 0px 24px 34px ${(p) => p.theme.toolipShadow};
+        `
+      : ''}
 
   &-enter {
     opacity: 0;

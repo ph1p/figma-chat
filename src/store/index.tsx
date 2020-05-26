@@ -2,7 +2,7 @@ import { action, computed, observable, toJS } from 'mobx';
 import React, { createRef } from 'react';
 
 import SimpleEncryptor from 'simple-encryptor';
-import { colors, DEFAULT_SERVER_URL } from '../shared/constants';
+import { DEFAULT_SERVER_URL } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
 import { sendMainMessage } from '../shared/utils';
 
@@ -73,7 +73,7 @@ class RootStore {
   settings = {
     name: '',
     avatar: '',
-    color: colors['#4F4F4F'],
+    color: '#4F4F4F',
     url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     enableNotificationSound: true,
