@@ -83,7 +83,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
             onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
           />
         </Username>
-        <div>
+        <ServerUrl>
           <label htmlFor="server-url">
             Server-URL
             <span
@@ -92,7 +92,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
                 saveSettings(settings.url !== store.settings.url);
               }}
             >
-              reset
+              (reset)
             </span>
           </label>
 
@@ -108,7 +108,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
             }
             onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
           />
-        </div>
+        </ServerUrl>
 
         <div>
           <ShortcutTiles>
@@ -201,6 +201,12 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
     </>
   );
 };
+
+const ServerUrl = styled.div`
+  input[type='text'] {
+    color: ${(p) => p.theme.placeholder} !important;
+  }
+`;
 
 const Username = styled.div`
   margin: 44px 0 34px;
