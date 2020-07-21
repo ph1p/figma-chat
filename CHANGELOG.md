@@ -1,5 +1,15 @@
+## 4.1.0 (2020-07-21)
+
+* perf(render): lift header up and move messages to own component ([a327aac](https://github.com/ph1p/figma-chat/commit/a327aac))
+* fix(color): add theme font color to connection info ([aa02762](https://github.com/ph1p/figma-chat/commit/aa02762))
+* fix(lint): remove shadowed variable ([c4579ae](https://github.com/ph1p/figma-chat/commit/c4579ae))
+* build: update figma typings ([0008245](https://github.com/ph1p/figma-chat/commit/0008245))
+* build(deps): update dependencies ([a9f16eb](https://github.com/ph1p/figma-chat/commit/a9f16eb))
+
+
 ## 4.0.0 (2020-05-26)
 
+* 4.0.0 ([1f73364](https://github.com/ph1p/figma-chat/commit/1f73364))
 * docs: replace gif ([528150b](https://github.com/ph1p/figma-chat/commit/528150b))
 * docs(assets): update header and gif ([e6377c1](https://github.com/ph1p/figma-chat/commit/e6377c1))
 * style: add correct colors to tooltip and scrollbar ([d6e9683](https://github.com/ph1p/figma-chat/commit/d6e9683))
@@ -66,13 +76,13 @@
 ## <small>2.4.1 (2020-04-06)</small>
 
 * 2.4.1 ([1567022](https://github.com/ph1p/figma-chat/commit/1567022))
-* fix(deps): audit fix some dependencies ([a5cb723](https://github.com/ph1p/figma-chat/commit/a5cb723))
 * fix(sound): create new instance to play sound immediately ([7d69be0](https://github.com/ph1p/figma-chat/commit/7d69be0))
 
 
 
 ## 2.4.0 (2020-04-06)
 
+* fix(deps): audit fix some dependencies ([a5cb723](https://github.com/ph1p/figma-chat/commit/a5cb723))
 * 2.4.0 ([d53cd73](https://github.com/ph1p/figma-chat/commit/d53cd73))
 * feat(settings): add new notification settings and sound ([2d65d72](https://github.com/ph1p/figma-chat/commit/2d65d72))
 
@@ -147,13 +157,13 @@
 ## 2.0.0 (2019-11-17)
 
 * 2.0.0 ([77fcd59](https://github.com/ph1p/figma-chat/commit/77fcd59))
-* feat(leave/join): add leave and join message ([43bdc2f](https://github.com/ph1p/figma-chat/commit/43bdc2f))
 * fix(handling): fix some state handling and redirections ([ae87cd1](https://github.com/ph1p/figma-chat/commit/ae87cd1))
 * fix(scroll): add timeout to scroll on incoming message ([a0c5c06](https://github.com/ph1p/figma-chat/commit/a0c5c06))
-* style: add header ([1fe0dad](https://github.com/ph1p/figma-chat/commit/1fe0dad))
-* style: add some opacity on hovering ([6e20f62](https://github.com/ph1p/figma-chat/commit/6e20f62))
+* feat(leave/join): add leave and join message ([43bdc2f](https://github.com/ph1p/figma-chat/commit/43bdc2f))
 * feat(minimize): add minimize modus again ([8e8c4bc](https://github.com/ph1p/figma-chat/commit/8e8c4bc))
 * feat(notify): add notifications ([b5aad45](https://github.com/ph1p/figma-chat/commit/b5aad45))
+* style: add header ([1fe0dad](https://github.com/ph1p/figma-chat/commit/1fe0dad))
+* style: add some opacity on hovering ([6e20f62](https://github.com/ph1p/figma-chat/commit/6e20f62))
 * refactor: remove comments ([8c7293c](https://github.com/ph1p/figma-chat/commit/8c7293c))
 * refactor: remove files and add missing functionality ([5ad7ca8](https://github.com/ph1p/figma-chat/commit/5ad7ca8))
 * refactor: start new version 🍕 ([a85be6a](https://github.com/ph1p/figma-chat/commit/a85be6a))
@@ -208,7 +218,6 @@
 ## 1.0.0 (2019-08-23)
 
 * 1.0.0 ([6433913](https://github.com/ph1p/figma-chat/commit/6433913))
-* docs(readme/assets): add assets and update the readme file ([61a0a9b](https://github.com/ph1p/figma-chat/commit/61a0a9b))
 * initial commit ([d9cc9e9](https://github.com/ph1p/figma-chat/commit/d9cc9e9))
 * feat(history): add local history ([536f663](https://github.com/ph1p/figma-chat/commit/536f663))
 * feat(server-url): add settings to change server url ([9bb8acd](https://github.com/ph1p/figma-chat/commit/9bb8acd))
@@ -219,10 +228,8 @@
 * docs(feature): add new feature to todolist ([1b7f944](https://github.com/ph1p/figma-chat/commit/1b7f944))
 * docs(package): add some infromation ([59c0669](https://github.com/ph1p/figma-chat/commit/59c0669))
 * docs(readme): add a feature to the list ([4f3ab13](https://github.com/ph1p/figma-chat/commit/4f3ab13))
+* docs(readme/assets): add assets and update the readme file ([61a0a9b](https://github.com/ph1p/figma-chat/commit/61a0a9b))
 * docs(screens): update screenshots ([72ed163](https://github.com/ph1p/figma-chat/commit/72ed163))
 * refactor(enums): create enums and update a useEffect hook ([a4181da](https://github.com/ph1p/figma-chat/commit/a4181da))
 * fix(online): fix online status and refactor some methods ([dc8c539](https://github.com/ph1p/figma-chat/commit/dc8c539))
 * fix(settings): prevent error on start ([7781044](https://github.com/ph1p/figma-chat/commit/7781044))
-
-
-
