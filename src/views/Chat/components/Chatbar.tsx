@@ -53,7 +53,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
   return (
     <ChatBarForm isSettings={isSettings} onSubmit={sendMessage}>
       <ConnectionInfo isConnected={isConnected}>
-        {isFailed ? <>connection failed 🙈</> : 'connecting...'}
+        {isFailed ? 'connection failed 🙈' : 'connecting...'}
       </ConnectionInfo>
 
       <ChatInputWrapper isConnected={isConnected}>
@@ -158,7 +158,7 @@ const ConnectionInfo = styled.div`
   z-index: 6;
   bottom: -5px;
   text-align: center;
-  color: #000;
+  color: ${(p) => p.theme.fontColor};
   font-weight: bold;
   transition: transform 0.2s;
   transform: translateY(${({ isConnected }) => (isConnected ? 69 : 0)}px);
