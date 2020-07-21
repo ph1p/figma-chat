@@ -22,22 +22,22 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "@types/react": "^16.9.35",
+    "@types/react": "^16.9.43",
     "@types/react-dom": "^16.9.8",
     "@types/socket.io-client": "^1.4.33",
     "create-file-webpack": "^1.0.2",
-    "css-loader": "^3.5.3",
+    "css-loader": "^3.6.0",
     "html-webpack-inline-source-plugin": "0.0.10",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^1.2.1",
-    "terser-webpack-plugin": "^3.0.1",
-    "ts-loader": "^7.0.4",
+    "terser-webpack-plugin": "^3.0.7",
+    "ts-loader": "^8.0.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.9.3",
+    "typescript": "^3.9.7",
     "url-loader": "^4.1.0",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.12"
   },
   "figmaPlugin": {
     "name": "Figma Chat",
@@ -60,8 +60,8 @@
   },
   "dependencies": {
     "@figma/plugin-typings": "^1.15.0",
-    "@popperjs/core": "^2.4.0",
-    "@types/react-transition-group": "^4.2.4",
+    "@popperjs/core": "^2.4.4",
+    "@types/react-transition-group": "^4.4.0",
     "linkifyjs": "^2.1.9",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
@@ -72,12 +72,12 @@
     "react-popper": "^2.2.3",
     "react-router-dom": "^5.2.0",
     "react-timeago": "^4.4.0",
-    "react-tooltip": "^4.2.6",
+    "react-tooltip": "^4.2.7",
     "react-transition-group": "^4.4.1",
-    "simple-encryptor": "^3.0.0",
+    "simple-encryptor": "^4.0.0",
     "socket.io-client": "^2.3.0",
-    "styled-components": "^5.1.0",
-    "type-fest": "^0.14.0",
+    "styled-components": "^5.1.1",
+    "type-fest": "^0.16.0",
     "uniqid": "^5.2.0"
   }
 }

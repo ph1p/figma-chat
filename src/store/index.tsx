@@ -1,7 +1,7 @@
 import { action, computed, observable, toJS } from 'mobx';
 import React, { createRef } from 'react';
 
-import SimpleEncryptor from 'simple-encryptor';
+import { createEncryptor } from 'simple-encryptor';
 import { DEFAULT_SERVER_URL } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
 import { sendMainMessage } from '../shared/utils';
@@ -11,7 +11,7 @@ import MessageSound from '../assets/sound.mp3';
 class RootStore {
   @computed
   get encryptor() {
-    return SimpleEncryptor(this.secret);
+    return createEncryptor(this.secret);
   }
 
   @observable
