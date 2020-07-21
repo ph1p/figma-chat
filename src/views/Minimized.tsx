@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import React, { FunctionComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import Header from '../components/Header';
 import Tooltip from '../components/Tooltip';
 import { ConnectionEnum } from '../shared/interfaces';
 import { useStore } from '../store';
@@ -12,37 +11,34 @@ const MinimizedView: FunctionComponent = () => {
   const store = useStore();
 
   return (
-    <>
-      <Header minimized />
-      <Minimized>
-        {!store.isMinimized && <Redirect to="/" />}
-        {store.status === ConnectionEnum.ERROR && (
-          <Redirect to="/connection-error" />
-        )}
-        <Users>
-          {store.online.map((user) => (
-            <Tooltip
-              hover
-              key={user.id}
-              handler={observer(
-                React.forwardRef((_, ref) => (
-                  <User
-                    key={user.id}
-                    ref={ref}
-                    className="user"
-                    color={user.color || '#000'}
-                  >
-                    {user.avatar || user.name.substr(0, 2)}
-                  </User>
-                ))
-              )}
-            >
-              {user.name}
-            </Tooltip>
-          ))}
-        </Users>
-      </Minimized>
-    </>
+    <Minimized>
+      {!store.isMinimized && <Redirect to="/" />}
+      {store.status === ConnectionEnum.ERROR && (
+        <Redirect to="/connection-error" />
+      )}
+      <Users>
+        {store.online.map((user) => (
+          <Tooltip
+            hover
+            key={user.id}
+            handler={observer(
+              React.forwardRef((_, ref) => (
+                <User
+                  key={user.id}
+                  ref={ref}
+                  className="user"
+                  color={user.color || '#000'}
+                >
+                  {user.avatar || user.name.substr(0, 2)}
+                </User>
+              ))
+            )}
+          >
+            {user.name}
+          </Tooltip>
+        ))}
+      </Users>
+    </Minimized>
   );
 };
 

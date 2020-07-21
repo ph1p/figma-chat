@@ -25,6 +25,8 @@ import UserListView from './views/UserList';
 import { reaction } from 'mobx';
 import theme from './shared/theme';
 import { useStore, StoreProvider } from './store';
+import Header from './components/Header';
+import TodoList from './views/Chat/components/TodoList';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
@@ -218,14 +220,23 @@ const init = () => {
     return (
       <ThemeProvider theme={theme(store.settings.isDarkTheme)}>
         <AppWrapper>
-          <GlobalStyle color={store.settings.color}/>
+          <GlobalStyle color={store.settings.color} />
 
           <SocketProvider socket={socket}>
             <Router>
               <Notifications />
 
+              {!store.settings.name ? (
+                <Redirect to="/todo" />
+              ) : (
+                <Header minimized={store.isMinimized} />
+              )}
               {store.isMinimized && <Redirect to="/minimized" />}
+
               <Switch>
+                <Route exact path="/todo">
+                  <TodoList />
+                </Route>
                 <Route exact path="/minimized">
                   <MinimizedView />
                 </Route>

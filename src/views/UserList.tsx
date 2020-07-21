@@ -2,7 +2,6 @@
 import { observer } from 'mobx-react';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
-import Header from '../components/Header';
 import { withSocketContext } from '../shared/SocketProvider';
 import { useStore } from '../store';
 
@@ -14,30 +13,27 @@ const UserListView: FunctionComponent<UserListProps> = (props) => {
   const store = useStore();
 
   return (
-    <>
-      <Header />
-      <UserList>
-        <h5>Active Users</h5>
-        <div className="users">
-          {store.online.map((user) => {
-            return (
-              <div key={user.id} className="user">
-                <div
-                  className="color"
-                  style={{ backgroundColor: user.color || '#000' }}
-                >
-                  {user.avatar}
-                </div>
-                <div className={`name ${!user.name ? 'empty' : ''}`}>
-                  {user.name || 'Anon'}
-                  {user.id === props.socket.id && <p>you</p>}
-                </div>
+    <UserList>
+      <h5>Active Users</h5>
+      <div className="users">
+        {store.online.map((user) => {
+          return (
+            <div key={user.id} className="user">
+              <div
+                className="color"
+                style={{ backgroundColor: user.color || '#000' }}
+              >
+                {user.avatar}
               </div>
-            );
-          })}
-        </div>
-      </UserList>
-    </>
+              <div className={`name ${!user.name ? 'empty' : ''}`}>
+                {user.name || 'Anon'}
+                {user.id === props.socket.id && <p>you</p>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </UserList>
   );
 };
 

@@ -9,7 +9,6 @@ import MessageIcon from '../../assets/icons/Message';
 import ThemeIcon from '../../assets/icons/Theme';
 import TrashIcon from '../../assets/icons/Trash';
 // components
-import Header from '../../components/Header';
 import Tooltip from '../../components/Tooltip';
 // shared
 import { withSocketContext } from '../../shared/SocketProvider';
@@ -49,7 +48,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
       store.settings.enableNotificationTooltip;
   }, [store.settings]);
 
-  const saveSettings = (shouldClose: boolean = true) => {
+  const saveSettings = (shouldClose = true) => {
     if (store.settings.name !== settings.name) {
       store.addNotification(`Name successfully updated`);
     }
@@ -62,143 +61,140 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
   };
 
   return (
-    <>
-      <Header />
-      <Settings>
-        <Picker>
-          <AvatarPicker />
-          <ColorPicker />
-        </Picker>
+    <Settings>
+      <Picker>
+        <AvatarPicker />
+        <ColorPicker />
+      </Picker>
 
-        <Username>
-          <label>Username</label>
-          <input
-            type="text"
-            ref={nameInputRef}
-            value={settings.name}
-            onBlur={() => saveSettings(false)}
-            onChange={({ target }: any) =>
-              (settings.name = target.value.substr(0, 20))
-            }
-            onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
-          />
-        </Username>
-        <ServerUrl>
-          <label htmlFor="server-url">
-            Server-URL
-            <span
-              onClick={() => {
-                settings.url = DEFAULT_SERVER_URL;
-                saveSettings(settings.url !== store.settings.url);
-              }}
-            >
-              (reset)
-            </span>
-          </label>
-
-          <input
-            id="server-url"
-            type="text"
-            value={settings.url}
-            onBlur={({ target }: any) =>
-              saveSettings(target.value !== store.settings.url)
-            }
-            onChange={({ target }: any) =>
-              (settings.url = target.value.substr(0, 255))
-            }
-            onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
-          />
-        </ServerUrl>
-
-        <div>
-          <ShortcutTiles>
-            <Tooltip
-              hover
-              handler={observer(
-                React.forwardRef((_, ref) => (
-                  <Tile
-                    name="trash"
-                    ref={ref}
-                    onClick={() =>
-                      store.clearChatHistory(() => saveSettings(true))
-                    }
-                  >
-                    <TrashIcon />
-                  </Tile>
-                ))
-              )}
-            >
-              History
-            </Tooltip>
-            <Tooltip
-              hover
-              handler={observer(
-                React.forwardRef((_, ref) => (
-                  <Tile
-                    name="message"
-                    ref={ref}
-                    onClick={() => {
-                      settings.enableNotificationTooltip = !settings.enableNotificationTooltip;
-                      saveSettings(false);
-                    }}
-                  >
-                    <MessageIcon active={settings.enableNotificationTooltip} />
-                  </Tile>
-                ))
-              )}
-            >
-              Notifications
-            </Tooltip>
-            <Tooltip
-              hover
-              handler={observer(
-                React.forwardRef((_, ref) => (
-                  <Tile
-                    name="theme"
-                    ref={ref}
-                    onClick={() => {
-                      store.settings.isDarkTheme = !store.settings.isDarkTheme;
-                      saveSettings(false);
-                    }}
-                  >
-                    <ThemeIcon active={store.settings.isDarkTheme} />
-                  </Tile>
-                ))
-              )}
-            >
-              Theme
-            </Tooltip>
-            <Tooltip
-              hover
-              handler={observer(
-                React.forwardRef((_, ref) => (
-                  <Tile
-                    name="bell"
-                    ref={ref}
-                    onClick={() => {
-                      store.settings.enableNotificationSound = !store.settings
-                        .enableNotificationSound;
-                      saveSettings(false);
-                    }}
-                  >
-                    <BellIcon active={store.settings.enableNotificationSound} />
-                  </Tile>
-                ))
-              )}
-            >
-              Sound
-            </Tooltip>
-          </ShortcutTiles>
-
-          <VersionNote
-            target="_blank"
-            href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
+      <Username>
+        <label>Username</label>
+        <input
+          type="text"
+          ref={nameInputRef}
+          value={settings.name}
+          onBlur={() => saveSettings(false)}
+          onChange={({ target }: any) =>
+            (settings.name = target.value.substr(0, 20))
+          }
+          onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
+        />
+      </Username>
+      <ServerUrl>
+        <label htmlFor="server-url">
+          Server-URL
+          <span
+            onClick={() => {
+              settings.url = DEFAULT_SERVER_URL;
+              saveSettings(settings.url !== store.settings.url);
+            }}
           >
-            v{version}
-          </VersionNote>
-        </div>
-      </Settings>
-    </>
+            (reset)
+          </span>
+        </label>
+
+        <input
+          id="server-url"
+          type="text"
+          value={settings.url}
+          onBlur={({ target }: any) =>
+            saveSettings(target.value !== store.settings.url)
+          }
+          onChange={({ target }: any) =>
+            (settings.url = target.value.substr(0, 255))
+          }
+          onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
+        />
+      </ServerUrl>
+
+      <div>
+        <ShortcutTiles>
+          <Tooltip
+            hover
+            handler={observer(
+              React.forwardRef((_, ref) => (
+                <Tile
+                  name="trash"
+                  ref={ref}
+                  onClick={() =>
+                    store.clearChatHistory(() => saveSettings(true))
+                  }
+                >
+                  <TrashIcon />
+                </Tile>
+              ))
+            )}
+          >
+            History
+          </Tooltip>
+          <Tooltip
+            hover
+            handler={observer(
+              React.forwardRef((_, ref) => (
+                <Tile
+                  name="message"
+                  ref={ref}
+                  onClick={() => {
+                    settings.enableNotificationTooltip = !settings.enableNotificationTooltip;
+                    saveSettings(false);
+                  }}
+                >
+                  <MessageIcon active={settings.enableNotificationTooltip} />
+                </Tile>
+              ))
+            )}
+          >
+            Notifications
+          </Tooltip>
+          <Tooltip
+            hover
+            handler={observer(
+              React.forwardRef((_, ref) => (
+                <Tile
+                  name="theme"
+                  ref={ref}
+                  onClick={() => {
+                    store.settings.isDarkTheme = !store.settings.isDarkTheme;
+                    saveSettings(false);
+                  }}
+                >
+                  <ThemeIcon active={store.settings.isDarkTheme} />
+                </Tile>
+              ))
+            )}
+          >
+            Theme
+          </Tooltip>
+          <Tooltip
+            hover
+            handler={observer(
+              React.forwardRef((_, ref) => (
+                <Tile
+                  name="bell"
+                  ref={ref}
+                  onClick={() => {
+                    store.settings.enableNotificationSound = !store.settings
+                      .enableNotificationSound;
+                    saveSettings(false);
+                  }}
+                >
+                  <BellIcon active={store.settings.enableNotificationSound} />
+                </Tile>
+              ))
+            )}
+          >
+            Sound
+          </Tooltip>
+        </ShortcutTiles>
+
+        <VersionNote
+          target="_blank"
+          href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
+        >
+          v{version}
+        </VersionNote>
+      </div>
+    </Settings>
   );
 };
 

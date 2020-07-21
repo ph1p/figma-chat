@@ -27,7 +27,7 @@ function CustomLink({ children, to, style = {}, className = '' }) {
         ...style,
       }}
       onClick={() => history.push(to)}
-      className={match ? className + ' active' : className}
+      className={match ? `${className} active` : className}
     >
       {children}
     </div>
