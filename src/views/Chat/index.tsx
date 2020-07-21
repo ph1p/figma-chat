@@ -10,6 +10,7 @@ import { IS_PROD, MAX_MESSAGES } from '../../shared/constants';
 import { sendMainMessage } from '../../shared/utils';
 import { useStore } from '../../store';
 import Messages from './components/Messages';
+import TodoList from './components/TodoList';
 
 interface ChatProps {
   socket: SocketIOClient.Socket;
@@ -145,6 +146,10 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       chatState.messagesToShow += MAX_MESSAGES;
     }
   };
+
+  if (!store.settings.name) {
+    return <TodoList />;
+  }
 
   return (
     <Chat hasSelection={store.selectionCount > 0}>

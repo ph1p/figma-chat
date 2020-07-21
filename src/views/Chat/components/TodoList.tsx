@@ -3,14 +3,9 @@ import React, { FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { withSocketContext } from '../../../shared/SocketProvider';
-
-interface ChatProps {
-  socket: SocketIOClient.Socket;
-}
-
-const TodoList: FunctionComponent<ChatProps> = () => {
+const TodoList: FunctionComponent = () => {
   const history = useHistory();
+
   return (
     <Wrapper>
       <Content onClick={() => history.push('/settings')}>
@@ -59,4 +54,4 @@ const Wrapper = styled.div`
   }
 `;
 
-export default withSocketContext(observer(TodoList));
+export default observer(TodoList);

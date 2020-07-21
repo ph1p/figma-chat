@@ -26,7 +26,6 @@ import { reaction } from 'mobx';
 import theme from './shared/theme';
 import { useStore, StoreProvider } from './store';
 import Header from './components/Header';
-import TodoList from './views/Chat/components/TodoList';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
@@ -226,17 +225,10 @@ const init = () => {
             <Router>
               <Notifications />
 
-              {!store.settings.name ? (
-                <Redirect to="/todo" />
-              ) : (
-                <Header minimized={store.isMinimized} />
-              )}
+              {store.settings.name && <Header minimized={store.isMinimized} />}
               {store.isMinimized && <Redirect to="/minimized" />}
 
               <Switch>
-                <Route exact path="/todo">
-                  <TodoList />
-                </Route>
                 <Route exact path="/minimized">
                   <MinimizedView />
                 </Route>
