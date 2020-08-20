@@ -1,10 +1,25 @@
+## <small>4.1.1 (2020-08-20)</small>
+
+* fix: add some conditions and check if history is corrupt ([8807ec9](https://github.com/ph1p/figma-chat/commit/8807ec9))
+* fix(todo): prevent todo list from opening on start ([408f505](https://github.com/ph1p/figma-chat/commit/408f505))
+* build: remove yarn lock ([ade23a6](https://github.com/ph1p/figma-chat/commit/ade23a6))
+* build(deps): bump lodash from 4.17.15 to 4.17.19 ([57fe7df](https://github.com/ph1p/figma-chat/commit/57fe7df))
+* build(deps): update all dependencies ([1ee8f92](https://github.com/ph1p/figma-chat/commit/1ee8f92))
+
+
+
 ## 4.1.0 (2020-07-21)
 
+* 4.1.0 ([3a48fe4](https://github.com/ph1p/figma-chat/commit/3a48fe4))
+* Create FUNDING.yml ([e1a999e](https://github.com/ph1p/figma-chat/commit/e1a999e))
+* Delete FUNDING.yml ([d14e0c6](https://github.com/ph1p/figma-chat/commit/d14e0c6))
+* Update FUNDING.yml ([035f62d](https://github.com/ph1p/figma-chat/commit/035f62d))
 * perf(render): lift header up and move messages to own component ([a327aac](https://github.com/ph1p/figma-chat/commit/a327aac))
 * fix(color): add theme font color to connection info ([aa02762](https://github.com/ph1p/figma-chat/commit/aa02762))
 * fix(lint): remove shadowed variable ([c4579ae](https://github.com/ph1p/figma-chat/commit/c4579ae))
 * build: update figma typings ([0008245](https://github.com/ph1p/figma-chat/commit/0008245))
 * build(deps): update dependencies ([a9f16eb](https://github.com/ph1p/figma-chat/commit/a9f16eb))
+
 
 
 ## 4.0.0 (2020-05-26)
@@ -98,10 +113,15 @@
 
 ## <small>2.3.2 (2020-03-13)</small>
 
-* 2.3.1 ([8c6f2d3](https://github.com/ph1p/figma-chat/commit/8c6f2d3))
 * 2.3.2 ([22feff1](https://github.com/ph1p/figma-chat/commit/22feff1))
 * fix(build): set import names correct ([de2af61](https://github.com/ph1p/figma-chat/commit/de2af61))
 * fix(input): ability to type ã õ á é etc characters ([a3a4633](https://github.com/ph1p/figma-chat/commit/a3a4633)), closes [#3](https://github.com/ph1p/figma-chat/issues/3)
+
+
+
+## <small>2.3.1 (2020-02-06)</small>
+
+* 2.3.1 ([8c6f2d3](https://github.com/ph1p/figma-chat/commit/8c6f2d3))
 * fix(relaunch): fix message on relaunch ([33346fe](https://github.com/ph1p/figma-chat/commit/33346fe))
 * refactor(rename): write all tsx files with capital letters ([eedc1b8](https://github.com/ph1p/figma-chat/commit/eedc1b8))
 * build(deps): update dependencies ([018d251](https://github.com/ph1p/figma-chat/commit/018d251))
@@ -233,3 +253,6 @@
 * refactor(enums): create enums and update a useEffect hook ([a4181da](https://github.com/ph1p/figma-chat/commit/a4181da))
 * fix(online): fix online status and refactor some methods ([dc8c539](https://github.com/ph1p/figma-chat/commit/dc8c539))
 * fix(settings): prevent error on start ([7781044](https://github.com/ph1p/figma-chat/commit/7781044))
+
+
+
