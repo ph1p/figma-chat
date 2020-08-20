@@ -35,7 +35,8 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
 
   const selectionCount = selection?.length || selection?.nodes?.length || 0;
 
-  const text = data.message.text;
+  const text = data?.message?.text || null;
+  const date = data?.message?.date || null;
   const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
 
   return (
@@ -103,8 +104,8 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
           )}
         </MessageContainer>
         <MessageDate>
-          {data.message.date && (
-            <TimeAgo date={data.message.date} formatter={formatter} />
+          {date && (
+            <TimeAgo date={date} formatter={formatter} />
           )}
         </MessageDate>
       </MessageWrapper>

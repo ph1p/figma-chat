@@ -34,7 +34,7 @@ const ChatView: FunctionComponent<Props> = (props) => {
       <TransitionGroup>
         {props.chatState.filteredMessages.map((m, i) => (
           <CSSTransition
-            key={m.message.date}
+            key={m.message?.date || i}
             timeout={400}
             classNames={`message-${
               m.id === store.instanceId ? 'self' : 'other'

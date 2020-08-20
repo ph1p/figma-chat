@@ -27,6 +27,12 @@ async function main() {
   let secret = figma.root.getPluginData('secret');
   // const ownerId = figma.root.getPluginData('ownerId');
 
+  try {
+    JSON.parse(history);
+  } catch {
+    history = '';
+  }
+
   if (!instanceId) {
     instanceId = 'user-' + uniqid() + '-' + generateString(15);
     await figma.clientStorage.setAsync('id', instanceId);
@@ -153,8 +159,9 @@ main().then(({ roomName, secret, history, instanceId }) => {
     switch (message.action) {
       case 'save-user-settings':
         await figma.clientStorage.setAsync('user-settings', message.payload);
+        const settings = await figma.clientStorage.getAsync('user-settings');
 
-        postMessage('user-settings', message.payload);
+        postMessage('user-settings', settings);
         break;
       case 'add-message-to-history':
         {
