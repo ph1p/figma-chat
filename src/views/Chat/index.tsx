@@ -1,6 +1,6 @@
 import { toJS } from 'mobx';
 
-import { observer, useLocalStore } from 'mobx-react';
+import { observer, useLocalObservable } from 'mobx-react';
 import React, { useEffect, FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { withSocketContext } from '../../shared/SocketProvider';
@@ -19,10 +19,19 @@ interface ChatProps {
 const ChatView: FunctionComponent<ChatProps> = (props) => {
   const store = useStore();
 
-  const chatState = useLocalStore(() => ({
+  const chatState = useLocalObservable(() => ({
     textMessage: '',
     selectionIsChecked: false,
     messagesToShow: MAX_MESSAGES,
+    setMessagesToShow(num: number) {
+      this.messagesToShow = num;
+    },
+    setTextMessage(msg: string) {
+      this.textMessage = msg;
+    },
+    setSelectionIsChecked(checked: boolean) {
+      this.selectionIsChecked = checked;
+    },
     get hideMoreButton() {
       return (
         chatState.messagesToShow >= store.messages.length ||
@@ -68,8 +77,8 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
 
         store.addMessage(message);
 
-        chatState.textMessage = '';
-        chatState.selectionIsChecked = false;
+        chatState.setTextMessage('');
+        chatState.setSelectionIsChecked(false);
       }
     }
   };
@@ -84,7 +93,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
         const hasSelection =
           pmessage.payload?.length > 0 || pmessage.payload?.nodes?.length > 0;
 
-        store.selection = hasSelection ? pmessage.payload : {};
+        store.setSelection(hasSelection ? pmessage.payload : {});
 
         if (!hasSelection) {
           chatState.selectionIsChecked = false;
@@ -112,11 +121,11 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
             : {}),
         };
 
-        store.secret = dataSecret;
-        store.roomName = dataRoomName;
-        store.messages = messages;
-        store.instanceId = instanceId;
-        store.selection = selection;
+        store.setSecret(dataSecret);
+        store.setRoomName(dataRoomName);
+        store.setMessages(messages);
+        store.setInstanceId(instanceId);
+        store.setSelection(selection);
 
         store.persistSettings(settings, props.socket, true);
       }
@@ -124,7 +133,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       if (pmessage.type === 'relaunch-message') {
         chatState.selectionIsChecked = true;
 
-        store.selection = pmessage.payload.selection || {};
+        store.setSelection(pmessage.payload.selection || {});
 
         if (store.selectionCount) {
           sendMessage();
@@ -141,9 +150,9 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       chatState.filteredMessages.length + MAX_MESSAGES >=
       store.messages.length
     ) {
-      chatState.messagesToShow = store.messages.length;
+      chatState.setMessagesToShow(store.messages.length);
     } else {
-      chatState.messagesToShow += MAX_MESSAGES;
+      chatState.setMessagesToShow(chatState.messagesToShow + MAX_MESSAGES);
     }
   };
 
@@ -155,21 +164,22 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
     <Chat hasSelection={store.selectionCount > 0}>
       <Messages
         chatState={chatState}
-        isBottom={store.disableAutoScroll}
+        isBottom={store.autoScrollDisabled}
         onWheel={() => {
           const { current } = toJS(store.messagesRef);
           if (current.scrollTop <= current.scrollHeight * 0.2) {
             showMore();
           }
-          store.disableAutoScroll =
+          store.disableAutoScroll(
             current.scrollHeight - (current.scrollTop + current.clientHeight) >
-            0;
+              0
+          );
         }}
       />
 
       <Chatbar
         sendMessage={sendMessage}
-        setTextMessage={(text) => (chatState.textMessage = text)}
+        setTextMessage={(text) => chatState.setTextMessage(text)}
         textMessage={chatState.textMessage}
         setSelectionIsChecked={(isChecked) =>
           (chatState.selectionIsChecked = isChecked)

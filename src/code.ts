@@ -1,4 +1,3 @@
-import uniqid from 'uniqid';
 import { generateString } from './shared/utils';
 
 let isMinimized = false;
@@ -19,6 +18,7 @@ figma.root.setRelaunchData({
 });
 
 async function main() {
+  const timestamp = +new Date();
   // random user id for current user
   let instanceId = await figma.clientStorage.getAsync('id');
   // figma.root.setPluginData('history', '');
@@ -34,7 +34,7 @@ async function main() {
   }
 
   if (!instanceId) {
-    instanceId = 'user-' + uniqid() + '-' + generateString(15);
+    instanceId = 'user-' + timestamp + '-' + generateString(15);
     await figma.clientStorage.setAsync('id', instanceId);
   }
 
@@ -43,7 +43,7 @@ async function main() {
   }
 
   if (!roomName) {
-    const randomRoomName = uniqid() + '-' + generateString(15);
+    const randomRoomName = timestamp + '-' + generateString(15);
     figma.root.setPluginData('roomName', randomRoomName);
     roomName = randomRoomName;
   }

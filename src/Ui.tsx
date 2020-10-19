@@ -1,5 +1,4 @@
 import { observer } from 'mobx-react';
-import 'mobx-react-lite/batchingForReactDom';
 import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
@@ -130,7 +129,7 @@ const init = () => {
     }
 
     function initSocketConnection(url: string) {
-      store.status = ConnectionEnum.NONE;
+      store.setStatus(ConnectionEnum.NONE);
 
       if (socket) {
         socket.removeAllListeners();
@@ -151,7 +150,7 @@ const init = () => {
         sendMainMessage('get-root-data');
 
         socket.on('connected', () => {
-          store.status = ConnectionEnum.CONNECTED;
+          store.setStatus(ConnectionEnum.CONNECTED);
 
           socket.emit('set user', store.settings);
           socket.emit('join room', {
@@ -163,11 +162,11 @@ const init = () => {
         });
 
         socket.on('connect_error', () => {
-          store.status = ConnectionEnum.ERROR;
+          store.setStatus(ConnectionEnum.ERROR);
         });
 
         socket.on('reconnect_error', () => {
-          store.status = ConnectionEnum.ERROR;
+          store.setStatus(ConnectionEnum.ERROR);
         });
 
         socket.on('chat message', (data) => {
@@ -184,7 +183,7 @@ const init = () => {
           store.addNotification(`${username} ${message}`);
         });
 
-        socket.on('online', (data) => (store.online = data));
+        socket.on('online', (data) => store.setOnline(data));
       }
 
       return () => {

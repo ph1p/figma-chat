@@ -1,4 +1,4 @@
-import { action, computed, observable, toJS } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 import React, { createRef } from 'react';
 
 import { createEncryptor } from 'simple-encryptor';
@@ -9,39 +9,56 @@ import { sendMainMessage } from '../shared/utils';
 import MessageSound from '../assets/sound.mp3';
 
 class RootStore {
-  @computed
+  constructor() {
+    makeAutoObservable(this);
+  }
+
   get encryptor() {
     return createEncryptor(this.secret);
   }
 
-  @observable
   status = ConnectionEnum.NONE;
-  // ---
-  @observable
   secret = '';
-
-  @observable
   roomName = '';
-
-  @observable
   instanceId = '';
-  // ---
-  @observable
   online = [];
-  // ---
-  @observable
   messages = [];
-
-  @observable
   messagesRef = createRef<HTMLDivElement>();
-
-  @observable
-  disableAutoScroll = false;
-
-  @observable
+  autoScrollDisabled = false;
   selection = undefined;
 
-  @computed
+  setStatus(status) {
+    this.status = status;
+  }
+  setSecret(secret) {
+    this.secret = secret;
+  }
+  setRoomName(roomName) {
+    this.roomName = roomName;
+  }
+  setInstanceId(instanceId) {
+    this.instanceId = instanceId;
+  }
+  setOnline(online) {
+    this.online = online;
+  }
+  setMessages(messages) {
+    this.messages = messages;
+  }
+  setMessagesRef(messagesRef) {
+    this.messagesRef = messagesRef;
+  }
+  setAutoScrollDisabled(autoScrollDisabled) {
+    this.autoScrollDisabled = autoScrollDisabled;
+  }
+  setSelection(selection) {
+    this.selection = selection;
+  }
+
+  disableAutoScroll(disable) {
+    this.autoScrollDisabled = disable;
+  }
+
   get selectionCount() {
     // fallback
     if (this.selection?.length) {
@@ -51,9 +68,8 @@ class RootStore {
     return this.selection?.nodes?.length || 0;
   }
 
-  @action
   scrollToBottom() {
-    if (!this.disableAutoScroll) {
+    if (!this.autoScrollDisabled) {
       const ref = toJS(this.messagesRef);
       // scroll to bottom
       if (ref?.current) {
@@ -63,13 +79,10 @@ class RootStore {
   }
 
   // ---
-  @observable
   isFocused = true;
 
-  @observable
   isMinimized = false;
 
-  @observable
   settings = {
     name: '',
     avatar: '',
@@ -80,10 +93,12 @@ class RootStore {
     isDarkTheme: false,
   };
 
-  @observable
   notifications = [];
 
-  @action
+  setDarkTheme(isDarkTheme) {
+    this.settings.isDarkTheme = isDarkTheme;
+  }
+
   addNotification(text: string, type?: string) {
     this.notifications.push({
       id: Math.random(),
@@ -92,13 +107,11 @@ class RootStore {
     });
   }
   // ---
-  @action
   toggleMinimizeChat() {
     this.isMinimized = !this.isMinimized;
     sendMainMessage('minimize', this.isMinimized);
   }
 
-  @action
   clearChatHistory(cb: () => void) {
     if (
       (window as any).confirm(
@@ -112,7 +125,6 @@ class RootStore {
     }
   }
 
-  @action
   persistSettings(settings, socket, isInit = false) {
     const oldUrl = this.settings.url;
     this.settings = {
@@ -136,7 +148,6 @@ class RootStore {
     }
   }
 
-  @action
   addMessage(messageData) {
     const isLocal = !messageData.user;
     const decryptedMessage = this.encryptor.decrypt(

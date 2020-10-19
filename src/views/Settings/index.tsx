@@ -1,9 +1,9 @@
 // store
-import { observer, useLocalStore } from 'mobx-react';
+import { observer, useLocalObservable } from 'mobx-react';
 import React, { useEffect, useRef, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { version } from '../../../package.json';
+import pkg from '../../../package.json';
 import BellIcon from '../../assets/icons/Bell';
 import MessageIcon from '../../assets/icons/Message';
 import ThemeIcon from '../../assets/icons/Theme';
@@ -26,10 +26,19 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
 
   const nameInputRef = useRef(null);
   const history = useHistory();
-  const settings = useLocalStore(() => ({
+  const settings = useLocalObservable(() => ({
     name: '',
     url: '',
     enableNotificationTooltip: true,
+    setUrl(url) {
+      this.url = url;
+    },
+    setName(name) {
+      this.name = name;
+    },
+    setEnableNotificationTooltip(flag) {
+      this.enableNotificationTooltip = flag;
+    },
   }));
 
   useEffect(() => {
@@ -42,10 +51,11 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    settings.name = store.settings.name;
-    settings.url = store.settings.url;
-    settings.enableNotificationTooltip =
-      store.settings.enableNotificationTooltip;
+    settings.setName(store.settings.name);
+    settings.setUrl(store.settings.url);
+    settings.setEnableNotificationTooltip(
+      store.settings.enableNotificationTooltip
+    );
   }, [store.settings]);
 
   const saveSettings = (shouldClose = true) => {
@@ -75,7 +85,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           value={settings.name}
           onBlur={() => saveSettings(false)}
           onChange={({ target }: any) =>
-            (settings.name = target.value.substr(0, 20))
+            settings.setName(target.value.substr(0, 20))
           }
           onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
         />
@@ -85,7 +95,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           Server-URL
           <span
             onClick={() => {
-              settings.url = DEFAULT_SERVER_URL;
+              settings.setUrl(DEFAULT_SERVER_URL);
               saveSettings(settings.url !== store.settings.url);
             }}
           >
@@ -101,7 +111,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
             saveSettings(target.value !== store.settings.url)
           }
           onChange={({ target }: any) =>
-            (settings.url = target.value.substr(0, 255))
+            settings.setUrl(target.value.substr(0, 255))
           }
           onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
         />
@@ -135,7 +145,9 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
                   name="message"
                   ref={ref}
                   onClick={() => {
-                    settings.enableNotificationTooltip = !settings.enableNotificationTooltip;
+                    settings.setEnableNotificationTooltip(
+                      !settings.enableNotificationTooltip
+                    );
                     saveSettings(false);
                   }}
                 >
@@ -154,7 +166,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
                   name="theme"
                   ref={ref}
                   onClick={() => {
-                    store.settings.isDarkTheme = !store.settings.isDarkTheme;
+                    store.setDarkTheme(!store.settings.isDarkTheme);
                     saveSettings(false);
                   }}
                 >
@@ -191,7 +203,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           target="_blank"
           href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
         >
-          v{version}
+          v{pkg.version}
         </VersionNote>
       </div>
     </Settings>

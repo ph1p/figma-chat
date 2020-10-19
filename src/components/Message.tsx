@@ -153,6 +153,7 @@ const SelectionButton = styled.button`
   border-color: ${(p) =>
     p.isSelf ? p.theme.fontColor : 'rgba(255, 255, 255, 0.4)'};
   color: ${(p) => (p.isSelf ? p.theme.fontColor : '#fff')};
+  border-style: solid;
   border-radius: 9px;
   padding: 5px 10px;
   display: flex;
