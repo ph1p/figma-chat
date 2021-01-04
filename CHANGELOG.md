@@ -1,5 +1,16 @@
+## 4.2.0 (2021-01-04)
+
+* refactor: remove unused main variable ([bc31cc0](https://github.com/ph1p/figma-chat/commit/bc31cc0))
+* refactor: update dependencies and tidy up the socket connection a little bit ([3bd38fd](https://github.com/ph1p/figma-chat/commit/3bd38fd))
+* refactor(mobx): move to new mobx 6 and update build process ([d00e677](https://github.com/ph1p/figma-chat/commit/d00e677))
+* build: remove unused packages and downgrade terser ([5baf2cb](https://github.com/ph1p/figma-chat/commit/5baf2cb))
+* feat(codeql): add codeql workflow ([8ae6f28](https://github.com/ph1p/figma-chat/commit/8ae6f28))
+
+
+
 ## <small>4.1.1 (2020-08-20)</small>
 
+* 4.1.1 ([5eb8f67](https://github.com/ph1p/figma-chat/commit/5eb8f67))
 * fix: add some conditions and check if history is corrupt ([8807ec9](https://github.com/ph1p/figma-chat/commit/8807ec9))
 * fix(todo): prevent todo list from opening on start ([408f505](https://github.com/ph1p/figma-chat/commit/408f505))
 * build: remove yarn lock ([ade23a6](https://github.com/ph1p/figma-chat/commit/ade23a6))
@@ -91,13 +102,13 @@
 ## <small>2.4.1 (2020-04-06)</small>
 
 * 2.4.1 ([1567022](https://github.com/ph1p/figma-chat/commit/1567022))
+* fix(deps): audit fix some dependencies ([a5cb723](https://github.com/ph1p/figma-chat/commit/a5cb723))
 * fix(sound): create new instance to play sound immediately ([7d69be0](https://github.com/ph1p/figma-chat/commit/7d69be0))
 
 
 
 ## 2.4.0 (2020-04-06)
 
-* fix(deps): audit fix some dependencies ([a5cb723](https://github.com/ph1p/figma-chat/commit/a5cb723))
 * 2.4.0 ([d53cd73](https://github.com/ph1p/figma-chat/commit/d53cd73))
 * feat(settings): add new notification settings and sound ([2d65d72](https://github.com/ph1p/figma-chat/commit/2d65d72))
 
@@ -113,15 +124,10 @@
 
 ## <small>2.3.2 (2020-03-13)</small>
 
+* 2.3.1 ([8c6f2d3](https://github.com/ph1p/figma-chat/commit/8c6f2d3))
 * 2.3.2 ([22feff1](https://github.com/ph1p/figma-chat/commit/22feff1))
 * fix(build): set import names correct ([de2af61](https://github.com/ph1p/figma-chat/commit/de2af61))
 * fix(input): ability to type ã õ á é etc characters ([a3a4633](https://github.com/ph1p/figma-chat/commit/a3a4633)), closes [#3](https://github.com/ph1p/figma-chat/issues/3)
-
-
-
-## <small>2.3.1 (2020-02-06)</small>
-
-* 2.3.1 ([8c6f2d3](https://github.com/ph1p/figma-chat/commit/8c6f2d3))
 * fix(relaunch): fix message on relaunch ([33346fe](https://github.com/ph1p/figma-chat/commit/33346fe))
 * refactor(rename): write all tsx files with capital letters ([eedc1b8](https://github.com/ph1p/figma-chat/commit/eedc1b8))
 * build(deps): update dependencies ([018d251](https://github.com/ph1p/figma-chat/commit/018d251))
