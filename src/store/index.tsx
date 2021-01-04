@@ -2,7 +2,6 @@ import { makeAutoObservable, toJS } from 'mobx';
 import React, { createRef } from 'react';
 
 import { createEncryptor } from 'simple-encryptor';
-import { DEFAULT_SERVER_URL } from '../shared/constants';
 import { ConnectionEnum } from '../shared/interfaces';
 import { sendMainMessage } from '../shared/utils';
 
@@ -87,7 +86,7 @@ class RootStore {
     name: '',
     avatar: '',
     color: '#4F4F4F',
-    url: DEFAULT_SERVER_URL,
+    url: '',
     enableNotificationTooltip: true,
     enableNotificationSound: true,
     isDarkTheme: false,
@@ -127,6 +126,7 @@ class RootStore {
 
   persistSettings(settings, socket, isInit = false) {
     const oldUrl = this.settings.url;
+
     this.settings = {
       ...this.settings,
       ...settings,
@@ -135,10 +135,9 @@ class RootStore {
     // save user settings in main
     sendMainMessage('save-user-settings', { ...toJS(this.settings) });
 
+    // set server URL
     if (!isInit && settings.url && settings.url !== oldUrl) {
-      // set server URL
       sendMainMessage('set-server-url', settings.url);
-
       this.addNotification('Updated server-URL');
     }
 

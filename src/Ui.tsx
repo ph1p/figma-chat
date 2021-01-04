@@ -21,10 +21,10 @@ import MinimizedView from './views/Minimized';
 import SettingsView from './views/Settings';
 import UserListView from './views/UserList';
 
-import { reaction } from 'mobx';
 import theme from './shared/theme';
 import { useStore, StoreProvider } from './store';
 import Header from './components/Header';
+import { DEFAULT_SERVER_URL } from './shared/constants';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
@@ -149,7 +149,7 @@ const init = () => {
       if (socket && store.status === ConnectionEnum.NONE) {
         sendMainMessage('get-root-data');
 
-        socket.on('connected', () => {
+        socket.on('connect', () => {
           store.setStatus(ConnectionEnum.CONNECTED);
 
           socket.emit('set user', store.settings);
@@ -161,13 +161,13 @@ const init = () => {
           sendMainMessage('ask-for-relaunch-message');
         });
 
-        socket.on('connect_error', () => {
-          store.setStatus(ConnectionEnum.ERROR);
-        });
+        socket.io.on('connect_error', () =>
+          store.setStatus(ConnectionEnum.ERROR)
+        );
 
-        socket.on('reconnect_error', () => {
-          store.setStatus(ConnectionEnum.ERROR);
-        });
+        socket.io.on('reconnect_error', () =>
+          store.setStatus(ConnectionEnum.ERROR)
+        );
 
         socket.on('chat message', (data) => {
           store.addMessage(data);
@@ -195,15 +195,11 @@ const init = () => {
     }, [socket]);
 
     useEffect(() => {
-      initSocketConnection(store.settings.url);
-
-      const serverUrlDisposer = reaction(
-        () => store.settings.url,
-        () => {
-          initSocketConnection(store.settings.url);
-        }
-      );
-
+      if (store.settings.url) {
+        initSocketConnection(store.settings.url);
+      } else {
+        sendMainMessage('set-server-url', DEFAULT_SERVER_URL);
+      }
       // check focus
       window.addEventListener('focus', onFocus);
       window.addEventListener('blur', onFocusOut);
@@ -211,9 +207,8 @@ const init = () => {
       return () => {
         window.removeEventListener('focus', onFocus);
         window.removeEventListener('blur', onFocusOut);
-        serverUrlDisposer();
       };
-    }, []);
+    }, [store.settings.url]);
 
     return (
       <ThemeProvider theme={theme(store.settings.isDarkTheme)}>

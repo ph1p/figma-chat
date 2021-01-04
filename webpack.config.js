@@ -1,4 +1,4 @@
-const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CreateFileWebpack = require('create-file-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -45,12 +45,28 @@ module.exports = (env, argv) => ({
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.mp3'],
+    fallback: {
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+    },
   },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, figmaPlugin.name),
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          REACT_APP_SC_ATTR: JSON.stringify('data-styled-figma-chat'),
+          SC_ATTR: JSON.stringify('data-styled-figma-chat'),
+          REACT_APP_SC_DISABLE_SPEEDY: JSON.stringify('false'),
+        },
+      },
+    }),
     new HtmlWebpackPlugin({
       filename: 'ui.html',
       inlineSource: '.(js)$',
@@ -75,6 +91,5 @@ module.exports = (env, argv) => ({
       fileName: 'manifest.json',
       content: JSON.stringify(figmaPlugin),
     }),
-    // new HtmlWebpackInlineSourcePlugin(),
   ],
 });
