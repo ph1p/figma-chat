@@ -1,3 +1,4 @@
+import { DEFAULT_SERVER_URL } from './shared/constants';
 import { generateString } from './shared/utils';
 
 let isMinimized = false;
@@ -19,6 +20,7 @@ figma.root.setRelaunchData({
 
 async function main() {
   const timestamp = +new Date();
+
   // random user id for current user
   let instanceId = await figma.clientStorage.getAsync('id');
   // figma.root.setPluginData('history', '');
@@ -26,6 +28,15 @@ async function main() {
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
   // const ownerId = figma.root.getPluginData('ownerId');
+
+  const settings = await figma.clientStorage.getAsync('user-settings');
+
+  if (!settings.url) {
+    await figma.clientStorage.setAsync('user-settings', {
+      ...settings,
+      url: DEFAULT_SERVER_URL
+    });
+  }
 
   try {
     JSON.parse(history);
@@ -186,13 +197,8 @@ main().then(({ roomName, secret, history, instanceId }) => {
           figma.notify(message.payload);
         }
         break;
-      case 'set-server-url':
-        await figma.clientStorage.setAsync('server-url', message.payload);
-        break;
       case 'initialize':
-        const url = await figma.clientStorage.getAsync('server-url');
-
-        postMessage('initialize', url || '');
+        postMessage('initialize');
 
         sendRootData({ roomName, secret, history, instanceId });
         break;

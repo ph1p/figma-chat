@@ -124,7 +124,7 @@ class RootStore {
     }
   }
 
-  persistSettings(settings, socket, isInit = false) {
+  persistSettings(settings, socket?, isInit = false) {
     const oldUrl = this.settings.url;
 
     this.settings = {
@@ -137,7 +137,6 @@ class RootStore {
 
     // set server URL
     if (!isInit && settings.url && settings.url !== oldUrl) {
-      sendMainMessage('set-server-url', settings.url);
       this.addNotification('Updated server-URL');
     }
 

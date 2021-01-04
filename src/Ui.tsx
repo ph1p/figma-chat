@@ -24,7 +24,6 @@ import UserListView from './views/UserList';
 import theme from './shared/theme';
 import { useStore, StoreProvider } from './store';
 import Header from './components/Header';
-import { DEFAULT_SERVER_URL } from './shared/constants';
 
 onmessage = (message) => {
   if (message.data.pluginMessage) {
@@ -197,8 +196,6 @@ const init = () => {
     useEffect(() => {
       if (store.settings.url) {
         initSocketConnection(store.settings.url);
-      } else {
-        sendMainMessage('set-server-url', DEFAULT_SERVER_URL);
       }
       // check focus
       window.addEventListener('focus', onFocus);
