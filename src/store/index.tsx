@@ -190,10 +190,18 @@ class RootStore {
           audio.play();
         }
         if (this.settings.enableNotificationTooltip) {
+          let text = '';
+          if (data.text) {
+            text =
+              data.text.length > 25
+                ? data.text.substr(0, 25 - 1) + '...'
+                : data.text;
+          }
+
           sendMainMessage(
             'notification',
             messageData?.user?.name
-              ? `New chat message from ${messageData.user.name}`
+              ? `${text} · ${messageData.user.avatar} ${messageData.user.name}`
               : `New chat message`
           );
         }
