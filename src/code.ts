@@ -31,7 +31,7 @@ async function main() {
 
   const settings = await figma.clientStorage.getAsync('user-settings');
 
-  if (!settings.url) {
+  if (!settings || !settings.url) {
     await figma.clientStorage.setAsync('user-settings', {
       ...settings,
       url: DEFAULT_SERVER_URL
