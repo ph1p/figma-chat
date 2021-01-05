@@ -1,5 +1,14 @@
+## <small>4.2.1 (2021-01-05)</small>
+
+* feat(notification): show text, avatar and username in notifications ([0b25c6b](https://github.com/ph1p/figma-chat/commit/0b25c6b))
+* fix(url): tiny hotfix in main process ([8736898](https://github.com/ph1p/figma-chat/commit/8736898))
+* build(workflow): remove codeql, because no queries are created ([f1ac709](https://github.com/ph1p/figma-chat/commit/f1ac709))
+
+
+
 ## 4.2.0 (2021-01-04)
 
+* 4.2.0 ([7db53c4](https://github.com/ph1p/figma-chat/commit/7db53c4))
 * refactor: remove unused main variable ([bc31cc0](https://github.com/ph1p/figma-chat/commit/bc31cc0))
 * refactor: update dependencies and tidy up the socket connection a little bit ([3bd38fd](https://github.com/ph1p/figma-chat/commit/3bd38fd))
 * refactor(mobx): move to new mobx 6 and update build process ([d00e677](https://github.com/ph1p/figma-chat/commit/d00e677))
