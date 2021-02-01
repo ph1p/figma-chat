@@ -1,5 +1,12 @@
+## <small>4.2.2 (2021-02-01)</small>
+
+* refactor(style): move font and global style into own css file and update dependencies ([27435af](https://github.com/ph1p/figma-chat/commit/27435af))
+
+
+
 ## <small>4.2.1 (2021-01-05)</small>
 
+* 4.2.1 ([d648e19](https://github.com/ph1p/figma-chat/commit/d648e19))
 * feat(notification): show text, avatar and username in notifications ([0b25c6b](https://github.com/ph1p/figma-chat/commit/0b25c6b))
 * fix(url): tiny hotfix in main process ([8736898](https://github.com/ph1p/figma-chat/commit/8736898))
 * build(workflow): remove codeql, because no queries are created ([f1ac709](https://github.com/ph1p/figma-chat/commit/f1ac709))
