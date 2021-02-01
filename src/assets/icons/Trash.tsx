@@ -8,7 +8,7 @@ const TrashIcon: FunctionComponent<Props> = (props) => {
   if (props.active) {
     return (
       <svg
-        xmlns="http://www.w3.org/2000/svg"
+        xmlns="https://www.w3.org/2000/svg"
         width="24"
         height="24"
         fill="none"
@@ -32,7 +32,7 @@ const TrashIcon: FunctionComponent<Props> = (props) => {
   }
 
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
+    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" fill="none">
       <path
         fill="#A2ADC0"
         d="M9.684 7h5.033c.037 0 .067.03.067.067h2.067v10.33a2.071 2.071 0 01-2.072 2.07H9.622a2.071 2.071 0 01-2.072-2.07V7.066h2.067c0-.037.03-.067.067-.067z"

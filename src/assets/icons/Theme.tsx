@@ -12,7 +12,7 @@ const ThemeIcon: FunctionComponent<Props> = (props) => {
         height="22"
         viewBox="0 0 22 22"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+        xmlns="https://www.w3.org/2000/svg"
       >
         <path
           fillRule="evenodd"
@@ -25,7 +25,7 @@ const ThemeIcon: FunctionComponent<Props> = (props) => {
   }
 
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
+    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" fill="none">
       <g clipPath="url(#moon)">
         <path
           fill="#A2ADC0"
