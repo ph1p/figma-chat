@@ -2,8 +2,8 @@ import { observer } from 'mobx-react';
 import React, { FunctionComponent } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import ChatIcon from '../assets/icons/Chat';
-import SettingsIcon from '../assets/icons/Settings';
+import ChatIcon from '../assets/icons/ChatIcon';
+import SettingsIcon from '../assets/icons/SettingsIcon';
 import { ConnectionEnum } from '../shared/interfaces';
 import { useStore } from '../store';
 

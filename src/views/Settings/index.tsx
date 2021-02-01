@@ -4,10 +4,10 @@ import React, { useEffect, useRef, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import pkg from '../../../package.json';
-import BellIcon from '../../assets/icons/Bell';
-import MessageIcon from '../../assets/icons/Message';
-import ThemeIcon from '../../assets/icons/Theme';
-import TrashIcon from '../../assets/icons/Trash';
+import BellIcon from '../../assets/icons/BellIcon';
+import MessageIcon from '../../assets/icons/MessageIcon';
+import ThemeIcon from '../../assets/icons/ThemeIcon';
+import TrashIcon from '../../assets/icons/TrashIcon';
 // components
 import Tooltip from '../../components/Tooltip';
 // shared
