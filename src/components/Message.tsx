@@ -181,7 +181,7 @@ const MessageContainer = styled.div`
   background-color: #18a0fb;
   border-radius: 4px 14px 14px 14px;
   color: #fff;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
