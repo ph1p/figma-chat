@@ -1,5 +1,16 @@
+## <small>4.2.3 (2021-03-10)</small>
+
+* fix(mobx): add action for window focus ([316da82](https://github.com/ph1p/figma-chat/commit/316da82))
+* build(deps): update all dependencies ([853302c](https://github.com/ph1p/figma-chat/commit/853302c))
+* refactor: add https to svgs ([77506f1](https://github.com/ph1p/figma-chat/commit/77506f1))
+* refactor(naming): rename icon components ([f1c9446](https://github.com/ph1p/figma-chat/commit/f1c9446))
+* refactor(style): add generic font family ([e82acd5](https://github.com/ph1p/figma-chat/commit/e82acd5))
+
+
+
 ## <small>4.2.2 (2021-02-01)</small>
 
+* 4.2.2 ([ab42310](https://github.com/ph1p/figma-chat/commit/ab42310))
 * refactor(style): move font and global style into own css file and update dependencies ([27435af](https://github.com/ph1p/figma-chat/commit/27435af))
 
 
