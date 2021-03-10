@@ -94,6 +94,14 @@ class RootStore {
 
   notifications = [];
 
+  setIsMinimized(isMinimized: boolean) {
+    this.isMinimized = isMinimized;
+  }
+
+  setIsFocused(isFocused: boolean) {
+    this.isFocused = isFocused;
+  }
+
   setDarkTheme(isDarkTheme) {
     this.settings.isDarkTheme = isDarkTheme;
   }

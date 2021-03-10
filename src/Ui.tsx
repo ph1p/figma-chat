@@ -64,11 +64,11 @@ const init = () => {
     function onFocus() {
       sendMainMessage('focus', false);
 
-      store.isFocused = false;
+      store.setIsFocused(false);
     }
     function onFocusOut() {
       sendMainMessage('focus', false);
-      store.isFocused = false;
+      store.setIsFocused(false);
     }
 
     function initSocketConnection(url: string) {
