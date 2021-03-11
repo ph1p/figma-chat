@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';

@@ -1,7 +1,10 @@
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CreateFileWebpack = require('create-file-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const { ESBuildPlugin } = require('esbuild-loader');
 const path = require('path');
 
 const { figmaPlugin } = require('./package.json');
@@ -10,7 +13,17 @@ module.exports = (env, argv) => ({
   mode: argv.mode === 'production' ? 'production' : 'development',
   devtool: argv.mode === 'production' ? false : 'inline-source-map',
   optimization: {
-    minimizer: [new TerserPlugin()],
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          ecma: 2016,
+          compress: {
+            arguments: true,
+            drop_console: true,
+          },
+        },
+      }),
+    ],
   },
   entry: {
     ui: './src/Ui.tsx',
@@ -23,8 +36,11 @@ module.exports = (env, argv) => ({
     rules: [
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
-        exclude: /node_modules/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'tsx', // Or 'ts' if you don't need tsx
+          target: 'es2015',
+        },
       },
       {
         test: /\.css$/,
@@ -55,6 +71,8 @@ module.exports = (env, argv) => ({
     path: path.resolve(__dirname, figmaPlugin.name),
   },
   plugins: [
+    argv.mode !== 'production' ? new BundleAnalyzerPlugin() : null,
+    new ESBuildPlugin(),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
@@ -91,5 +109,5 @@ module.exports = (env, argv) => ({
       fileName: 'manifest.json',
       content: JSON.stringify(figmaPlugin),
     }),
-  ],
+  ].filter(Boolean),
 });

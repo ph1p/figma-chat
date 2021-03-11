@@ -1,19 +1,16 @@
 // store
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
-import { withSocketContext } from '../shared/SocketProvider';
+import { useSocket } from '../shared/SocketProvider';
 import { useStore } from '../store';
 
-interface UserListProps {
-  socket: SocketIOClient.Socket;
-}
-
-const UserListView: FunctionComponent<UserListProps> = (props) => {
+const UserList: FunctionComponent = observer(() => {
   const store = useStore();
+  const socket = useSocket();
 
   return (
-    <UserList>
+    <Wrapper>
       <h5>Active Users</h5>
       <div className="users">
         {store.online.map((user) => {
@@ -27,17 +24,17 @@ const UserListView: FunctionComponent<UserListProps> = (props) => {
               </div>
               <div className={`name ${!user.name ? 'empty' : ''}`}>
                 {user.name || 'Anon'}
-                {user.id === props.socket.id && <p>you</p>}
+                {user.id === socket.id && <p>you</p>}
               </div>
             </div>
           );
         })}
       </div>
-    </UserList>
+    </Wrapper>
   );
-};
+});
 
-const UserList = styled.div`
+const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
   width: 100vw;
@@ -83,4 +80,4 @@ const UserList = styled.div`
   }
 `;
 
-export default withSocketContext(observer(UserListView));
+export default UserList;

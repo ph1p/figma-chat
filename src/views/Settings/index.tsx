@@ -1,5 +1,5 @@
 // store
-import { observer, useLocalObservable } from 'mobx-react';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, useRef, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
@@ -11,18 +11,15 @@ import TrashIcon from '../../assets/icons/TrashIcon';
 // components
 import Tooltip from '../../components/Tooltip';
 // shared
-import { withSocketContext } from '../../shared/SocketProvider';
 import { DEFAULT_SERVER_URL } from '../../shared/constants';
+import { useSocket } from '../../shared/SocketProvider';
 import { useStore } from '../../store';
 import AvatarPicker from './components/AvatarPicker';
 import ColorPicker from './components/ColorPicker';
 
-interface SettingsProps {
-  socket: SocketIOClient.Socket;
-}
-
-const SettingsView: FunctionComponent<SettingsProps> = (props) => {
+const SettingsView: FunctionComponent = observer(() => {
   const store = useStore();
+  const socket = useSocket();
 
   const nameInputRef = useRef(null);
   const history = useHistory();
@@ -63,7 +60,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
       store.addNotification(`Name successfully updated`);
     }
 
-    store.persistSettings(settings, props.socket);
+    store.persistSettings(settings, socket);
 
     if (shouldClose) {
       history.push('/');
@@ -122,7 +119,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <Tooltip
             hover
             handler={observer(
-              React.forwardRef((_, ref) => (
+              (_, ref) => (
                 <Tile
                   name="trash"
                   ref={ref}
@@ -132,7 +129,8 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
                 >
                   <TrashIcon />
                 </Tile>
-              ))
+              ),
+              { forwardRef: true }
             )}
           >
             History
@@ -140,7 +138,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <Tooltip
             hover
             handler={observer(
-              React.forwardRef((_, ref) => (
+              (_, ref) => (
                 <Tile
                   name="message"
                   ref={ref}
@@ -153,7 +151,8 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
                 >
                   <MessageIcon active={settings.enableNotificationTooltip} />
                 </Tile>
-              ))
+              ),
+              { forwardRef: true }
             )}
           >
             Notifications
@@ -161,7 +160,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <Tooltip
             hover
             handler={observer(
-              React.forwardRef((_, ref) => (
+              (_, ref) => (
                 <Tile
                   name="theme"
                   ref={ref}
@@ -172,7 +171,8 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
                 >
                   <ThemeIcon active={store.settings.isDarkTheme} />
                 </Tile>
-              ))
+              ),
+              { forwardRef: true }
             )}
           >
             Theme
@@ -180,19 +180,22 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
           <Tooltip
             hover
             handler={observer(
-              React.forwardRef((_, ref) => (
+              (_, ref) => (
                 <Tile
                   name="bell"
                   ref={ref}
                   onClick={() => {
-                    store.settings.enableNotificationSound = !store.settings
-                      .enableNotificationSound;
+                    store.setSetting(
+                      'enableNotificationSound',
+                      !store.settings.enableNotificationSound
+                    );
                     saveSettings(false);
                   }}
                 >
                   <BellIcon active={store.settings.enableNotificationSound} />
                 </Tile>
-              ))
+              ),
+              { forwardRef: true }
             )}
           >
             Sound
@@ -208,7 +211,7 @@ const SettingsView: FunctionComponent<SettingsProps> = (props) => {
       </div>
     </Settings>
   );
-};
+});
 
 const ServerUrl = styled.div`
   input[type='text'] {
@@ -349,4 +352,4 @@ const Settings = styled.div`
   }
 `;
 
-export default withSocketContext(observer(SettingsView));
+export default SettingsView;

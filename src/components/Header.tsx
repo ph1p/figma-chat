@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
@@ -11,7 +11,7 @@ interface Props {
   minimized?: boolean;
 }
 
-function CustomLink({ children, to, style = {}, className = '' }) {
+const CustomLink = ({ children, to, style = {}, className = '' }) => {
   const history = useHistory();
   const match = useRouteMatch({
     path: to,
@@ -32,7 +32,7 @@ function CustomLink({ children, to, style = {}, className = '' }) {
       {children}
     </div>
   );
-}
+};
 
 const Header: FunctionComponent<Props> = (props) => {
   const store = useStore();

@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
@@ -59,19 +59,19 @@ const AppWrapper = styled.div`
 const init = () => {
   const App = observer(() => {
     const store = useStore();
-    const [socket, setSocket] = useState<SocketIOClient.Socket>(undefined);
+    const [socket, setSocket] = useState<SocketIOClient.Socket>(null);
 
-    function onFocus() {
-      sendMainMessage('focus', false);
-
-      store.setIsFocused(false);
-    }
-    function onFocusOut() {
+    const onFocus = () => {
       sendMainMessage('focus', false);
       store.setIsFocused(false);
-    }
+    };
 
-    function initSocketConnection(url: string) {
+    const onFocusOut = () => {
+      sendMainMessage('focus', false);
+      store.setIsFocused(false);
+    };
+
+    const initSocketConnection = (url: string) => {
       store.setStatus(ConnectionEnum.NONE);
 
       if (socket) {
@@ -86,12 +86,11 @@ const init = () => {
           transports: ['websocket'],
         })
       );
-    }
+    };
 
     useEffect(() => {
       if (socket && store.status === ConnectionEnum.NONE) {
         sendMainMessage('get-root-data');
-
         socket.on('connect', () => {
           store.setStatus(ConnectionEnum.CONNECTED);
 

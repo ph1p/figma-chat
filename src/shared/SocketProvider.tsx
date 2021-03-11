@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { FunctionComponent } from 'react';
 
 // SocketContext = {Provider, Consumer}
@@ -9,30 +8,23 @@ interface Props {
   children: any;
 }
 
-export const SocketProvider: FunctionComponent<Props> = props => {
-  return (
-    <SocketContext.Provider value={props.socket}>
-      {props.children}
-    </SocketContext.Provider>
-  );
+export const SocketProvider: FunctionComponent<Props> = (props) => (
+  <SocketContext.Provider value={props.socket}>
+    {props.children}
+  </SocketContext.Provider>
+);
+
+export const useSocket = (): SocketIOClient.Socket => {
+  const socket = React.useContext(SocketContext);
+
+  if (typeof socket === 'undefined') {
+    throw new Error('useSocket must be used within a SocketProvider.');
+  }
+  return socket;
 };
 
-export const withSocketContext = <Comp extends React.ComponentType<any>>(
-  Component: Comp
-): React.ComponentClass<any> => {
-  return class ComponentWithSocket extends React.Component<any> {
-    static propTypes = {
-      Component: PropTypes.element
-    };
-
-    static displayName = `${Component.displayName || Component.name}`;
-
-    render() {
-      return (
-        <SocketContext.Consumer>
-          {socket => <Component {...(this.props as any)} socket={socket} />}
-        </SocketContext.Consumer>
-      );
-    }
-  };
-};
+export const withSocketContext = (Component) => (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <Component {...(props as unknown)} socket={socket} />}
+  </SocketContext.Consumer>
+);

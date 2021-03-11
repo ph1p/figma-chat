@@ -7,6 +7,15 @@ import { sendMainMessage } from '../shared/utils';
 
 import MessageSound from '../assets/sound.mp3';
 
+interface StoreSettings {
+  name: string;
+  avatar: string;
+  color: string;
+  url: string;
+  enableNotificationTooltip: boolean;
+  enableNotificationSound: boolean;
+  isDarkTheme: boolean;
+}
 class RootStore {
   constructor() {
     makeAutoObservable(this);
@@ -82,7 +91,7 @@ class RootStore {
 
   isMinimized = false;
 
-  settings = {
+  settings: StoreSettings = {
     name: '',
     avatar: '',
     color: '#4F4F4F',
@@ -93,6 +102,13 @@ class RootStore {
   };
 
   notifications = [];
+
+  setSetting(key: keyof StoreSettings, value: string | boolean) {
+    this.settings = {
+      ...this.settings,
+      [key]: value,
+    };
+  }
 
   setIsMinimized(isMinimized: boolean) {
     this.isMinimized = isMinimized;
@@ -163,7 +179,7 @@ class RootStore {
     // silent on error
     try {
       const data = JSON.parse(decryptedMessage);
-      let newMessage: {} = {
+      let newMessage: Record<string, unknown> = {
         message: {
           ...data,
         },
@@ -224,9 +240,7 @@ class RootStore {
   }
 }
 
-export function createStore() {
-  return new RootStore();
-}
+export const createStore = () => new RootStore();
 
 export type TStore = ReturnType<typeof createStore>;
 

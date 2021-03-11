@@ -1,20 +1,18 @@
 // store
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useRef, FunctionComponent } from 'react';
 import styled from 'styled-components';
 // components
 import Tooltip from '../../../components/Tooltip';
 // shared
-import { withSocketContext } from '../../../shared/SocketProvider';
+import { useSocket } from '../../../shared/SocketProvider';
 import { colors } from '../../../shared/constants';
 import { useStore } from '../../../store';
 
-interface SettingsProps {
-  socket: SocketIOClient.Socket;
-}
-
-const ColorPickerComponent: FunctionComponent<SettingsProps> = (props) => {
+const ColorPicker: FunctionComponent = observer(() => {
   const store = useStore();
+
+  const socket = useSocket();
   const pickerRef = useRef(null);
 
   return (
@@ -24,16 +22,17 @@ const ColorPickerComponent: FunctionComponent<SettingsProps> = (props) => {
       offsetHorizontal={29}
       placement="bottom"
       handler={observer(
-        React.forwardRef((p, ref) => (
+        (p, ref) => (
           <ColorPickerAction
             {...p}
             ref={ref}
             style={{ backgroundColor: store.settings.color }}
           />
-        ))
+        ),
+        { forwardRef: true }
       )}
     >
-      <ColorPicker>
+      <Wrapper>
         {Object.keys(colors).map((color) => (
           <div
             key={color}
@@ -43,17 +42,17 @@ const ColorPickerComponent: FunctionComponent<SettingsProps> = (props) => {
                 {
                   color,
                 },
-                props.socket
+                socket
               );
             }}
             className={`color ${store.settings.color === color && ' active'}`}
             style={{ backgroundColor: color }}
           />
         ))}
-      </ColorPicker>
+      </Wrapper>
     </Tooltip>
   );
-};
+});
 
 const ColorPickerAction = styled.div`
   width: 59px;
@@ -76,7 +75,7 @@ const ColorPickerAction = styled.div`
   }
 `;
 
-const ColorPicker = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -107,4 +106,4 @@ const ColorPicker = styled.div`
   }
 `;
 
-export default withSocketContext(observer(ColorPickerComponent));
+export default ColorPicker;

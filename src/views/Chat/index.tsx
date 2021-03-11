@@ -1,23 +1,20 @@
 import { toJS } from 'mobx';
 
-import { observer, useLocalObservable } from 'mobx-react';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, FunctionComponent } from 'react';
 import styled from 'styled-components';
-import { withSocketContext } from '../../shared/SocketProvider';
-import Chatbar from './components/Chatbar';
+import { useSocket } from '../../shared/SocketProvider';
 
 import { IS_PROD, MAX_MESSAGES } from '../../shared/constants';
 import { sendMainMessage } from '../../shared/utils';
 import { useStore } from '../../store';
+import Chatbar from './components/Chatbar';
 import Messages from './components/Messages';
 import TodoList from './components/TodoList';
 
-interface ChatProps {
-  socket: SocketIOClient.Socket;
-}
-
-const ChatView: FunctionComponent<ChatProps> = (props) => {
+const ChatView: FunctionComponent = observer(() => {
   const store = useStore();
+  const socket = useSocket();
 
   const chatState = useLocalObservable(() => ({
     textMessage: '',
@@ -70,7 +67,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       } else {
         const message = store.encryptor.encrypt(JSON.stringify(data));
 
-        props.socket.emit('chat message', {
+        socket.emit('chat message', {
           roomName: store.roomName,
           message,
         });
@@ -127,7 +124,7 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
         store.setInstanceId(instanceId);
         store.setSelection(selection);
 
-        store.persistSettings(settings, props.socket, true);
+        store.persistSettings(settings, socket, true);
       }
 
       if (pmessage.type === 'relaunch-message') {
@@ -188,11 +185,11 @@ const ChatView: FunctionComponent<ChatProps> = (props) => {
       />
     </Chat>
   );
-};
+});
 
 const Chat = styled.div`
   display: grid;
   grid-template-rows: 397px 55px;
 `;
 
-export default withSocketContext(observer(ChatView));
+export default ChatView;

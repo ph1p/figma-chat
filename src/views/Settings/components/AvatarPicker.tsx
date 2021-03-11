@@ -1,19 +1,17 @@
 // store
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useRef, FunctionComponent } from 'react';
 import styled from 'styled-components';
 // components
 import Tooltip from '../../../components/Tooltip';
+import { useSocket } from '../../../shared/SocketProvider';
 // shared
-import { withSocketContext } from '../../../shared/SocketProvider';
 import { useStore } from '../../../store';
 
-interface SettingsProps {
-  socket: SocketIOClient.Socket;
-}
-
-const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
+const AvatarPicker: FunctionComponent = observer(() => {
   const store = useStore();
+  const socket = useSocket();
+
   const pickerRef = useRef(null);
 
   return (
@@ -23,14 +21,17 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
       offsetHorizontal={29}
       placement="bottom"
       handler={observer(
-        React.forwardRef((p, ref) => (
+        (p, ref) => (
           <AvatarPickerAction {...p} ref={ref}>
             {store.settings.avatar}
           </AvatarPickerAction>
-        ))
+        ),
+        {
+          forwardRef: true,
+        }
       )}
     >
-      <AvatarPicker>
+      <Wrapper>
         {['', '🐵', '🐮', '🐷', '🐨', '🦊', '🐻', '🐶', '🐸', '🐹'].map(
           (emoji) => (
             <div
@@ -45,7 +46,7 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
                   {
                     avatar: emoji,
                   },
-                  props.socket
+                  socket
                 );
               }}
             >
@@ -53,10 +54,10 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
             </div>
           )
         )}
-      </AvatarPicker>
+      </Wrapper>
     </Tooltip>
   );
-};
+});
 
 const AvatarPickerAction = styled.div`
   width: 59px;
@@ -69,7 +70,7 @@ const AvatarPickerAction = styled.div`
   cursor: pointer;
 `;
 
-const AvatarPicker = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -106,4 +107,4 @@ const AvatarPicker = styled.div`
   }
 `;
 
-export default withSocketContext(observer(AvatarPickerComponent));
+export default AvatarPicker;
