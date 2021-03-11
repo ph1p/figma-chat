@@ -185,8 +185,10 @@ const SettingsView: FunctionComponent = observer(() => {
                   name="bell"
                   ref={ref}
                   onClick={() => {
-                    store.settings.enableNotificationSound = !store.settings
-                      .enableNotificationSound;
+                    store.setSetting(
+                      'enableNotificationSound',
+                      !store.settings.enableNotificationSound
+                    );
                     saveSettings(false);
                   }}
                 >
