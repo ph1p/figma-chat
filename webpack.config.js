@@ -1,5 +1,6 @@
 const webpack = require('webpack');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CreateFileWebpack = require('create-file-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -12,7 +13,17 @@ module.exports = (env, argv) => ({
   mode: argv.mode === 'production' ? 'production' : 'development',
   devtool: argv.mode === 'production' ? false : 'inline-source-map',
   optimization: {
-    minimizer: [new TerserPlugin()],
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          ecma: 2016,
+          compress: {
+            arguments: true,
+            drop_console: true,
+          },
+        },
+      }),
+    ],
   },
   entry: {
     ui: './src/Ui.tsx',
@@ -60,7 +71,7 @@ module.exports = (env, argv) => ({
     path: path.resolve(__dirname, figmaPlugin.name),
   },
   plugins: [
-    new BundleAnalyzerPlugin(),
+    argv.mode !== 'production' ? new BundleAnalyzerPlugin() : null,
     new ESBuildPlugin(),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
@@ -98,5 +109,5 @@ module.exports = (env, argv) => ({
       fileName: 'manifest.json',
       content: JSON.stringify(figmaPlugin),
     }),
-  ],
+  ].filter(Boolean),
 });
