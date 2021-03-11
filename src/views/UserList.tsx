@@ -5,12 +5,12 @@ import styled from 'styled-components';
 import { useSocket } from '../shared/SocketProvider';
 import { useStore } from '../store';
 
-const UserListView: FunctionComponent = observer(() => {
+const UserList: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
 
   return (
-    <UserList>
+    <Wrapper>
       <h5>Active Users</h5>
       <div className="users">
         {store.online.map((user) => {
@@ -30,11 +30,11 @@ const UserListView: FunctionComponent = observer(() => {
           );
         })}
       </div>
-    </UserList>
+    </Wrapper>
   );
 });
 
-const UserList = styled.div`
+const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
   width: 100vw;
@@ -80,4 +80,4 @@ const UserList = styled.div`
   }
 `;
 
-export default UserListView;
+export default UserList;

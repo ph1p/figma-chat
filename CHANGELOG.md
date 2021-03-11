@@ -1,5 +1,16 @@
+## 4.3.0 (2021-03-11)
+
+* fix(socket): initialize socket with null ([6d5d16c](https://github.com/ph1p/figma-chat/commit/6d5d16c))
+* fix(store): fix "strict" warning ([9f9a294](https://github.com/ph1p/figma-chat/commit/9f9a294))
+* refactor: reduce bundle size ([f180513](https://github.com/ph1p/figma-chat/commit/f180513))
+* refactor: update store, move to eslint add socket hook ([ca69c30](https://github.com/ph1p/figma-chat/commit/ca69c30))
+* refactor(build): optimize build size ([9be3ed3](https://github.com/ph1p/figma-chat/commit/9be3ed3))
+
+
+
 ## <small>4.2.3 (2021-03-10)</small>
 
+* 4.2.3 ([ce6f54b](https://github.com/ph1p/figma-chat/commit/ce6f54b))
 * fix(mobx): add action for window focus ([316da82](https://github.com/ph1p/figma-chat/commit/316da82))
 * build(deps): update all dependencies ([853302c](https://github.com/ph1p/figma-chat/commit/853302c))
 * refactor: add https to svgs ([77506f1](https://github.com/ph1p/figma-chat/commit/77506f1))

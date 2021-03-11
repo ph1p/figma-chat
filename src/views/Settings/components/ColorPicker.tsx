@@ -9,7 +9,7 @@ import { useSocket } from '../../../shared/SocketProvider';
 import { colors } from '../../../shared/constants';
 import { useStore } from '../../../store';
 
-const ColorPickerComponent: FunctionComponent = observer(() => {
+const ColorPicker: FunctionComponent = observer(() => {
   const store = useStore();
 
   const socket = useSocket();
@@ -32,7 +32,7 @@ const ColorPickerComponent: FunctionComponent = observer(() => {
         { forwardRef: true }
       )}
     >
-      <ColorPicker>
+      <Wrapper>
         {Object.keys(colors).map((color) => (
           <div
             key={color}
@@ -49,7 +49,7 @@ const ColorPickerComponent: FunctionComponent = observer(() => {
             style={{ backgroundColor: color }}
           />
         ))}
-      </ColorPicker>
+      </Wrapper>
     </Tooltip>
   );
 });
@@ -75,7 +75,7 @@ const ColorPickerAction = styled.div`
   }
 `;
 
-const ColorPicker = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -106,4 +106,4 @@ const ColorPicker = styled.div`
   }
 `;
 
-export default ColorPickerComponent;
+export default ColorPicker;

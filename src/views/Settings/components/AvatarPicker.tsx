@@ -8,7 +8,7 @@ import { useSocket } from '../../../shared/SocketProvider';
 // shared
 import { useStore } from '../../../store';
 
-const AvatarPickerComponent: FunctionComponent = observer(() => {
+const AvatarPicker: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
 
@@ -31,7 +31,7 @@ const AvatarPickerComponent: FunctionComponent = observer(() => {
         }
       )}
     >
-      <AvatarPicker>
+      <Wrapper>
         {['', '🐵', '🐮', '🐷', '🐨', '🦊', '🐻', '🐶', '🐸', '🐹'].map(
           (emoji) => (
             <div
@@ -54,7 +54,7 @@ const AvatarPickerComponent: FunctionComponent = observer(() => {
             </div>
           )
         )}
-      </AvatarPicker>
+      </Wrapper>
     </Tooltip>
   );
 });
@@ -70,7 +70,7 @@ const AvatarPickerAction = styled.div`
   cursor: pointer;
 `;
 
-const AvatarPicker = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -107,4 +107,4 @@ const AvatarPicker = styled.div`
   }
 `;
 
-export default AvatarPickerComponent;
+export default AvatarPicker;
