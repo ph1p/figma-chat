@@ -59,7 +59,7 @@ const AppWrapper = styled.div`
 const init = () => {
   const App = observer(() => {
     const store = useStore();
-    const [socket, setSocket] = useState<SocketIOClient.Socket>(undefined);
+    const [socket, setSocket] = useState<SocketIOClient.Socket>(null);
 
     const onFocus = () => {
       sendMainMessage('focus', false);
