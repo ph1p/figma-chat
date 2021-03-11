@@ -85,5 +85,8 @@
     "stream-browserify": "^3.0.0",
     "styled-components": "^5.2.1",
     "uniqid": "^5.3.0"
+  },
+  "resolutions": {
+    "bn.js": "5.2.0"
   }
 }
