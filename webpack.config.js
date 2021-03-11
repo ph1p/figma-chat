@@ -1,7 +1,9 @@
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CreateFileWebpack = require('create-file-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const { ESBuildPlugin } = require('esbuild-loader');
 const path = require('path');
 
 const { figmaPlugin } = require('./package.json');
@@ -23,8 +25,11 @@ module.exports = (env, argv) => ({
     rules: [
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
-        exclude: /node_modules/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'tsx', // Or 'ts' if you don't need tsx
+          target: 'es2015',
+        },
       },
       {
         test: /\.css$/,
@@ -55,6 +60,8 @@ module.exports = (env, argv) => ({
     path: path.resolve(__dirname, figmaPlugin.name),
   },
   plugins: [
+    new BundleAnalyzerPlugin(),
+    new ESBuildPlugin(),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),

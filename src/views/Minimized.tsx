@@ -1,5 +1,5 @@
 // store
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
@@ -22,7 +22,7 @@ const MinimizedView: FunctionComponent = () => {
             hover
             key={user.id}
             handler={observer(
-              React.forwardRef((_, ref) => (
+              (_, ref) => (
                 <User
                   key={user.id}
                   ref={ref}
@@ -31,7 +31,8 @@ const MinimizedView: FunctionComponent = () => {
                 >
                   {user.avatar || user.name.substr(0, 2)}
                 </User>
-              ))
+              ),
+              { forwardRef: true }
             )}
           >
             {user.name}

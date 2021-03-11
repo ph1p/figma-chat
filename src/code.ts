@@ -18,7 +18,7 @@ figma.root.setRelaunchData({
   open: '',
 });
 
-async function main() {
+const main = async () => {
   const timestamp = +new Date();
 
   // random user id for current user
@@ -34,7 +34,7 @@ async function main() {
   if (!settings || !settings.url) {
     await figma.clientStorage.setAsync('user-settings', {
       ...settings,
-      url: DEFAULT_SERVER_URL
+      url: DEFAULT_SERVER_URL,
     });
   }
 
@@ -71,16 +71,17 @@ async function main() {
 
   // Parse History
   try {
-    history = typeof history === 'string' ? JSON.parse(history) : []
-  } catch { }
+    history = typeof history === 'string' ? JSON.parse(history) : [];
+  } catch {}
 
   return {
     roomName,
     secret,
     history,
     instanceId,
+    settings,
   };
-}
+};
 
 const postMessage = (type = '', payload = {}) =>
   figma.ui.postMessage({
@@ -96,9 +97,9 @@ const sendSelection = () => {
   postMessage('selection', {
     page: {
       id: figma.currentPage.id,
-      name: figma.currentPage.name
+      name: figma.currentPage.name,
     },
-    nodes: getSelectionIds()
+    nodes: getSelectionIds(),
   });
 };
 
@@ -128,12 +129,11 @@ const isValidShape = (node) =>
   node.type === 'INSTANCE' ||
   node.type === 'POLYGON';
 
-
-function goToPage(id) {
+const goToPage = (id) => {
   if (figma.getNodeById(id)) {
     figma.currentPage = figma.getNodeById(id) as PageNode;
   }
-}
+};
 
 let previousSelection = figma.currentPage.selection || [];
 
@@ -176,7 +176,9 @@ main().then(({ roomName, secret, history, instanceId }) => {
         break;
       case 'add-message-to-history':
         {
-          const messageHistory = JSON.parse(figma.root.getPluginData('history'));
+          const messageHistory = JSON.parse(
+            figma.root.getPluginData('history')
+          );
 
           figma.root.setPluginData(
             'history',
@@ -186,7 +188,10 @@ main().then(({ roomName, secret, history, instanceId }) => {
         break;
       case 'get-history':
         {
-          postMessage('history', JSON.parse(figma.root.getPluginData('history')));
+          postMessage(
+            'history',
+            JSON.parse(figma.root.getPluginData('history'))
+          );
         }
         break;
       case 'notify':
@@ -215,7 +220,10 @@ main().then(({ roomName, secret, history, instanceId }) => {
         sendNotifications = isMinimized;
 
         // resize window
-        figma.ui.resize(message.payload ? 180 : 333, message.payload ? 108 : 490);
+        figma.ui.resize(
+          message.payload ? 180 : 333,
+          message.payload ? 108 : 490
+        );
         break;
       case 'focus':
         if (!isMinimized) {
@@ -232,7 +240,7 @@ main().then(({ roomName, secret, history, instanceId }) => {
 
         // fallback for ids
         if (message.payload.ids) {
-          selectedNodes = message.payload.ids
+          selectedNodes = message.payload.ids;
         } else {
           goToPage(message.payload?.page?.id);
           selectedNodes = message.payload.nodes;
@@ -259,9 +267,9 @@ main().then(({ roomName, secret, history, instanceId }) => {
             selection: {
               page: {
                 id: figma.currentPage.id,
-                name: figma.currentPage.name
+                name: figma.currentPage.name,
               },
-              nodes: getSelectionIds()
+              nodes: getSelectionIds(),
             },
           });
         }

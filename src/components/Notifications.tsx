@@ -1,5 +1,5 @@
 // store
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState, FunctionComponent } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';

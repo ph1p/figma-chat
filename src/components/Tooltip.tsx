@@ -48,12 +48,8 @@ export const RefTooltip = React.forwardRef<any, Props>((props, ref: any) => {
   const wrapperRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
-    show() {
-      setIsOpen(true);
-    },
-    hide() {
-      setIsOpen(false);
-    },
+    show: () => setIsOpen(true),
+    hide: () => setIsOpen(false),
   }));
 
   return (
@@ -112,18 +108,16 @@ const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
   });
 
   useImperativeHandle(ref, () => ({
-    hide() {
-      setIsOpen(false);
-    },
+    hide:() => setIsOpen(false)
   }));
 
   useEffect(() => {
     if (!props.hover) {
-      function handleClick(event) {
+      const handleClick = (event) => {
         if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
           setIsOpen(false);
         }
-      }
+      };
 
       document.addEventListener('mousedown', handleClick);
       return () => document.removeEventListener('mousedown', handleClick);

@@ -163,7 +163,7 @@ class RootStore {
     // silent on error
     try {
       const data = JSON.parse(decryptedMessage);
-      let newMessage: {} = {
+      let newMessage: Record<string, unknown> = {
         message: {
           ...data,
         },
@@ -224,9 +224,7 @@ class RootStore {
   }
 }
 
-export function createStore() {
-  return new RootStore();
-}
+export const createStore = () => new RootStore();
 
 export type TStore = ReturnType<typeof createStore>;
 

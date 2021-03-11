@@ -1,19 +1,17 @@
 // store
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useRef, FunctionComponent } from 'react';
 import styled from 'styled-components';
 // components
 import Tooltip from '../../../components/Tooltip';
+import { useSocket } from '../../../shared/SocketProvider';
 // shared
-import { withSocketContext } from '../../../shared/SocketProvider';
 import { useStore } from '../../../store';
 
-interface SettingsProps {
-  socket: SocketIOClient.Socket;
-}
-
-const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
+const AvatarPickerComponent: FunctionComponent = observer(() => {
   const store = useStore();
+  const socket = useSocket();
+
   const pickerRef = useRef(null);
 
   return (
@@ -23,11 +21,14 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
       offsetHorizontal={29}
       placement="bottom"
       handler={observer(
-        React.forwardRef((p, ref) => (
+        (p, ref) => (
           <AvatarPickerAction {...p} ref={ref}>
             {store.settings.avatar}
           </AvatarPickerAction>
-        ))
+        ),
+        {
+          forwardRef: true,
+        }
       )}
     >
       <AvatarPicker>
@@ -45,7 +46,7 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
                   {
                     avatar: emoji,
                   },
-                  props.socket
+                  socket
                 );
               }}
             >
@@ -56,7 +57,7 @@ const AvatarPickerComponent: FunctionComponent<SettingsProps> = (props) => {
       </AvatarPicker>
     </Tooltip>
   );
-};
+});
 
 const AvatarPickerAction = styled.div`
   width: 59px;
@@ -106,4 +107,4 @@ const AvatarPicker = styled.div`
   }
 `;
 
-export default withSocketContext(observer(AvatarPickerComponent));
+export default AvatarPickerComponent;

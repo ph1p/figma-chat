@@ -1,5 +1,5 @@
 import { autorun } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState, FunctionComponent } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
