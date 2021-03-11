@@ -11,7 +11,7 @@ You can find it [**here**](https://www.figma.com/c/plugin/742073255743594050/Fig
 
 ### What does it look like?
 
-![](./assets/presentation.gif)
+![presentation](https://user-images.githubusercontent.com/15351728/110795249-ea161680-8276-11eb-8820-0f96ef4bf445.gif)
 (And yes, I have chatted with myself)
 
 ### Encrypted? No login?
