@@ -6,11 +6,12 @@ import styled from 'styled-components';
 import { useSocket } from '../../shared/SocketProvider';
 
 import { IS_PROD, MAX_MESSAGES } from '../../shared/constants';
-import { sendMainMessage } from '../../shared/utils';
 import { useStore } from '../../store';
+import MessageEmitter from '../../shared/MessageEmitter';
 import Chatbar from './components/Chatbar';
 import Messages from './components/Messages';
 import TodoList from './components/TodoList';
+
 
 const ChatView: FunctionComponent = observer(() => {
   const store = useStore();
@@ -80,65 +81,68 @@ const ChatView: FunctionComponent = observer(() => {
     }
   };
 
-  // All messages from main
-  onmessage = (message) => {
-    const pmessage = message.data.pluginMessage;
+  useEffect(() => {
+    MessageEmitter.on('selection', (selection) => {
+      const hasSelection =
+        selection?.length > 0 || selection?.nodes?.length > 0;
 
-    if (pmessage) {
-      // set selection
-      if (pmessage.type === 'selection') {
-        const hasSelection =
-          pmessage.payload?.length > 0 || pmessage.payload?.nodes?.length > 0;
+      store.setSelection(hasSelection ? selection : {});
 
-        store.setSelection(hasSelection ? pmessage.payload : {});
-
-        if (!hasSelection) {
-          chatState.selectionIsChecked = false;
-        }
+      if (!hasSelection) {
+        chatState.selectionIsChecked = false;
       }
+    });
 
-      if (pmessage.type === 'root-data') {
-        const {
-          roomName: dataRoomName = '',
-          secret: dataSecret = '',
-          history: messages = [],
-          selection = {
-            page: '',
-            nodes: [],
-          },
-          settings = {},
-          instanceId = '',
-        } = {
-          ...pmessage.payload,
-          ...(!IS_PROD
-            ? {
-                secret: 'thisismysecretkey',
-                roomName: 'dev',
-              }
-            : {}),
-        };
+    MessageEmitter.on('root-data', async (data) => {
+      const {
+        roomName: dataRoomName = '',
+        secret: dataSecret = '',
+        history: messages = [],
+        selection = {
+          page: '',
+          nodes: [],
+        },
+        settings = {},
+        instanceId = '',
+      } = {
+        ...data,
+        ...(!IS_PROD
+          ? {
+              secret: 'thisismysecretkey',
+              roomName: 'dev',
+            }
+          : {}),
+      };
 
-        store.setSecret(dataSecret);
-        store.setRoomName(dataRoomName);
-        store.setMessages(messages);
-        store.setInstanceId(instanceId);
-        store.setSelection(selection);
+      store.setSecret(dataSecret);
+      store.setRoomName(dataRoomName);
+      store.setInstanceId(instanceId);
+      store.setSelection(selection);
 
-        store.persistSettings(settings, socket, true);
+      store.persistSettings(settings, socket, true);
+
+
+
+      store.setMessages(messages);
+    });
+
+    MessageEmitter.on('relaunch-message', (data) => {
+      chatState.selectionIsChecked = true;
+
+      store.setSelection(data.selection || {});
+
+      if (store.selectionCount) {
+        sendMessage();
+        MessageEmitter.emit('notify', 'Selection sent successfully');
       }
+    });
 
-      if (pmessage.type === 'relaunch-message') {
-        chatState.selectionIsChecked = true;
-
-        store.setSelection(pmessage.payload.selection || {});
-
-        if (store.selectionCount) {
-          sendMessage();
-          sendMainMessage('notify', 'Selection sent successfully');
-        }
-      }
-    }
-  };
+    return () => {
+      MessageEmitter.remove('selection');
+      MessageEmitter.remove('root-data');
+      MessageEmitter.remove('relaunch-message');
+    };
+  }, []);
 
   useEffect(() => store.scrollToBottom(), [store.messages]);
 

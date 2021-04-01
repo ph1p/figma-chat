@@ -3,9 +3,16 @@ import React, { createRef } from 'react';
 
 import { createEncryptor } from 'simple-encryptor';
 import { ConnectionEnum } from '../shared/interfaces';
-import { sendMainMessage } from '../shared/utils';
 
 import MessageSound from '../assets/sound.mp3';
+import MessageEmitter from '../shared/MessageEmitter';
+
+const blobToImageString = async (blob) =>
+  new Promise((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
 
 interface StoreSettings {
   name: string;
@@ -50,9 +57,33 @@ class RootStore {
   setOnline(online) {
     this.online = online;
   }
-  setMessages(messages) {
+
+  async setMessages(messages) {
+    for (const messageData of messages) {
+      if (
+        messageData?.message?.selection?.nodes &&
+        messageData?.message?.selection.nodes.length === 1
+      ) {
+        if (!messageData.message.selection.url) {
+          const image = (await MessageEmitter.ask(
+            'get image',
+            toJS(messageData?.message?.selection.nodes)
+          )) as any;
+
+          if (image) {
+            const blob = new Blob([image], {
+              type: 'image/png',
+            });
+            messageData.message.selection.url = await blobToImageString(blob);
+          }
+        }
+      }
+    }
     this.messages = messages;
+
+    setTimeout(() => this.scrollToBottom(), 0);
   }
+
   setMessagesRef(messagesRef) {
     this.messagesRef = messagesRef;
   }
@@ -132,7 +163,7 @@ class RootStore {
   // ---
   toggleMinimizeChat() {
     this.isMinimized = !this.isMinimized;
-    sendMainMessage('minimize', this.isMinimized);
+    MessageEmitter.emit('minimize', this.isMinimized);
   }
 
   clearChatHistory(cb: () => void) {
@@ -141,7 +172,7 @@ class RootStore {
         'Do you really want to delete the complete chat history? (This cannot be undone)'
       )
     ) {
-      sendMainMessage('clear-chat-history');
+      MessageEmitter.emit('clear-chat-history');
       this.messages = [];
       cb();
       this.addNotification('Chat history successfully deleted');
@@ -157,7 +188,7 @@ class RootStore {
     };
 
     // save user settings in main
-    sendMainMessage('save-user-settings', { ...toJS(this.settings) });
+    MessageEmitter.emit('save-user-settings', { ...toJS(this.settings) });
 
     // set server URL
     if (!isInit && settings.url && settings.url !== oldUrl) {
@@ -199,7 +230,7 @@ class RootStore {
           },
         };
 
-        sendMainMessage('add-message-to-history', newMessage);
+        MessageEmitter.emit('add-message-to-history', newMessage);
       } else {
         newMessage = {
           id: messageData.id,
@@ -222,7 +253,7 @@ class RootStore {
                 : data.text;
           }
 
-          sendMainMessage(
+          MessageEmitter.emit(
             'notification',
             messageData?.user?.name
               ? `${text} · ${messageData.user.avatar} ${messageData.user.name}`
@@ -231,7 +262,7 @@ class RootStore {
         }
       }
 
-      this.messages.push(newMessage);
+      this.setMessages([...this.messages, newMessage]);
 
       setTimeout(() => this.scrollToBottom(), 0);
     } catch (e) {

@@ -1,4 +1,5 @@
 import { DEFAULT_SERVER_URL } from './shared/constants';
+import MessageEmitter from './shared/MessageEmitter';
 import { generateString } from './shared/utils';
 
 let isMinimized = false;
@@ -83,18 +84,12 @@ const main = async () => {
   };
 };
 
-const postMessage = (type = '', payload = {}) =>
-  figma.ui.postMessage({
-    type,
-    payload,
-  });
-
 const getSelectionIds = () => {
   return figma.currentPage.selection.map((n) => n.id);
 };
 
 const sendSelection = () => {
-  postMessage('selection', {
+  MessageEmitter.emit('selection', {
     page: {
       id: figma.currentPage.id,
       name: figma.currentPage.name,
@@ -106,7 +101,7 @@ const sendSelection = () => {
 const sendRootData = async ({ roomName, secret, history, instanceId }) => {
   const settings = await figma.clientStorage.getAsync('user-settings');
 
-  postMessage('root-data', {
+  MessageEmitter.emit('root-data', {
     roomName,
     secret,
     history,
@@ -137,8 +132,24 @@ const goToPage = (id) => {
 
 let previousSelection = figma.currentPage.selection || [];
 
+MessageEmitter.answer('get image', async (ids) => {
+  try {
+    const node = figma.getNodeById(ids[0]) as SceneNode;
+
+    return await node.exportAsync({
+      format: 'PNG',
+      constraint: {
+        type: 'SCALE',
+        value: 0.3,
+      },
+    });
+  } catch (e) {
+    return null;
+  }
+});
+
 main().then(({ roomName, secret, history, instanceId }) => {
-  postMessage('ready');
+  MessageEmitter.emit('ready');
 
   // events
   figma.on('selectionchange', () => {
@@ -166,117 +177,99 @@ main().then(({ roomName, secret, history, instanceId }) => {
     }
   });
 
-  figma.ui.onmessage = async (message) => {
-    switch (message.action) {
-      case 'save-user-settings':
-        await figma.clientStorage.setAsync('user-settings', message.payload);
-        const settings = await figma.clientStorage.getAsync('user-settings');
+  MessageEmitter.on('save-user-settings', async (data, emit) => {
+    await figma.clientStorage.setAsync('user-settings', data);
+    const settings = await figma.clientStorage.getAsync('user-settings');
 
-        postMessage('user-settings', settings);
-        break;
-      case 'add-message-to-history':
-        {
-          const messageHistory = JSON.parse(
-            figma.root.getPluginData('history')
-          );
+    emit('user-settings', settings);
+  });
 
-          figma.root.setPluginData(
-            'history',
-            JSON.stringify(messageHistory.concat(message.payload))
-          );
-        }
-        break;
-      case 'get-history':
-        {
-          postMessage(
-            'history',
-            JSON.parse(figma.root.getPluginData('history'))
-          );
-        }
-        break;
-      case 'notify':
-        figma.notify(message.payload);
-        break;
-      case 'notification':
-        if (sendNotifications) {
-          figma.notify(message.payload);
-        }
-        break;
-      case 'initialize':
-        postMessage('initialize');
+  MessageEmitter.on('add-message-to-history', async (data) => {
+    const messageHistory = JSON.parse(figma.root.getPluginData('history'));
 
-        sendRootData({ roomName, secret, history, instanceId });
-        break;
-      case 'get-selection':
-        sendSelection();
-        break;
-      case 'clear-chat-history':
-        figma.root.setPluginData('history', '[]');
+    figma.root.setPluginData(
+      'history',
+      JSON.stringify(messageHistory.concat(data))
+    );
+  });
 
-        postMessage('history', JSON.parse('[]'));
-        break;
-      case 'minimize':
-        isMinimized = message.payload;
-        sendNotifications = isMinimized;
-
-        // resize window
-        figma.ui.resize(
-          message.payload ? 180 : 333,
-          message.payload ? 108 : 490
-        );
-        break;
-      case 'focus':
-        if (!isMinimized) {
-          isFocused = message.payload;
-
-          if (!isFocused) {
-            sendNotifications = true;
-          }
-        }
-        break;
-      case 'focus-nodes':
-        let selectedNodes = [];
-        triggerSelectionEvent = false;
-
-        // fallback for ids
-        if (message.payload.ids) {
-          selectedNodes = message.payload.ids;
-        } else {
-          goToPage(message.payload?.page?.id);
-          selectedNodes = message.payload.nodes;
-        }
-
-        const nodes = figma.currentPage.findAll(
-          (n) => selectedNodes.indexOf(n.id) !== -1
-        );
-
-        figma.currentPage.selection = nodes;
-        figma.viewport.scrollAndZoomIntoView(nodes);
-
-        setTimeout(() => (triggerSelectionEvent = true));
-
-        break;
-      case 'get-root-data':
-        sendRootData({ roomName, secret, history, instanceId });
-        break;
-
-      case 'ask-for-relaunch-message':
-        if (isRelaunch && !alreadyAskedForRelaunchMessage) {
-          alreadyAskedForRelaunchMessage = true;
-          postMessage('relaunch-message', {
-            selection: {
-              page: {
-                id: figma.currentPage.id,
-                name: figma.currentPage.name,
-              },
-              nodes: getSelectionIds(),
-            },
-          });
-        }
-        break;
-      case 'cancel':
-        figma.closePlugin();
-        break;
+  MessageEmitter.on('notify', (data) => figma.notify(data));
+  MessageEmitter.on('notification', (data) => {
+    if (sendNotifications) {
+      figma.notify(data);
     }
-  };
+  });
+
+  MessageEmitter.on('clear-chat-history', (_, emit) => {
+    figma.root.setPluginData('history', '[]');
+
+    emit('history', JSON.parse('[]'));
+  });
+
+  MessageEmitter.on('initialize', (_, emit) => {
+    emit('initialize');
+
+    sendRootData({ roomName, secret, history, instanceId });
+  });
+
+  MessageEmitter.on('minimize', (data) => {
+    isMinimized = data;
+    sendNotifications = isMinimized;
+
+    // resize window
+    figma.ui.resize(data ? 180 : 333, data ? 108 : 490);
+  });
+
+  MessageEmitter.on('focus', (data) => {
+    if (!isMinimized) {
+      isFocused = data;
+
+      if (!isFocused) {
+        sendNotifications = true;
+      }
+    }
+  });
+
+  MessageEmitter.on('focus-nodes', (data) => {
+    let selectedNodes = [];
+    triggerSelectionEvent = false;
+
+    // fallback for ids
+    if (data.ids) {
+      selectedNodes = data.ids;
+    } else {
+      goToPage(data?.page?.id);
+      selectedNodes = data.nodes;
+    }
+
+    const nodes = figma.currentPage.findAll(
+      (n) => selectedNodes.indexOf(n.id) !== -1
+    );
+
+    figma.currentPage.selection = nodes;
+    figma.viewport.scrollAndZoomIntoView(nodes);
+
+    setTimeout(() => (triggerSelectionEvent = true));
+  });
+
+  MessageEmitter.on('get-root-data', () => {
+    sendRootData({ roomName, secret, history, instanceId });
+  });
+
+  MessageEmitter.on('ask-for-relaunch-message', (_, emit) => {
+    if (isRelaunch && !alreadyAskedForRelaunchMessage) {
+      alreadyAskedForRelaunchMessage = true;
+      emit('relaunch-message', {
+        selection: {
+          page: {
+            id: figma.currentPage.id,
+            name: figma.currentPage.name,
+          },
+          nodes: getSelectionIds(),
+        },
+      });
+    }
+  });
+
+  MessageEmitter.on('cancel', () => figma.closePlugin());
 });

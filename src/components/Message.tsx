@@ -7,11 +7,12 @@ import nowStrings from 'react-timeago/lib/language-strings/en-short';
 import styled, { css } from 'styled-components';
 import HashIcon from '../assets/icons/HashIcon';
 import { colors } from '../shared/constants';
-import { sendMainMessage } from '../shared/utils';
+import MessageEmitter from '../shared/MessageEmitter';
 
 const formatter = buildFormatter(nowStrings);
 
 const isOnlyEmoji = (str: string) =>
+  // https://stackoverflow.com/a/41164587/6429774
   str.replace(
     /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g,
     ''
@@ -34,6 +35,7 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
 
   const text = data?.message?.text || null;
   const date = data?.message?.date || null;
+  const url = selection?.url || null;
   const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
 
   return (
@@ -69,7 +71,7 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
                   };
                 }
 
-                sendMainMessage('focus-nodes', selectionData);
+                MessageEmitter.emit('focus-nodes', selectionData);
               }}
             >
               {text && (
@@ -82,12 +84,14 @@ const Message: FunctionComponent<Props> = ({ data, instanceId }) => {
                   {text}
                 </Linkify>
               )}
+
               <SelectionButton isSelf={isSelf}>
                 <HashIcon />
                 {pageName ? pageName + ' - ' : ''}
                 focus {selectionCount} element
                 {selectionCount > 1 ? 's' : ''}
               </SelectionButton>
+              {url && <img src={url} />}
             </span>
           ) : (
             <Linkify
@@ -189,6 +193,14 @@ const MessageContainer = styled.div`
   text-align: left;
   header {
     margin-bottom: 4px;
+  }
+
+  img {
+    max-width: 100%;
+    max-height: 100px;
+    margin-top: 10px;
+    border-radius: 6px;
+    cursor: pointer;
   }
 
   .linkified {

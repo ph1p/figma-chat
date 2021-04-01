@@ -38,7 +38,7 @@ module.exports = (env, argv) => ({
         test: /\.tsx?$/,
         loader: 'esbuild-loader',
         options: {
-          loader: 'tsx', // Or 'ts' if you don't need tsx
+          loader: 'tsx',
           target: 'es2015',
         },
       },

@@ -14,7 +14,6 @@ import Notifications from './components/Notifications';
 import { SocketProvider } from './shared/SocketProvider';
 // shared
 import { ConnectionEnum } from './shared/interfaces';
-import { sendMainMessage } from './shared/utils';
 // views
 import ChatView from './views/Chat';
 import MinimizedView from './views/Minimized';
@@ -26,21 +25,9 @@ import { useStore, StoreProvider } from './store';
 import Header from './components/Header';
 
 import './style.css';
+import MessageEmitter from './shared/MessageEmitter';
 
-onmessage = (message) => {
-  if (message.data.pluginMessage) {
-    const { type } = message.data.pluginMessage;
-
-    // initialize
-    if (type === 'ready') {
-      sendMainMessage('initialize');
-    }
-
-    if (type === 'initialize') {
-      init();
-    }
-  }
-};
+MessageEmitter.on('ready', (_, emit) => emit('initialize'));
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -56,18 +43,18 @@ const AppWrapper = styled.div`
   overflow: hidden;
 `;
 
-const init = () => {
+MessageEmitter.on('initialize', () => {
   const App = observer(() => {
     const store = useStore();
     const [socket, setSocket] = useState<SocketIOClient.Socket>(null);
 
     const onFocus = () => {
-      sendMainMessage('focus', false);
+      MessageEmitter.emit('focus', false);
       store.setIsFocused(false);
     };
 
     const onFocusOut = () => {
-      sendMainMessage('focus', false);
+      MessageEmitter.emit('focus', false);
       store.setIsFocused(false);
     };
 
@@ -90,7 +77,7 @@ const init = () => {
 
     useEffect(() => {
       if (socket && store.status === ConnectionEnum.NONE) {
-        sendMainMessage('get-root-data');
+        MessageEmitter.emit('get-root-data');
         socket.on('connect', () => {
           store.setStatus(ConnectionEnum.CONNECTED);
 
@@ -100,7 +87,7 @@ const init = () => {
             settings: store.settings,
           });
 
-          sendMainMessage('ask-for-relaunch-message');
+          MessageEmitter.emit('ask-for-relaunch-message');
         });
 
         socket.io.on('connect_error', () =>
@@ -189,4 +176,4 @@ const init = () => {
     </StoreProvider>,
     document.getElementById('app')
   );
-};
+});
