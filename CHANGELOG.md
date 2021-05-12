@@ -1,10 +1,14 @@
-## 4.3.0 (2021-03-11)
+## <small>4.3.1 (2021-05-12)</small>
 
-* fix(socket): initialize socket with null ([6d5d16c](https://github.com/ph1p/figma-chat/commit/6d5d16c))
-* fix(store): fix "strict" warning ([9f9a294](https://github.com/ph1p/figma-chat/commit/9f9a294))
+* build(deps): update dependencies ([de28784](https://github.com/ph1p/figma-chat/commit/de28784))
 * refactor: reduce bundle size ([f180513](https://github.com/ph1p/figma-chat/commit/f180513))
+* refactor: remove large gif ([c71908f](https://github.com/ph1p/figma-chat/commit/c71908f))
 * refactor: update store, move to eslint add socket hook ([ca69c30](https://github.com/ph1p/figma-chat/commit/ca69c30))
 * refactor(build): optimize build size ([9be3ed3](https://github.com/ph1p/figma-chat/commit/9be3ed3))
+* docs(readme): upload gif to github ([50bf366](https://github.com/ph1p/figma-chat/commit/50bf366))
+* 4.3.0 ([1234070](https://github.com/ph1p/figma-chat/commit/1234070))
+* fix(socket): initialize socket with null ([6d5d16c](https://github.com/ph1p/figma-chat/commit/6d5d16c))
+* fix(store): fix "strict" warning ([9f9a294](https://github.com/ph1p/figma-chat/commit/9f9a294))
 
 
 
