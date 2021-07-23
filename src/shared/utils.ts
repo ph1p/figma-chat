@@ -3,12 +3,12 @@ export const sendMainMessage = (action, payload = {}) => {
     {
       pluginMessage: {
         action,
-        payload
-      }
+        payload: JSON.parse(JSON.stringify(payload)),
+      },
     },
     '*'
   );
-}
+};
 export const generateString = (length: number = 40): string => {
   const chars =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

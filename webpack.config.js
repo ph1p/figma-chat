@@ -1,6 +1,6 @@
 const webpack = require('webpack');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CreateFileWebpack = require('create-file-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -72,7 +72,6 @@ module.exports = (env, argv) => ({
   },
   plugins: [
     argv.mode !== 'production' ? new BundleAnalyzerPlugin() : null,
-    new ESBuildPlugin(),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),

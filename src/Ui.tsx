@@ -7,7 +7,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 // components
 import Notifications from './components/Notifications';
@@ -59,7 +59,7 @@ const AppWrapper = styled.div`
 const init = () => {
   const App = observer(() => {
     const store = useStore();
-    const [socket, setSocket] = useState<SocketIOClient.Socket>(null);
+    const [socket, setSocket] = useState<Socket>(null);
 
     const onFocus = () => {
       sendMainMessage('focus', false);
@@ -75,7 +75,7 @@ const init = () => {
       store.setStatus(ConnectionEnum.NONE);
 
       if (socket) {
-        socket.removeAllListeners();
+        socket.offAny();
         socket.disconnect();
       }
 
@@ -103,9 +103,7 @@ const init = () => {
           sendMainMessage('ask-for-relaunch-message');
         });
 
-        socket.io.on('connect_error', () =>
-          store.setStatus(ConnectionEnum.ERROR)
-        );
+        socket.io.on('error', () => store.setStatus(ConnectionEnum.ERROR));
 
         socket.io.on('reconnect_error', () =>
           store.setStatus(ConnectionEnum.ERROR)
@@ -130,7 +128,7 @@ const init = () => {
 
       return () => {
         if (socket) {
-          socket.removeAllListeners();
+          socket.offAny();
           socket.disconnect();
         }
       };
@@ -158,10 +156,8 @@ const init = () => {
           <SocketProvider socket={socket}>
             <Router>
               <Notifications />
-
               {store.settings.name && <Header minimized={store.isMinimized} />}
               {store.isMinimized && <Redirect to="/minimized" />}
-
               <Switch>
                 <Route exact path="/minimized">
                   <MinimizedView />
