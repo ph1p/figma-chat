@@ -6,16 +6,46 @@ module.exports = {
   extends: ['prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: ['tsconfig.json', './packages/*/tsconfig.json'],
     sourceType: 'module',
   },
   plugins: [
-    'eslint-plugin-import',
-    'eslint-plugin-prefer-arrow',
-    'eslint-plugin-react',
-    '@typescript-eslint'
+    'prefer-arrow',
+    'react',
+    '@typescript-eslint',
+    'react-app',
+    'import',
   ],
   rules: {
+    'react-hooks/exhaustive-deps': 0,
+    'import/order': [
+      'error',
+      {
+        pathGroups: [
+          {
+            pattern: '^[a-zA-Z]',
+            group: 'builtin',
+            position: 'after',
+          },
+          {
+            pattern: '@shared/**',
+            group: 'external',
+            position: 'after',
+          },
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'after',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['builtin'],
+        groups: [['builtin', 'external'], 'internal', 'parent', 'sibling'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+        },
+      },
+    ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/array-type': [
       'error',
@@ -117,9 +147,6 @@ module.exports = {
       'undefined',
     ],
     'id-match': 'error',
-    'import/no-extraneous-dependencies': 'error',
-    'import/no-internal-modules': 'off',
-    'import/order': 'error',
     'linebreak-style': 'off',
     'max-classes-per-file': ['error', 1],
     'max-len': 'off',
@@ -181,6 +208,6 @@ module.exports = {
       },
     ],
     'use-isnan': 'error',
-    'valid-typeof': 'off'
+    'valid-typeof': 'off',
   },
 };

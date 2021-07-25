@@ -1,0 +1,72 @@
+{
+  "name": "plugin",
+  "version": "4.3.1",
+  "description": "",
+  "main": "code.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack --mode=production && rm ./Figma\\ Chat/ui.js*",
+    "lint": "eslint  --ext .tsx,.ts,.json,.js src/ --fix",
+    "start": "DEBUG=* webpack --watch"
+  },
+  "author": "Philip Stapelfeldt <me@ph1p.dev>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ph1p/figma-chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ph1p/figma-chat/issues"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react-transition-group": "^4.4.2",
+    "create-file-webpack": "^1.0.2",
+    "css-loader": "^6.2.0",
+    "esbuild-loader": "^2.13.1",
+    "html-webpack-plugin": "^5.3.2",
+    "style-loader": "^3.2.1",
+    "terser-webpack-plugin": "v5.1.4",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.46.0",
+    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-cli": "^4.7.2"
+  },
+  "figmaPlugin": {
+    "name": "Figma Chat",
+    "id": "742073255743594050",
+    "api": "1.0.0",
+    "main": "code.js",
+    "ui": "ui.html",
+    "enableProposedApi": false,
+    "relaunchButtons": [
+      {
+        "command": "open",
+        "name": "Open Figma-Chat"
+      },
+      {
+        "command": "relaunch",
+        "name": "Send selection to chat",
+        "multipleSelection": true
+      }
+    ]
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "linkifyjs": "^3.0.0-beta.3",
+    "mobx": "^6.3.2",
+    "mobx-react-lite": "^3.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-timeago": "^6.2.1",
+    "react-transition-group": "^4.4.2",
+    "simple-encryptor": "^4.0.0",
+    "socket.io-client": "^4.1.3",
+    "stream-browserify": "^3.0.0",
+    "uniqid": "^5.3.0"
+  },
+  "resolutions": {
+    "bn.js": "5.2.0"
+  }
+}
