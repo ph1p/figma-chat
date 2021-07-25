@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useState } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
 
 import { MAX_MESSAGES } from '@shared/utils/constants';
@@ -18,7 +17,7 @@ interface Props {
 
 const ChatView: FunctionComponent<Props> = (props) => {
   const store = useStore();
-  const nodeRef = React.useRef(null);
+  // const nodeRef = React.useRef(null);
   const [containerIsHidden, setContainerIsHidden] = useState(false);
 
   const showMessageSeperator = (messageIndex = 0) => {
@@ -35,29 +34,20 @@ const ChatView: FunctionComponent<Props> = (props) => {
       isBottom={props.isBottom}
       onWheel={props.onWheel}
     >
-      <TransitionGroup>
+      <div>
         {props.chatState.filteredMessages.map((m: MessageData, i: number) => (
-          <CSSTransition
-            key={m.message?.date || i}
-            nodeRef={nodeRef}
-            timeout={400}
-            classNames={`message-${
-              m.id === store.instanceId ? 'self' : 'other'
-            }`}
-          >
-            <>
-              <Message data={m} ref={nodeRef} instanceId={store.instanceId} />
-              {showMessageSeperator(i) ? (
-                <MessageSeperator>
-                  <span>older messages</span>
-                </MessageSeperator>
-              ) : (
-                ''
-              )}
-            </>
-          </CSSTransition>
+          <React.Fragment key={i}>
+            <Message data={m} />
+            {showMessageSeperator(i) ? (
+              <MessageSeperator>
+                <span>older messages</span>
+              </MessageSeperator>
+            ) : (
+              ''
+            )}
+          </React.Fragment>
         ))}
-      </TransitionGroup>
+      </div>
     </Messages>
   );
 };
@@ -89,6 +79,8 @@ const Messages = styled.div<{
   overflow-x: hidden;
   overflow-y: auto;
   display: grid;
+  height: calc(500px - 60px);
+  max-height: 100%;
   &::after {
     content: '';
     transition: opacity 0.3s;

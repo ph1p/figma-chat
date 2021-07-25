@@ -1,15 +1,32 @@
 import { Chat } from '@web/views/Chat';
 import React from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  height: 500px;
+  max-height: 100%;
+  max-width: 500px;
+  border-radius: 8px;
+  display: grid;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 100px #eee;
+  background-color: ${(p) => p.theme.backgroundColor};
+`;
 
 export const App = () => {
   return (
-    <Router>
-      <Switch>
-        <Route path="/">
-          <Chat />
-        </Route>
-      </Switch>
-    </Router>
+    <Wrapper>
+      <Router>
+        <Switch>
+          <Route path="/">
+            <Chat />
+          </Route>
+        </Switch>
+      </Router>
+    </Wrapper>
   );
 };

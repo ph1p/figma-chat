@@ -13,7 +13,6 @@ import {
 } from '@shared/utils/interfaces';
 import { darkTheme, lightTheme } from '@shared/utils/theme';
 
-
 class RootStore {
   url = 'https://figma-chat.ph1p.dev';
   room = '1627070280662-EOq7RFhIyf7SIjv';

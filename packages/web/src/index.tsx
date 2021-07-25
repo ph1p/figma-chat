@@ -14,12 +14,7 @@ import reportWebVitals from './reportWebVitals';
 import { StoreProvider, trunk, useStore } from './store/RootStore';
 
 const GlobalStyle = createGlobalStyle`
-  body {
-    background-color: ${(p) => p.theme.backgroundColor};
-    height: 100%;
-  }
-
-  #root, html {
+  #root, body, html {
     height: 100%;
   }
 
