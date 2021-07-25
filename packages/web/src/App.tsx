@@ -7,14 +7,20 @@ const Wrapper = styled.div`
   height: 500px;
   max-height: 100%;
   max-width: 500px;
-  border-radius: 8px;
-  display: grid;
-  position: relative;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 100px #eee;
   background-color: ${(p) => p.theme.backgroundColor};
+  @media (min-width: 450px) {
+    border-radius: 8px;
+    box-shadow: 0 0 100px #eee;
+    display: grid;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  @media (max-width: 450px) {
+    height: 100%;
+    width: 100%;
+  }
 `;
 
 export const App = () => {

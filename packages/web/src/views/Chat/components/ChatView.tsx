@@ -81,6 +81,14 @@ const Messages = styled.div<{
   display: grid;
   height: calc(500px - 60px);
   max-height: 100%;
+  background-color: ${(p) => p.theme.backgroundColor};
+  @media (min-width: 450px) {
+    height: calc(500px - 60px);
+  }
+  @media (max-width: 450px) {
+    height: 100%;
+    width: 100%;
+  }
   &::after {
     content: '';
     transition: opacity 0.3s;
