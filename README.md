@@ -8,6 +8,17 @@
 - [Web-Client](./packages/web/README.md)
 - [Server](./packages/server/README.md)
 
+## Development
+
+You can simple start or build all packages
+
+```bash
+# start
+yarn start:server && yarn start:plugin && yarn start:web
+# build
+yarn build:server && yarn build:plugin && yarn build:web
+```
+
 ## Description
 
 This is the monorepo of Figma-Chat. Inside the `packages` folder you will find all projects.

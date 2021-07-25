@@ -49,13 +49,13 @@ yarn install
 ```
 
 ```bash
-yarn plugin:build
+yarn build:plugin
 ```
 
 or
 
 ```bash
-yarn plugin:start
+yarn start:plugin
 ```
 
 - Open figma
