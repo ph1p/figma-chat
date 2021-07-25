@@ -1,6 +1,7 @@
-# Figma-Chat Server
+# Figma Chat Server
 
-The websocket server for [https://github.com/ph1p/figma-chat](https://github.com/ph1p/figma-chat)
+This plugins needs a server.
+This is a simple websocket server. **Messages are only forwarded and not stored!**
 
 ## How to start your own server?
 
@@ -10,21 +11,21 @@ Clone the repository:
 git clone https://github.com/ph1p/figma-chat.git
 ```
 
-and nstall all the dependencies.
+and install all the dependencies.
 
 ```bash
-npm install
+yarn install
 ```
 
 run the server:
 
 ```bash
-npm start
+yarn build && yarn start
 ```
 
 If you want to set another port, you can set the `PORT` environment variable.
 
-### Docker
+### Docker (run inside this folder)
 
 ```bash
 docker build . --tag figma-chat-server --build-arg VERSION=$(node -p -e "require('./package.json').version") && docker run -p 127.0.0.1:80:3000/tcp figma-chat-server
@@ -49,7 +50,7 @@ docker-compose build
 ## Development
 
 ```bash
-npm run dev # starts a server on port 3000
+yarn start:server # starts a server on port 3000
 ```
 
 Set the server URL to `http://127.0.0.1:3000/` inside your plugin.

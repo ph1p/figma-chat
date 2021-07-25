@@ -9,6 +9,6 @@ COPY package*.json ./
 
 RUN npm install --only-prod
 
-COPY ./dist/server.js .
+COPY ./dist/server.js ./dist/
 
 CMD [ "npm", "start" ]

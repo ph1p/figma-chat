@@ -4,9 +4,12 @@
   "description": "",
   "private": true,
   "scripts": {
+    "start:plugin": "yarn workspace plugin start",
     "start:web": "yarn workspace web start",
     "start:server": "yarn workspace server dev",
-    "start:plugin": "yarn workspace plugin start",
+    "build:plugin": "yarn workspace plugin build",
+    "build:web": "yarn workspace web build",
+    "build:server": "yarn workspace server build",
     "lint": "yarn workspace plugin lint && yarn workspace web lint && yarn workspace shared lint && yarn workspace server lint",
     "version": "conventional-changelog -p karma -i CHANGELOG.md -s -r 0 && git add ."
   },
@@ -29,7 +32,6 @@
     "@types/react-dom": "^17.0.9",
     "@types/styled-components": "^5.1.11",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "cross-env": "^7.0.3",
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",

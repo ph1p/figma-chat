@@ -3,9 +3,9 @@
   "version": "1.1.0",
   "main": "./dist/server.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production node ./dist/server.js",
     "build": "tsc",
-    "dev": "yarn build && cross-env NODE_ENV=development concurrently --kill-others \"tsc -w\" \"nodemon ./dist/server.js\"",
+    "dev": "yarn build && NODE_ENV=development concurrently --kill-others \"tsc -w\" \"nodemon ./dist/server.js\"",
     "lint": "echo \"not implemented\""
   },
   "license": "MIT",
