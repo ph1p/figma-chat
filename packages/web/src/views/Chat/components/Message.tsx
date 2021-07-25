@@ -2,7 +2,7 @@ import { useStore } from '@web/store/RootStore';
 import Linkify from 'linkifyjs/react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { animated, useSpring } from 'react-spring';
 import TimeAgo from 'react-timeago';
 // @ts-ignore
@@ -37,20 +37,20 @@ const Message: FunctionComponent<Props> = observer(({ data }) => {
   const date = data?.message?.date || null;
   const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
 
-  const [toggle, setToggle] = useState(false);
-
-  useEffect(() => {
-    setToggle(true);
-  }, []);
-
   const styles = useSpring({
-    translateX: toggle ? 0 : isSelf ? 60 : -60,
-    opacity: toggle ? 1 : 0,
+    to: {
+      translateX: 0,
+      opacity: 1,
+    },
+    from: {
+      translateX: isSelf ? 60 : -60,
+      opacity: 1,
+    },
   });
 
   return (
     <animated.div style={styles}>
-      <MessageFlex style={styles} isSelf={isSelf}>
+      <MessageFlex isSelf={isSelf}>
         <MessageWrapper className="message" isSelf={isSelf}>
           <MessageContainer
             className={`${isSelf ? 'me' : colorClass} ${
@@ -122,7 +122,7 @@ const MessageDate = styled.div`
   font-weight: 600;
 `;
 
-const MessageFlex = styled.div<{ isSelf: boolean; style: any }>`
+const MessageFlex = styled.div<{ isSelf: boolean }>`
   display: flex;
   justify-content: flex-end;
   flex-direction: ${({ isSelf }) => (isSelf ? 'row' : 'row-reverse')};
