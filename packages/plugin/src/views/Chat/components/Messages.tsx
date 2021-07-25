@@ -1,11 +1,12 @@
+import { sendMainMessage } from '@plugin/shared/utils';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useState, FunctionComponent } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
 
+import Message from '@shared/components/Message';
 import { MAX_MESSAGES } from '@shared/utils/constants';
 
-import Message from '../../../components/Message';
 import { useStore } from '../../../store';
 
 interface Props {
@@ -25,6 +26,23 @@ const ChatView: FunctionComponent<Props> = (props) => {
     );
   };
 
+  const onClickSelection = (selection) => {
+    let selectionData = null;
+
+    // fallback without page
+    if (selection.length) {
+      selectionData = {
+        ids: selection,
+      };
+    } else {
+      selectionData = {
+        ...selection,
+      };
+    }
+
+    sendMainMessage('focus-nodes', selectionData);
+  };
+
   return (
     <Messages
       onAnimationEnd={() => setContainerIsHidden(!containerIsHidden)}
@@ -32,28 +50,24 @@ const ChatView: FunctionComponent<Props> = (props) => {
       isBottom={props.isBottom}
       onWheel={props.onWheel}
     >
-      <TransitionGroup>
+      <div>
         {props.chatState.filteredMessages.map((m, i) => (
-          <CSSTransition
-            key={m.message?.date || i}
-            timeout={400}
-            classNames={`message-${
-              m.id === store.instanceId ? 'self' : 'other'
-            }`}
-          >
-            <>
-              <Message data={m} instanceId={store.instanceId} />
-              {showMessageSeperator(i) ? (
-                <MessageSeperator>
-                  <span>older messages</span>
-                </MessageSeperator>
-              ) : (
-                ''
-              )}
-            </>
-          </CSSTransition>
+          <React.Fragment key={i}>
+            <Message
+              data={m}
+              instanceId={store.instanceId}
+              onClickSelection={onClickSelection}
+            />
+            {showMessageSeperator(i) ? (
+              <MessageSeperator>
+                <span>older messages</span>
+              </MessageSeperator>
+            ) : (
+              ''
+            )}
+          </React.Fragment>
         ))}
-      </TransitionGroup>
+      </div>
     </Messages>
   );
 };

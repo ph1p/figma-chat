@@ -10,13 +10,11 @@
     "eject": "craco eject"
   },
   "dependencies": {
-    "linkifyjs": "^3.0.0-beta.3",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "mobx-sync": "^3.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "react-timeago": "^6.2.1",
     "simple-encryptor": "^4.0.0",
     "socket.io-client": "^4.1.3",
     "web-vitals": "^2.1.0"
@@ -39,9 +37,7 @@
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^26.0.24",
-    "@types/linkifyjs": "^2.1.4",
     "@types/react-router-dom": "^5.1.8",
-    "@types/react-timeago": "^4.1.3",
     "@types/react-transition-group": "^4.4.2",
     "esbuild-loader": "^2.13.1",
     "ts-loader": "8.2.0"

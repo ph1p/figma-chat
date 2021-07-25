@@ -2,12 +2,11 @@ import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 
+import Message from '@shared/components/Message';
 import { MAX_MESSAGES } from '@shared/utils/constants';
 import { MessageData } from '@shared/utils/interfaces';
 
 import { useStore } from '../../../store/RootStore';
-
-import Message from './Message';
 
 interface Props {
   isBottom: boolean;
@@ -37,7 +36,7 @@ const ChatView: FunctionComponent<Props> = (props) => {
       <div>
         {props.chatState.filteredMessages.map((m: MessageData, i: number) => (
           <React.Fragment key={i}>
-            <Message data={m} />
+            <Message data={m} instanceId={store.instanceId} />
             {showMessageSeperator(i) ? (
               <MessageSeperator>
                 <span>older messages</span>

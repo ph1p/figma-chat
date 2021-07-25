@@ -1,4 +1,3 @@
-import { useStore } from '@web/store/RootStore';
 import Linkify from 'linkifyjs/react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
@@ -20,89 +19,96 @@ const formatter = buildFormatter(nowStrings);
 
 interface Props {
   data: MessageData;
+  instanceId: string;
+  onClickSelection?: (selection: any) => void;
 }
 
-const Message: FunctionComponent<Props> = observer(({ data }) => {
-  const store = useStore();
-  const username = data.user.name || '';
-  const avatar = data.user.avatar || '';
-  const colorClass = EColors[data.user.color] || 'blue';
-  const selection = toJS(data?.message?.selection);
-  const isSelf = data.id === store.instanceId;
-  const pageName = selection?.page?.name || '';
+const Message: FunctionComponent<Props> = observer(
+  ({ data, instanceId, onClickSelection }) => {
+    const username = data.user.name || '';
+    const avatar = data.user.avatar || '';
+    const colorClass = EColors[data.user.color] || 'blue';
+    const selection = toJS(data?.message?.selection);
+    const isSelf = data.id === instanceId;
+    const pageName = selection?.page?.name || '';
 
-  const selectionCount = (selection?.nodes && selection?.nodes?.length) || 0;
+    const selectionCount = (selection?.nodes && selection?.nodes?.length) || 0;
 
-  const text = data?.message?.text || '';
-  const date = data?.message?.date || null;
-  const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
+    const text = data?.message?.text || '';
+    const date = data?.message?.date || null;
+    const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
 
-  const styles = useSpring({
-    to: {
-      translateX: 0,
-      opacity: 1,
-    },
-    from: {
-      translateX: isSelf ? 60 : -60,
-      opacity: 1,
-    },
-  });
+    const styles = useSpring({
+      to: {
+        translateX: 0,
+        opacity: 1,
+      },
+      from: {
+        translateX: isSelf ? 60 : -60,
+        opacity: 1,
+      },
+    });
 
-  return (
-    <animated.div style={styles}>
-      <MessageFlex isSelf={isSelf}>
-        <MessageWrapper className="message" isSelf={isSelf}>
-          <MessageContainer
-            className={`${isSelf ? 'me' : colorClass} ${
-              isSingleEmoji && 'emoji'
-            }`}
-          >
-            {!isSelf && username && (
-              <MessageHeader>
-                <div className="user">
-                  {avatar && avatar + ' '}
-                  {username}
-                </div>
-              </MessageHeader>
-            )}
-            {selection ? (
-              <span onClick={() => {}}>
-                {text && (
-                  <Linkify
-                    tagName="div"
-                    options={{
-                      defaultProtocol: 'https',
-                    }}
-                  >
-                    {text}
-                  </Linkify>
-                )}
-                <SelectionButton isSelf={isSelf}>
-                  <HashIcon />
-                  {pageName ? pageName + ' - ' : ''}
-                  focus {selectionCount} element
-                  {selectionCount > 1 ? 's' : ''}
-                </SelectionButton>
-              </span>
-            ) : (
-              <Linkify
-                tagName="div"
-                options={{
-                  defaultProtocol: 'https',
-                }}
-              >
-                {text}
-              </Linkify>
-            )}
-          </MessageContainer>
-          <MessageDate>
-            {date && <TimeAgo date={date} formatter={formatter} />}
-          </MessageDate>
-        </MessageWrapper>
-      </MessageFlex>
-    </animated.div>
-  );
-});
+    return (
+      <animated.div style={styles}>
+        <MessageFlex isSelf={isSelf}>
+          <MessageWrapper className="message" isSelf={isSelf}>
+            <MessageContainer
+              className={`${isSelf ? 'me' : colorClass} ${
+                isSingleEmoji && 'emoji'
+              }`}
+            >
+              {!isSelf && username && (
+                <MessageHeader>
+                  <div className="user">
+                    {avatar && avatar + ' '}
+                    {username}
+                  </div>
+                </MessageHeader>
+              )}
+              {selection ? (
+                <span
+                  onClick={() =>
+                    onClickSelection ? onClickSelection(toJS(selection)) : null
+                  }
+                >
+                  {text && (
+                    <Linkify
+                      tagName="div"
+                      options={{
+                        defaultProtocol: 'https',
+                      }}
+                    >
+                      {text}
+                    </Linkify>
+                  )}
+                  <SelectionButton isSelf={isSelf}>
+                    <HashIcon />
+                    {pageName ? pageName + ' - ' : ''}
+                    focus {selectionCount} element
+                    {selectionCount > 1 ? 's' : ''}
+                  </SelectionButton>
+                </span>
+              ) : (
+                <Linkify
+                  tagName="div"
+                  options={{
+                    defaultProtocol: 'https',
+                  }}
+                >
+                  {text}
+                </Linkify>
+              )}
+            </MessageContainer>
+            <MessageDate>
+              {date && <TimeAgo date={date} formatter={formatter} />}
+            </MessageDate>
+          </MessageWrapper>
+        </MessageFlex>
+      </animated.div>
+    );
+  }
+);
 
 const MessageHeader = styled.header`
   display: flex;

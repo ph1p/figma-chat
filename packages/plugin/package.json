@@ -21,7 +21,6 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "@types/react-transition-group": "^4.4.2",
     "create-file-webpack": "^1.0.2",
     "css-loader": "^6.2.0",
     "esbuild-loader": "^2.13.1",
@@ -55,12 +54,9 @@
   "dependencies": {
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
-    "linkifyjs": "^3.0.0-beta.3",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "react-router-dom": "^5.2.0",
-    "react-timeago": "^6.2.1",
-    "react-transition-group": "^4.4.2",
     "simple-encryptor": "^4.0.0",
     "socket.io-client": "^4.1.3",
     "stream-browserify": "^3.0.0",
