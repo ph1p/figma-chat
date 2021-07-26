@@ -1,26 +1,21 @@
 import { useStore } from '@web/store/RootStore';
 import { toJS } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import React from 'react';
 import styled from 'styled-components';
 
 import { MAX_MESSAGES } from '@shared/utils/constants';
 
+import { ChatBar } from './components/ChatBar';
 import ChatView from './components/ChatView';
-import Chatbar from './components/Chatbar';
 
 export const Chat = observer(() => {
   const store = useStore();
 
   const chatState = useLocalObservable(() => ({
-    textMessage: '',
     selectionIsChecked: false,
     messagesToShow: MAX_MESSAGES,
     setMessagesToShow(num: number) {
       this.messagesToShow = num;
-    },
-    setTextMessage(msg: string) {
-      this.textMessage = msg;
     },
     get hideMoreButton() {
       return (
@@ -63,11 +58,7 @@ export const Chat = observer(() => {
           }
         }}
       />
-      <Chatbar
-        sendMessage={() => {}}
-        setTextMessage={chatState.setTextMessage}
-        textMessage={''}
-      />
+      <ChatBar />
     </Wrapper>
   );
 });

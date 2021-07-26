@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Checkbox = (props) => {
+const Checkbox = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <CheckboxWrapper checked={props.checked}>
       <input
@@ -17,7 +17,7 @@ const Checkbox = (props) => {
   );
 };
 
-const CheckboxWrapper = styled.div`
+const CheckboxWrapper = styled.div<{ checked?: boolean }>`
   display: flex;
   justify-content: space-between;
   position: relative;
@@ -26,7 +26,7 @@ const CheckboxWrapper = styled.div`
     display: none;
   }
   label {
-  cursor: pointer;
+    cursor: pointer;
     font-size: 12px;
     font-weight: bold;
     width: 100%;

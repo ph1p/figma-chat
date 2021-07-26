@@ -74,7 +74,7 @@ export const RefTooltip = React.forwardRef<any, Props>((props, ref: any) => {
   );
 });
 
-const TooltipComponent = React.forwardRef<any, Props>((props, ref) => {
+export default React.forwardRef<any, Props>((props, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const { handler: HandlerComp } = props;
 
@@ -232,5 +232,3 @@ const Tooltip = styled.div<{
     }
   }
 `;
-
-export default TooltipComponent;

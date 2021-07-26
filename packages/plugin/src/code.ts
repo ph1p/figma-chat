@@ -1,6 +1,5 @@
 import { DEFAULT_SERVER_URL } from '@shared/utils/constants';
-
-import { generateString } from './shared/utils';
+import { generateString } from '@shared/utils/helpers';
 
 let isMinimized = false;
 let isFocused = true;

@@ -3,21 +3,20 @@ import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
+import EmojiIcon from '@shared/assets/icons/EmojiIcon';
 import SendArrowIcon from '@shared/assets/icons/SendArrowIcon';
+import Tooltip from '@shared/components/Tooltip';
 import { useSocket } from '@shared/utils/SocketProvider';
 import { ConnectionEnum } from '@shared/utils/interfaces';
 
 import { useStore } from '../../../store/RootStore';
 
-interface ChatProps {
-  sendMessage: (event: any) => void;
-  setTextMessage: (text: string) => void;
-  textMessage: string;
-}
-
-const ChatBar: FunctionComponent<ChatProps> = (props) => {
+export const ChatBar: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
+  const emojiPickerRef = useRef<React.ElementRef<typeof Tooltip>>(null);
+  const chatTextInput = useRef<HTMLInputElement>(null);
+  const [messageText, setMessageText] = useState('');
 
   const [isFailed, setIsFailed] = useState(
     store.status === ConnectionEnum.ERROR
@@ -25,7 +24,6 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
   const [connected, setConnected] = useState(
     store.status === ConnectionEnum.CONNECTED
   );
-  const chatTextInput = useRef<HTMLInputElement>(null);
 
   useEffect(
     () =>
@@ -36,13 +34,15 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
     []
   );
 
-  const sendMessage = (e: any) => {
+  const sendMessage = (e: any, msg?: string) => {
     e.preventDefault();
 
-    if (socket && chatTextInput.current) {
+    const text = msg || messageText;
+
+    if (socket && chatTextInput.current && text) {
       const message = store.encryptor.encrypt(
         JSON.stringify({
-          text: chatTextInput.current.value,
+          text,
           date: new Date(),
           external: true,
         })
@@ -56,25 +56,56 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
       store.addLocalMessage(message);
 
       chatTextInput.current.value = '';
+      setMessageText('');
     }
   };
 
   return (
     <ChatBarForm onSubmit={sendMessage}>
-      <ConnectionInfo connected={connected.toString()}>
+      <ConnectionInfo connected={connected}>
         {isFailed ? 'connection failed 🙈' : 'connecting...'}
       </ConnectionInfo>
 
-      <ChatInputWrapper connected={connected.toString()}>
+      <ChatInputWrapper connected={connected}>
         <ChatInput>
           <input
             ref={chatTextInput}
             type="input"
             onChange={({ target }: any) =>
-              props.setTextMessage(target.value.substr(0, 1000))
+              setMessageText(target.value.substr(0, 1000))
             }
-            placeholder="Write something..."
+            placeholder="Write something ..."
           />
+
+          <Tooltip
+            ref={emojiPickerRef}
+            style={{
+              paddingTop: 11,
+              paddingBottom: 11,
+              paddingLeft: 17,
+              paddingRight: 17,
+            }}
+            handler={React.forwardRef(
+              (p, ref: React.ForwardedRef<HTMLInputElement>) => (
+                <EmojiPickerStyled {...p} ref={ref}>
+                  <EmojiIcon />
+                </EmojiPickerStyled>
+              )
+            )}
+          >
+            <EmojiList>
+              {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩'].map((emoji) => (
+                <span
+                  key={emoji}
+                  data-emoji={emoji}
+                  onClick={(e) => {
+                    sendMessage(e, emoji);
+                    emojiPickerRef.current.hide();
+                  }}
+                />
+              ))}
+            </EmojiList>
+          </Tooltip>
 
           <SendButton color={store.settings.color} onClick={sendMessage}>
             <SendArrowIcon />
@@ -83,9 +114,30 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
       </ChatInputWrapper>
     </ChatBarForm>
   );
-};
+});
 
-const ConnectionInfo = styled.div<{ connected: string }>`
+const EmojiList = styled.div`
+  display: flex;
+  font-size: 25px;
+  width: 240px;
+  justify-content: space-between;
+  span {
+    cursor: pointer;
+    &::after {
+      content: attr(data-emoji);
+    }
+  }
+`;
+
+const EmojiPickerStyled = styled.div`
+  position: absolute;
+  right: 51px;
+  top: 11px;
+  z-index: 5;
+  cursor: pointer;
+`;
+
+const ConnectionInfo = styled.div<{ connected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,8 +151,8 @@ const ConnectionInfo = styled.div<{ connected: string }>`
   color: ${(p) => p.theme.fontColor};
   font-weight: bold;
   transition: opacity 0.2s;
-  opacity: ${(props) => (props.connected === 'true' ? 0 : 1)};
-  z-index: ${(props) => (props.connected === 'true' ? -1 : 1)};
+  opacity: ${(props) => (props.connected ? 0 : 1)};
+  z-index: ${(props) => (props.connected ? -1 : 1)};
   span {
     text-decoration: underline;
     cursor: pointer;
@@ -116,10 +168,10 @@ const ChatBarForm = styled.form`
   position: relative;
 `;
 
-const ChatInputWrapper = styled.div<{ connected: string }>`
+const ChatInputWrapper = styled.div<{ connected: boolean }>`
   display: flex;
   transition: opacity 0.3s;
-  opacity: ${(props) => (props.connected === 'true' ? 1 : 0)};
+  opacity: ${(props) => (props.connected ? 1 : 0)};
   position: relative;
 `;
 
@@ -182,5 +234,3 @@ const SendButton = styled.div`
     align-self: center;
   }
 `;
-
-export default observer(ChatBar);
