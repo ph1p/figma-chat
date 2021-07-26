@@ -1,0 +1,264 @@
+import './store';
+import { DEFAULT_SERVER_URL } from '@shared/utils/constants';
+import { generateString } from '@shared/utils/helpers';
+
+import EventEmitter from '../shared/EventEmitter';
+
+let isMinimized = false;
+let isFocused = true;
+let sendNotifications = false;
+let triggerSelectionEvent = true;
+
+const isRelaunch = figma.command === 'relaunch';
+
+figma.showUI(__html__, {
+  width: 333,
+  height: 490,
+  // visible: !isRelaunch
+});
+
+figma.root.setRelaunchData({
+  open: '',
+});
+
+const main = async () => {
+  const timestamp = +new Date();
+
+  // random user id for current user
+  let instanceId = await figma.clientStorage.getAsync('id');
+  let history = figma.root.getPluginData('history');
+  let roomName = figma.root.getPluginData('roomName');
+  let secret = figma.root.getPluginData('secret');
+  // const ownerId = figma.root.getPluginData('ownerId');
+
+  const settings = await figma.clientStorage.getAsync('user-settings');
+
+  if (!settings || !settings.url) {
+    await figma.clientStorage.setAsync('user-settings', {
+      ...settings,
+      url: DEFAULT_SERVER_URL,
+    });
+  }
+
+  try {
+    JSON.parse(history);
+  } catch {
+    history = '';
+  }
+
+  if (!instanceId) {
+    instanceId = 'user-' + timestamp + '-' + generateString(15);
+    await figma.clientStorage.setAsync('id', instanceId);
+  }
+
+  if (!roomName && !secret) {
+    figma.root.setPluginData('ownerId', instanceId);
+  }
+
+  if (!roomName) {
+    const randomRoomName = timestamp + '-' + generateString(15);
+    figma.root.setPluginData('roomName', randomRoomName);
+    roomName = randomRoomName;
+  }
+
+  if (!secret) {
+    secret = generateString(20);
+    figma.root.setPluginData('secret', secret);
+  }
+
+  if (!history) {
+    history = '[]';
+    figma.root.setPluginData('history', history);
+  }
+
+  // Parse History
+  try {
+    history = typeof history === 'string' ? JSON.parse(history) : [];
+  } catch {}
+
+  return {
+    roomName,
+    secret,
+    history,
+    instanceId,
+    settings,
+  };
+};
+
+const postMessage = (type = '', payload = {}) =>
+  figma.ui.postMessage({
+    type,
+    payload,
+  });
+
+const getSelectionIds = () => figma.currentPage.selection.map((n) => n.id);
+
+const sendSelection = () => {
+  EventEmitter.emit('selection', {
+    page: {
+      id: figma.currentPage.id,
+      name: figma.currentPage.name,
+    },
+    nodes: getSelectionIds(),
+  });
+};
+
+const sendRootData = async ({ roomName, secret, history, instanceId }) => {
+  const settings = await figma.clientStorage.getAsync('user-settings');
+
+  postMessage('root-data', {
+    roomName,
+    secret,
+    history,
+    instanceId,
+    settings,
+    selection: getSelectionIds(),
+  });
+};
+
+let alreadyAskedForRelaunchMessage = false;
+
+const isValidShape = (node) =>
+  node.type === 'RECTANGLE' ||
+  node.type === 'ELLIPSE' ||
+  node.type === 'GROUP' ||
+  node.type === 'TEXT' ||
+  node.type === 'VECTOR' ||
+  node.type === 'FRAME' ||
+  node.type === 'COMPONENT' ||
+  node.type === 'INSTANCE' ||
+  node.type === 'POLYGON';
+
+const goToPage = (id) => {
+  if (figma.getNodeById(id)) {
+    figma.currentPage = figma.getNodeById(id) as PageNode;
+  }
+};
+
+let previousSelection = figma.currentPage.selection || [];
+
+EventEmitter.on('clear-chat-history', () => {
+  figma.root.setPluginData('history', '[]');
+
+  postMessage('history', JSON.parse('[]'));
+});
+
+EventEmitter.on('minimize', (flag) => {
+  isMinimized = flag;
+  sendNotifications = isMinimized;
+
+  // resize window
+  figma.ui.resize(flag ? 180 : 333, flag ? 108 : 490);
+});
+
+EventEmitter.on('save-user-settings', async (payload, emit) => {
+  await figma.clientStorage.setAsync('user-settings', payload);
+  const settings = await figma.clientStorage.getAsync('user-settings');
+
+  emit('user-settings', settings);
+});
+
+EventEmitter.on('add-message-to-history', (payload) => {
+  const messageHistory = JSON.parse(figma.root.getPluginData('history'));
+
+  figma.root.setPluginData(
+    'history',
+    JSON.stringify(messageHistory.concat(payload))
+  );
+});
+
+EventEmitter.answer(
+  'get-history',
+  JSON.parse(figma.root.getPluginData('history'))
+);
+
+EventEmitter.on('notify', (payload) => {
+  figma.notify(payload);
+});
+
+EventEmitter.on('notification', (payload) => {
+  if (sendNotifications) {
+    figma.notify(payload);
+  }
+});
+
+EventEmitter.on('root-data', async (_, emit) => {
+  const { roomName, secret, history, instanceId } = await main();
+
+  emit('root-data', { roomName, secret, history, instanceId });
+});
+
+EventEmitter.on('focus', (payload) => {
+  if (!isMinimized) {
+    isFocused = payload;
+
+    if (!isFocused) {
+      sendNotifications = true;
+    }
+  }
+});
+
+EventEmitter.on('focus-nodes', (payload) => {
+  let selectedNodes = [];
+  triggerSelectionEvent = false;
+
+  // fallback for ids
+  if (payload.ids) {
+    selectedNodes = payload.ids;
+  } else {
+    goToPage(payload?.page?.id);
+    selectedNodes = payload.nodes;
+  }
+
+  const nodes = figma.currentPage.findAll(
+    (n) => selectedNodes.indexOf(n.id) !== -1
+  );
+
+  figma.currentPage.selection = nodes;
+  figma.viewport.scrollAndZoomIntoView(nodes);
+
+  setTimeout(() => (triggerSelectionEvent = true));
+});
+
+EventEmitter.on('ask-for-relaunch-message', (_, emit) => {
+  if (isRelaunch && !alreadyAskedForRelaunchMessage) {
+    alreadyAskedForRelaunchMessage = true;
+    emit('relaunch-message', {
+      selection: {
+        page: {
+          id: figma.currentPage.id,
+          name: figma.currentPage.name,
+        },
+        nodes: getSelectionIds(),
+      },
+    });
+  }
+});
+
+EventEmitter.on('cancel', () => {});
+
+// events
+figma.on('selectionchange', () => {
+  if (figma.currentPage.selection.length > 0) {
+    for (const node of figma.currentPage.selection) {
+      if (node.setRelaunchData && isValidShape(node)) {
+        node.setRelaunchData({
+          relaunch: '',
+        });
+      }
+    }
+    previousSelection = figma.currentPage.selection;
+  } else {
+    if (previousSelection.length > 0) {
+      // tidy up 🧹
+      for (const node of previousSelection) {
+        if (node.setRelaunchData && isValidShape(node)) {
+          node.setRelaunchData({});
+        }
+      }
+    }
+  }
+  if (triggerSelectionEvent) {
+    sendSelection();
+  }
+});

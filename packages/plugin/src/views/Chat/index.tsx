@@ -1,3 +1,4 @@
+import EventEmitter from '@plugin/shared/EventEmitter';
 import { toJS } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, FunctionComponent } from 'react';
@@ -81,59 +82,59 @@ const ChatView: FunctionComponent = observer(() => {
     }
   };
 
-  // All messages from main
-  onmessage = (message) => {
-    const pmessage = message.data.pluginMessage;
+  useEffect(() => {
+    EventEmitter.on('selection', (selection) => {
+      const hasSelection =
+        selection?.length > 0 || selection?.nodes?.length > 0;
 
-    if (pmessage) {
-      // set selection
-      if (pmessage.type === 'selection') {
-        const hasSelection =
-          pmessage.payload?.length > 0 || pmessage.payload?.nodes?.length > 0;
+      store.setSelection(hasSelection ? selection : {});
 
-        store.setSelection(hasSelection ? pmessage.payload : {});
-
-        if (!hasSelection) {
-          chatState.selectionIsChecked = false;
-        }
+      if (!hasSelection) {
+        chatState.selectionIsChecked = false;
       }
+    });
 
-      if (pmessage.type === 'root-data') {
-        const {
-          roomName: dataRoomName = '',
-          secret: dataSecret = '',
-          history: messages = [],
-          selection = {
-            page: '',
-            nodes: [],
-          },
-          settings = {},
-          instanceId = '',
-        } = {
-          ...pmessage.payload,
-        };
+    EventEmitter.on('root-data', (data) => {
+      const {
+        roomName: dataRoomName = '',
+        secret: dataSecret = '',
+        history: messages = [],
+        selection = {
+          page: '',
+          nodes: [],
+        },
+        settings = {},
+        instanceId = '',
+      } = {
+        ...data,
+      };
 
-        store.setSecret(dataSecret);
-        store.setRoomName(dataRoomName);
-        store.setMessages(messages);
-        store.setInstanceId(instanceId);
-        store.setSelection(selection);
+      store.setSecret(dataSecret);
+      store.setRoomName(dataRoomName);
+      store.setMessages(messages);
+      store.setInstanceId(instanceId);
+      store.setSelection(selection);
 
-        store.persistSettings(settings, socket, true);
+      store.persistSettings(settings, socket, true);
+    });
+
+    EventEmitter.on('relaunch-message', (data) => {
+      chatState.selectionIsChecked = true;
+
+      store.setSelection(data.selection || {});
+
+      if (store.selectionCount) {
+        sendMessage();
+        sendMainMessage('notify', 'Selection sent successfully');
       }
+    });
 
-      if (pmessage.type === 'relaunch-message') {
-        chatState.selectionIsChecked = true;
-
-        store.setSelection(pmessage.payload.selection || {});
-
-        if (store.selectionCount) {
-          sendMessage();
-          sendMainMessage('notify', 'Selection sent successfully');
-        }
-      }
-    }
-  };
+    return () => {
+      EventEmitter.remove('selection');
+      EventEmitter.remove('root-data');
+      EventEmitter.remove('relaunch-message');
+    };
+  }, []);
 
   useEffect(() => store.scrollToBottom(), [store.messages]);
 

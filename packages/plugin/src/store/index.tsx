@@ -1,4 +1,6 @@
+import EventEmitter from '@plugin/shared/EventEmitter';
 import { makeAutoObservable, toJS } from 'mobx';
+import { AsyncTrunk, ignore } from 'mobx-sync';
 import React, { createRef } from 'react';
 import { createEncryptor } from 'simple-encryptor';
 import { DefaultTheme } from 'styled-components';
@@ -6,8 +8,6 @@ import { DefaultTheme } from 'styled-components';
 import MessageSound from '@shared/assets/sound.mp3';
 import { ConnectionEnum } from '@shared/utils/interfaces';
 import { darkTheme, lightTheme } from '@shared/utils/theme';
-
-import { sendMainMessage } from '../shared/utils';
 
 interface StoreSettings {
   name: string;
@@ -18,7 +18,7 @@ interface StoreSettings {
   enableNotificationSound: boolean;
   isDarkTheme: boolean;
 }
-class RootStore {
+export class RootStore {
   constructor() {
     makeAutoObservable(this);
   }
@@ -33,6 +33,7 @@ class RootStore {
   instanceId = '';
   online = [];
   messages = [];
+  @ignore
   messagesRef = createRef<HTMLDivElement>();
   autoScrollDisabled = false;
   selection = undefined;
@@ -138,7 +139,7 @@ class RootStore {
   // ---
   toggleMinimizeChat() {
     this.isMinimized = !this.isMinimized;
-    sendMainMessage('minimize', this.isMinimized);
+    EventEmitter.emit('minimize', this.isMinimized);
   }
 
   clearChatHistory(cb: () => void) {
@@ -147,7 +148,8 @@ class RootStore {
         'Do you really want to delete the complete chat history? (This cannot be undone)'
       )
     ) {
-      sendMainMessage('clear-chat-history');
+      EventEmitter.emit('clear-chat-history');
+
       this.messages = [];
       cb();
       this.addNotification('Chat history successfully deleted');
@@ -163,7 +165,7 @@ class RootStore {
     };
 
     // save user settings in main
-    sendMainMessage('save-user-settings', { ...toJS(this.settings) });
+    EventEmitter.emit('save-user-settings', { ...toJS(this.settings) });
 
     // set server URL
     if (!isInit && settings.url && settings.url !== oldUrl) {
@@ -181,8 +183,6 @@ class RootStore {
     const decryptedMessage = this.encryptor.decrypt(
       isLocal ? messageData : messageData.message
     );
-
-    console.log(messageData, decryptedMessage);
 
     // silent on error
     try {
@@ -207,7 +207,7 @@ class RootStore {
           },
         };
 
-        sendMainMessage('add-message-to-history', newMessage);
+        EventEmitter.emit('add-message-to-history', newMessage);
       } else {
         newMessage = {
           id: messageData.id,
@@ -218,7 +218,7 @@ class RootStore {
         };
 
         if (data.external) {
-          sendMainMessage('add-message-to-history', newMessage);
+          EventEmitter.emit('add-message-to-history', newMessage);
         }
 
         if (this.settings.enableNotificationSound) {
@@ -234,7 +234,7 @@ class RootStore {
                 : data.text;
           }
 
-          sendMainMessage(
+          EventEmitter.emit(
             'notification',
             messageData?.user?.name
               ? `${text} · ${messageData.user.avatar} ${messageData.user.name}`
@@ -252,18 +252,13 @@ class RootStore {
   }
 }
 
-export const createStore = () => new RootStore();
+export const rootStore = new RootStore();
 
-export type TStore = ReturnType<typeof createStore>;
+const StoreContext = React.createContext<RootStore | null>(null);
 
-const StoreContext = React.createContext<TStore | null>(null);
-
-export const StoreProvider = ({ children }) => {
-  const store = createStore();
-  return (
-    <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
-  );
-};
+export const StoreProvider = ({ children }) => (
+  <StoreContext.Provider value={rootStore}>{children}</StoreContext.Provider>
+);
 
 export const useStore = () => {
   const store = React.useContext(StoreContext);
@@ -272,3 +267,38 @@ export const useStore = () => {
   }
   return store;
 };
+
+export const trunk = new AsyncTrunk(rootStore, {
+  storageKey: 'figma-chat',
+  storage: {
+    getItem: (key: string) => {
+      EventEmitter.emit('storage get item', key);
+      return new Promise((resolve) =>
+        EventEmitter.once('storage get item', resolve)
+      );
+    },
+    setItem: (key: string, value: string) => {
+      EventEmitter.emit('storage set item', {
+        key,
+        value,
+      });
+      return new Promise((resolve) =>
+        EventEmitter.once('storage set item', resolve)
+      );
+    },
+    removeItem: (key: string) => {
+      EventEmitter.emit('storage remove item', key);
+      return new Promise((resolve) =>
+        EventEmitter.once('storage remove item', resolve)
+      );
+    },
+  },
+});
+
+export const getStoreFromMain = (): Promise<RootStore> =>
+  new Promise((resolve) => {
+    EventEmitter.emit('storage', 'figma-chat');
+    EventEmitter.once('storage', (store) => {
+      resolve(JSON.parse(store || '{}'));
+    });
+  });

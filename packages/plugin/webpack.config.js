@@ -28,7 +28,7 @@ module.exports = (env, argv) => ({
   },
   entry: {
     ui: './src/Ui.tsx',
-    code: './src/code.ts',
+    code: './src/main/index.ts',
   },
   watchOptions: {
     ignored: ['node_modules/**'],
