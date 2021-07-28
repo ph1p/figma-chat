@@ -13,29 +13,32 @@ import {
 import { darkTheme, lightTheme } from '@shared/utils/theme';
 
 class RootStore {
-  url = 'https://figma-chat.ph1p.dev';
-  @ignore
-  room = '1627070280662-EOq7RFhIyf7SIjv';
-  @ignore
-  secret = 'YTANPwojS6qIHFAhoJrX';
-  @ignore
-  instanceId = '';
-  @ignore
-  status = ConnectionEnum.NONE;
   settings: StoreSettings = {
     name: 'Test',
     avatar: '',
     color: '#4F4F4F',
-    url: '',
+    url: 'https://figma-chat.ph1p.dev',
     enableNotificationTooltip: true,
     enableNotificationSound: true,
     isDarkTheme: false,
   };
+  messages: any[] = [];
+
+  room = '';
+  secret = '';
+
+  @ignore
+  instanceId = '';
+
+  @ignore
+  status = ConnectionEnum.NONE;
+
   @ignore
   online: any[] = [];
-  messages: any[] = [];
+
   @ignore
   messagesRef = createRef<HTMLDivElement>();
+
   @ignore
   autoScrollDisabled = false;
 
@@ -49,10 +52,6 @@ class RootStore {
 
   setStatus(status: ConnectionEnum) {
     this.status = status;
-  }
-
-  setUrl(url: string) {
-    this.url = url;
   }
 
   setInstanceId(instanceId: string) {
@@ -69,12 +68,42 @@ class RootStore {
     this.settings.isDarkTheme = isDarkTheme;
   }
 
+  setRoom(room: string) {
+    this.room = room;
+  }
+
   setSecret(secret: string) {
     this.secret = secret;
   }
 
   setOnline(online: any[]) {
     this.online = online;
+  }
+
+  setSetting(key: keyof StoreSettings, value: string | boolean) {
+    this.settings = {
+      ...this.settings,
+      [key]: value,
+    };
+  }
+
+  persistSettings(settings: any, socket?: any, isInit = false) {
+    const oldUrl = this.settings.url;
+
+    this.settings = {
+      ...this.settings,
+      ...settings,
+    };
+
+    // set server URL
+    if (!isInit && settings.url && settings.url !== oldUrl) {
+      // this.addNotification('Updated server-URL');
+    }
+
+    if (socket && socket.connected) {
+      // set user data on server
+      socket.emit('set user', this.settings);
+    }
   }
 
   addLocalMessage(messageData: string) {

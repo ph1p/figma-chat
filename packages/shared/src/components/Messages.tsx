@@ -73,16 +73,16 @@ export const Messages: FunctionComponent<Props> = observer((props) => {
         {props.chatState.filteredMessages.map(
           (data: MessageData, i: number) => (
             <React.Fragment key={data.message?.date}>
-              <Message
-                data={data}
-                instanceId={props.store.instanceId}
-                onClickSelection={props.onClickSelection}
-              />
               {showMessageSeperator(i) && (
                 <MessageSeperator>
                   <span>older messages</span>
                 </MessageSeperator>
               )}
+              <Message
+                data={data}
+                instanceId={props.store.instanceId}
+                onClickSelection={props.onClickSelection}
+              />
             </React.Fragment>
           )
         )}
@@ -100,14 +100,14 @@ const Wrapper = styled.div<{ isWeb?: boolean }>`
   ${(p) =>
     p.isWeb
       ? css`
-          height: calc(500px - 60px);
+          height: calc(500px - 56px);
           max-height: 100%;
-          background-color: ${p.theme.backgroundColor};
           @media (min-width: 450px) {
-            height: calc(500px - 60px);
+            height: calc(500px - 56px);
           }
           @media (max-width: 450px) {
-            height: 100%;
+            height: calc(100vh - 106px);
+            width: 100%;
             width: 100%;
           }
         `

@@ -1,5 +1,4 @@
 import './store';
-import { DEFAULT_SERVER_URL } from '@shared/utils/constants';
 import { generateString } from '@shared/utils/helpers';
 
 import EventEmitter from '../shared/EventEmitter';

@@ -161,7 +161,7 @@ const ConnectionInfo = styled.div<{ connected: boolean }>`
 `;
 
 const ChatBarForm = styled.form`
-  padding: 0 20px 20px 20px;
+  padding: 0 14px 14px 14px;
   z-index: 3;
   margin: 0;
   transition: opacity 0.2s;

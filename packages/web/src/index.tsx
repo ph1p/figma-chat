@@ -29,34 +29,32 @@ trunk.init().then(() => {
     const store = useStore();
 
     useEffect(() => {
-      store.setUrl('http://localhost:3000');
-    }, []);
-
-    useEffect(() => {
       if (socket) {
         socket.offAny();
         socket.disconnect();
       }
 
       setSocket(
-        io(store.url, {
+        io(store.settings.url, {
           reconnectionAttempts: 3,
           forceNew: true,
           transports: ['websocket'],
         })
       );
-    }, [store.url]);
+    }, [store.settings.url]);
 
     useEffect(() => {
       if (socket) {
         socket.on('connect', () => {
           store.setStatus(ConnectionEnum.CONNECTED);
 
-          socket.emit('set user', toJS(store.settings));
-          socket.emit('join room', {
-            room: store.room,
-            settings: toJS(store.settings),
-          });
+          if (store.room && store.secret) {
+            socket.emit('set user', toJS(store.settings));
+            socket.emit('join room', {
+              room: store.room,
+              settings: toJS(store.settings),
+            });
+          }
         });
 
         socket.io.on('error', () => store.setStatus(ConnectionEnum.ERROR));
@@ -67,16 +65,17 @@ trunk.init().then(() => {
 
         socket.on('chat message', (data) => store.addReceivedMessage(data));
 
-        // socket.on('join leave message', (data) => {
-        //   const username = data.user.name || 'Anon';
-        //   let message = 'joins the conversation';
+        socket.on('join leave message', (data) => {
+          const username = data.user.name || 'Anon';
+          let message = 'joins the conversation';
 
-        //   if (data.type === 'LEAVE') {
-        //     message = 'leaves the conversation';
-        //   }
+          if (data.type === 'LEAVE') {
+            message = 'leaves the conversation';
+          }
 
-        //   // store.addNotification(`${username} ${message}`);
-        // });
+          console.log(`${username} ${message}`);
+          // store.addNotification(`${username} ${message}`);
+        });
 
         socket.on('online', (data) => store.setOnline(data));
       }

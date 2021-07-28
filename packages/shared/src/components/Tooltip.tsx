@@ -156,7 +156,7 @@ export default React.forwardRef<any, Props>((props, ref) => {
 });
 
 const TooltipContent = styled.div<{ hover?: boolean }>`
-  padding: ${(p) => (p.hover ? '5px 10px' : 15)};
+  padding: ${(p) => (p.hover ? '5px 10px' : '15px')};
   position: relative;
   z-index: 1;
   font-weight: normal;

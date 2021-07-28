@@ -6,18 +6,9 @@ import { createEncryptor } from 'simple-encryptor';
 import { DefaultTheme } from 'styled-components';
 
 import MessageSound from '@shared/assets/sound.mp3';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import { ConnectionEnum, StoreSettings } from '@shared/utils/interfaces';
 import { darkTheme, lightTheme } from '@shared/utils/theme';
 
-interface StoreSettings {
-  name: string;
-  avatar: string;
-  color: string;
-  url: string;
-  enableNotificationTooltip: boolean;
-  enableNotificationSound: boolean;
-  isDarkTheme: boolean;
-}
 export class RootStore {
   constructor() {
     makeAutoObservable(this);

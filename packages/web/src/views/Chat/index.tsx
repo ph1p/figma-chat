@@ -35,6 +35,6 @@ export const Chat = observer(() => {
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-rows: 1fr 60px;
+  grid-template-rows: 1fr 54px;
   height: 100%;
 `;
