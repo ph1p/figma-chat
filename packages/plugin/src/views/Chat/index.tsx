@@ -1,20 +1,18 @@
 import EventEmitter from '@plugin/shared/EventEmitter';
-import { toJS } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, FunctionComponent } from 'react';
 import styled from 'styled-components';
 
+import { Messages } from '@shared/components/Messages';
 import { useSocket } from '@shared/utils/SocketProvider';
 import { MAX_MESSAGES } from '@shared/utils/constants';
 
-import { sendMainMessage } from '../../shared/utils';
 import { useStore } from '../../store';
 
 import Chatbar from './components/Chatbar';
-import Messages from './components/Messages';
 import TodoList from './components/TodoList';
 
-const ChatView: FunctionComponent = observer(() => {
+const Chat: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
 
@@ -30,12 +28,6 @@ const ChatView: FunctionComponent = observer(() => {
     },
     setSelectionIsChecked(checked: boolean) {
       this.selectionIsChecked = checked;
-    },
-    get hideMoreButton() {
-      return (
-        chatState.messagesToShow >= store.messages.length ||
-        chatState.filteredMessages.length >= store.messages.length
-      );
     },
     get filteredMessages() {
       return [...store.messages].slice(-chatState.messagesToShow);
@@ -94,30 +86,6 @@ const ChatView: FunctionComponent = observer(() => {
       }
     });
 
-    EventEmitter.on('root-data', (data) => {
-      const {
-        roomName: dataRoomName = '',
-        secret: dataSecret = '',
-        history: messages = [],
-        selection = {
-          page: '',
-          nodes: [],
-        },
-        settings = {},
-        instanceId = '',
-      } = {
-        ...data,
-      };
-
-      store.setSecret(dataSecret);
-      store.setRoomName(dataRoomName);
-      store.setMessages(messages);
-      store.setInstanceId(instanceId);
-      store.setSelection(selection);
-
-      store.persistSettings(settings, socket, true);
-    });
-
     EventEmitter.on('relaunch-message', (data) => {
       chatState.selectionIsChecked = true;
 
@@ -125,7 +93,7 @@ const ChatView: FunctionComponent = observer(() => {
 
       if (store.selectionCount) {
         sendMessage();
-        sendMainMessage('notify', 'Selection sent successfully');
+        EventEmitter.emit('notify', 'Selection sent successfully');
       }
     });
 
@@ -138,36 +106,33 @@ const ChatView: FunctionComponent = observer(() => {
 
   useEffect(() => store.scrollToBottom(), [store.messages]);
 
-  const showMore = () => {
-    if (
-      chatState.filteredMessages.length + MAX_MESSAGES >=
-      store.messages.length
-    ) {
-      chatState.setMessagesToShow(store.messages.length);
-    } else {
-      chatState.setMessagesToShow(chatState.messagesToShow + MAX_MESSAGES);
-    }
-  };
-
   if (!store.settings.name) {
     return <TodoList />;
   }
 
+  const onClickSelection = (selection) => {
+    let selectionData = null;
+
+    // fallback without page
+    if (selection.length) {
+      selectionData = {
+        ids: selection,
+      };
+    } else {
+      selectionData = {
+        ...selection,
+      };
+    }
+
+    EventEmitter.emit('focus-nodes', selectionData);
+  };
+
   return (
-    <Chat hasSelection={store.selectionCount > 0}>
+    <Wrapper hasSelection={store.selectionCount > 0}>
       <Messages
         chatState={chatState}
-        isBottom={store.autoScrollDisabled}
-        onWheel={() => {
-          const { current } = toJS(store.messagesRef);
-          if (current.scrollTop <= current.scrollHeight * 0.2) {
-            showMore();
-          }
-          store.disableAutoScroll(
-            current.scrollHeight - (current.scrollTop + current.clientHeight) >
-              0
-          );
-        }}
+        store={store}
+        onClickSelection={onClickSelection}
       />
 
       <Chatbar
@@ -179,13 +144,13 @@ const ChatView: FunctionComponent = observer(() => {
         }
         selectionIsChecked={chatState.selectionIsChecked}
       />
-    </Chat>
+    </Wrapper>
   );
 });
 
-const Chat = styled.div`
+const Wrapper = styled.div<{ hasSelection: boolean }>`
   display: grid;
   grid-template-rows: 397px 55px;
 `;
 
-export default ChatView;
+export default Chat;

@@ -1,6 +1,5 @@
 import Header from '@plugin/components/Header';
 import Notifications from '@plugin/components/Notifications';
-import { sendMainMessage } from '@plugin/shared/utils';
 import {
   getStoreFromMain,
   StoreProvider,
@@ -58,18 +57,17 @@ const AppWrapper = styled.div`
   overflow: hidden;
 `;
 
-// const init = () => {
 const App = observer(() => {
   const store = useStore();
   const [socket, setSocket] = useState<Socket>(null);
 
   const onFocus = () => {
-    sendMainMessage('focus', false);
+    EventEmitter.emit('focus', false);
     store.setIsFocused(false);
   };
 
   const onFocusOut = () => {
-    sendMainMessage('focus', false);
+    EventEmitter.emit('focus', false);
     store.setIsFocused(false);
   };
 
@@ -92,41 +90,64 @@ const App = observer(() => {
 
   useEffect(() => {
     if (socket && store.status === ConnectionEnum.NONE) {
-      // sendMainMessage('get-root-data');
-      EventEmitter.emit('root-data');
       socket.on('connect', () => {
-        store.setStatus(ConnectionEnum.CONNECTED);
+        EventEmitter.ask('root-data').then((rootData: any) => {
+          const {
+            roomName: dataRoomName = '',
+            secret: dataSecret = '',
+            history: messages = [],
+            selection = {
+              page: '',
+              nodes: [],
+            },
+            settings = {},
+            instanceId = '',
+          } = rootData;
 
-        socket.emit('set user', store.settings);
-        socket.emit('join room', {
-          room: store.roomName,
-          settings: store.settings,
+          store.setSecret(dataSecret);
+          store.setRoomName(dataRoomName);
+          store.setMessages(messages);
+          store.setInstanceId(instanceId);
+          store.setSelection(selection);
+
+          store.persistSettings(settings, socket, true);
+
+          // socket listener
+          socket.io.on('error', () => store.setStatus(ConnectionEnum.ERROR));
+
+          socket.io.on('reconnect_error', () =>
+            store.setStatus(ConnectionEnum.ERROR)
+          );
+
+          socket.on('chat message', (data) => {
+            store.addMessage(data);
+          });
+
+          socket.on('join leave message', (data) => {
+            const username = data.user.name || 'Anon';
+            let message = 'joins the conversation';
+
+            if (data.type === 'LEAVE') {
+              message = 'leaves the conversation';
+            }
+            store.addNotification(`${username} ${message}`);
+          });
+
+          socket.on('online', (data) => {
+            store.setOnline(data);
+          });
+
+          store.setStatus(ConnectionEnum.CONNECTED);
+
+          socket.emit('set user', store.settings);
+          socket.emit('join room', {
+            room: dataRoomName,
+            settings: store.settings,
+          });
+
+          EventEmitter.emit('ask-for-relaunch-message');
         });
-
-        sendMainMessage('ask-for-relaunch-message');
       });
-
-      socket.io.on('error', () => store.setStatus(ConnectionEnum.ERROR));
-
-      socket.io.on('reconnect_error', () =>
-        store.setStatus(ConnectionEnum.ERROR)
-      );
-
-      socket.on('chat message', (data) => {
-        store.addMessage(data);
-      });
-
-      socket.on('join leave message', (data) => {
-        const username = data.user.name || 'Anon';
-        let message = 'joins the conversation';
-
-        if (data.type === 'LEAVE') {
-          message = 'leaves the conversation';
-        }
-        store.addNotification(`${username} ${message}`);
-      });
-
-      socket.on('online', (data) => store.setOnline(data));
     }
 
     return () => {
@@ -192,4 +213,3 @@ getStoreFromMain().then((store) => {
     );
   });
 });
-// };

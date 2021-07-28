@@ -27,15 +27,26 @@ export class RootStore {
     return createEncryptor(this.secret);
   }
 
+  @ignore
   status = ConnectionEnum.NONE;
-  secret = '';
-  roomName = '';
-  instanceId = '';
+  @ignore
   online = [];
+  @ignore
   messages = [];
   @ignore
   messagesRef = createRef<HTMLDivElement>();
+
+  @ignore
+  secret = '';
+  @ignore
+  roomName = '';
+  @ignore
+  instanceId = '';
+
+  @ignore
   autoScrollDisabled = false;
+
+  @ignore
   selection = undefined;
 
   setStatus(status) {
@@ -94,8 +105,10 @@ export class RootStore {
   }
 
   // ---
+  @ignore
   isFocused = true;
 
+  @ignore
   isMinimized = false;
 
   settings: StoreSettings = {
@@ -108,6 +121,7 @@ export class RootStore {
     isDarkTheme: false,
   };
 
+  @ignore
   notifications = [];
 
   setSetting(key: keyof StoreSettings, value: string | boolean) {
@@ -165,7 +179,7 @@ export class RootStore {
     };
 
     // save user settings in main
-    EventEmitter.emit('save-user-settings', { ...toJS(this.settings) });
+    // EventEmitter.emit('save-user-settings', { ...toJS(this.settings) });
 
     // set server URL
     if (!isInit && settings.url && settings.url !== oldUrl) {

@@ -126,3 +126,7 @@ io.on('connection', (socket) => {
 httpServer.listen(PORT, () => {
   console.log(`The Figma-Chat Server (${VERSION}) is running`);
 });
+
+process.on('SIGINT', () => {
+  process.exit();
+});

@@ -1,7 +1,7 @@
 import Linkify from 'linkifyjs/react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import TimeAgo from 'react-timeago';
 // @ts-ignore
@@ -29,7 +29,7 @@ const Message: FunctionComponent<Props> = observer(
     const avatar = data.user.avatar || '';
     const colorClass = EColors[data.user.color] || 'blue';
     const selection = toJS(data?.message?.selection);
-    const isSelf = data.id === instanceId;
+    const isLocalMessage = data.id === instanceId;
     const pageName = selection?.page?.name || '';
 
     const selectionCount = (selection?.nodes && selection?.nodes?.length) || 0;
@@ -37,28 +37,26 @@ const Message: FunctionComponent<Props> = observer(
     const text = data?.message?.text || '';
     const date = data?.message?.date || null;
     const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+      setMounted(true);
+    }, []);
 
     const styles = useSpring({
-      to: {
-        translateX: 0,
-        opacity: 1,
-      },
-      from: {
-        translateX: isSelf ? 60 : -60,
-        opacity: 1,
-      },
+      opacity: mounted ? 1 : 0,
     });
 
     return (
       <animated.div style={styles}>
-        <MessageFlex isSelf={isSelf}>
-          <MessageWrapper className="message" isSelf={isSelf}>
+        <MessageFlex isLocalMessage={isLocalMessage}>
+          <div className="message">
             <MessageContainer
-              className={`${isSelf ? 'me' : colorClass} ${
+              className={`${isLocalMessage ? 'me' : colorClass} ${
                 isSingleEmoji && 'emoji'
               }`}
             >
-              {!isSelf && username && (
+              {!isLocalMessage && username && (
                 <MessageHeader>
                   <div className="user">
                     {avatar && avatar + ' '}
@@ -82,7 +80,7 @@ const Message: FunctionComponent<Props> = observer(
                       {text}
                     </Linkify>
                   )}
-                  <SelectionButton isSelf={isSelf}>
+                  <SelectionButton isLocalMessage={isLocalMessage}>
                     <HashIcon />
                     {pageName ? pageName + ' - ' : ''}
                     focus {selectionCount} element
@@ -103,7 +101,7 @@ const Message: FunctionComponent<Props> = observer(
             <MessageDate>
               {date && <TimeAgo date={date} formatter={formatter} />}
             </MessageDate>
-          </MessageWrapper>
+          </div>
         </MessageFlex>
       </animated.div>
     );
@@ -128,28 +126,29 @@ const MessageDate = styled.div`
   font-weight: 600;
 `;
 
-const MessageFlex = styled.div<{ isSelf: boolean }>`
+const MessageFlex = styled.div<{ isLocalMessage: boolean }>`
   display: flex;
   justify-content: flex-end;
-  flex-direction: ${({ isSelf }) => (isSelf ? 'row' : 'row-reverse')};
-`;
-
-const MessageWrapper = styled.div<{ isSelf: boolean }>`
-  margin: 0 0 10px 0;
-  text-align: ${({ isSelf }) => (isSelf ? 'right' : 'left')};
-  ${MessageDate} {
-    text-align: ${({ isSelf }) => (isSelf ? 'right' : 'left')};
+  flex-direction: ${({ isLocalMessage }) =>
+    isLocalMessage ? 'row' : 'row-reverse'};
+  .message {
+    margin: 0 0 10px 0;
+    text-align: ${({ isLocalMessage }) => (isLocalMessage ? 'right' : 'left')};
+    ${MessageDate} {
+      text-align: ${({ isLocalMessage }) =>
+        isLocalMessage ? 'right' : 'left'};
+    }
   }
 `;
 
-const SelectionButton = styled('button')<{ isSelf: boolean }>`
+const SelectionButton = styled('button')<{ isLocalMessage: boolean }>`
   cursor: pointer;
   width: 100%;
   font-size: 11px;
   background-color: transparent;
   border-color: ${(p) =>
-    p.isSelf ? p.theme.fontColor : 'rgba(255, 255, 255, 0.4)'};
-  color: ${(p) => (p.isSelf ? p.theme.fontColor : '#fff')};
+    p.isLocalMessage ? p.theme.fontColor : 'rgba(255, 255, 255, 0.4)'};
+  color: ${(p) => (p.isLocalMessage ? p.theme.fontColor : '#fff')};
   border-style: solid;
   border-radius: 9px;
   padding: 5px 10px;
@@ -159,18 +158,18 @@ const SelectionButton = styled('button')<{ isSelf: boolean }>`
   svg {
     margin-right: 5px;
     path {
-      fill: ${(p) => (p.isSelf ? p.theme.fontColor : '#fff')};
+      fill: ${(p) => (p.isLocalMessage ? p.theme.fontColor : '#fff')};
     }
   }
   &:hover {
     border-color: transparent;
-    background-color: rgba(0, 0, 0, ${(p) => (p.isSelf ? 0.1 : 0.2)});
+    background-color: rgba(0, 0, 0, ${(p) => (p.isLocalMessage ? 0.1 : 0.2)});
   }
   &:active,
   &:focus {
     border-color: transparent;
     outline: none;
-    background-color: rgba(0, 0, 0, ${(p) => (p.isSelf ? 0.2 : 0.3)});
+    background-color: rgba(0, 0, 0, ${(p) => (p.isLocalMessage ? 0.2 : 0.3)});
   }
 `;
 
@@ -187,7 +186,6 @@ const MessageContainer = styled.div`
   word-break: break-word;
   margin-bottom: 4px;
   max-width: 240px;
-  display: inline-block;
   text-align: left;
   header {
     margin-bottom: 4px;

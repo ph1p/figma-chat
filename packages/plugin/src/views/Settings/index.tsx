@@ -243,7 +243,7 @@ const Picker = styled.div`
   margin: 0 auto;
 `;
 
-const Tile = styled.div`
+const Tile = styled.div<{ name: string }>`
   width: 45px;
   height: 45px;
   background-color: ${(p) => p.theme.secondaryBackgroundColor};

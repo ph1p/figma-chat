@@ -31,15 +31,6 @@ const main = async () => {
   let secret = figma.root.getPluginData('secret');
   // const ownerId = figma.root.getPluginData('ownerId');
 
-  const settings = await figma.clientStorage.getAsync('user-settings');
-
-  if (!settings || !settings.url) {
-    await figma.clientStorage.setAsync('user-settings', {
-      ...settings,
-      url: DEFAULT_SERVER_URL,
-    });
-  }
-
   try {
     JSON.parse(history);
   } catch {
@@ -81,15 +72,8 @@ const main = async () => {
     secret,
     history,
     instanceId,
-    settings,
   };
 };
-
-const postMessage = (type = '', payload = {}) =>
-  figma.ui.postMessage({
-    type,
-    payload,
-  });
 
 const getSelectionIds = () => figma.currentPage.selection.map((n) => n.id);
 
@@ -100,19 +84,6 @@ const sendSelection = () => {
       name: figma.currentPage.name,
     },
     nodes: getSelectionIds(),
-  });
-};
-
-const sendRootData = async ({ roomName, secret, history, instanceId }) => {
-  const settings = await figma.clientStorage.getAsync('user-settings');
-
-  postMessage('root-data', {
-    roomName,
-    secret,
-    history,
-    instanceId,
-    settings,
-    selection: getSelectionIds(),
   });
 };
 
@@ -151,15 +122,10 @@ EventEmitter.on('minimize', (flag) => {
   figma.ui.resize(flag ? 180 : 333, flag ? 108 : 490);
 });
 
-EventEmitter.on('save-user-settings', async (payload, emit) => {
-  await figma.clientStorage.setAsync('user-settings', payload);
-  const settings = await figma.clientStorage.getAsync('user-settings');
-
-  emit('user-settings', settings);
-});
-
 EventEmitter.on('add-message-to-history', (payload) => {
-  const messageHistory = JSON.parse(figma.root.getPluginData('history'));
+  const messageHistory = JSON.parse(
+    figma.root.getPluginData('history') || '[]'
+  );
 
   figma.root.setPluginData(
     'history',
@@ -169,7 +135,7 @@ EventEmitter.on('add-message-to-history', (payload) => {
 
 EventEmitter.answer(
   'get-history',
-  JSON.parse(figma.root.getPluginData('history'))
+  JSON.parse(figma.root.getPluginData('history') || '[]')
 );
 
 EventEmitter.on('notify', (payload) => {
@@ -182,10 +148,16 @@ EventEmitter.on('notification', (payload) => {
   }
 });
 
-EventEmitter.on('root-data', async (_, emit) => {
+EventEmitter.answer('root-data', async () => {
   const { roomName, secret, history, instanceId } = await main();
 
-  emit('root-data', { roomName, secret, history, instanceId });
+  return {
+    roomName,
+    secret,
+    history,
+    instanceId,
+    selection: getSelectionIds(),
+  };
 });
 
 EventEmitter.on('focus', (payload) => {

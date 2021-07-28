@@ -1,10 +1,9 @@
 import { makeAutoObservable, toJS } from 'mobx';
-import { AsyncTrunk } from 'mobx-sync';
+import { AsyncTrunk, ignore } from 'mobx-sync';
 import React, { FunctionComponent, createRef } from 'react';
 import { createEncryptor } from 'simple-encryptor';
 import { DefaultTheme } from 'styled-components';
 
-import MessageSound from '@shared/assets/sound.mp3';
 import { EColors } from '@shared/utils/constants';
 import {
   ConnectionEnum,
@@ -15,9 +14,13 @@ import { darkTheme, lightTheme } from '@shared/utils/theme';
 
 class RootStore {
   url = 'https://figma-chat.ph1p.dev';
+  @ignore
   room = '1627070280662-EOq7RFhIyf7SIjv';
+  @ignore
   secret = 'YTANPwojS6qIHFAhoJrX';
+  @ignore
   instanceId = '';
+  @ignore
   status = ConnectionEnum.NONE;
   settings: StoreSettings = {
     name: 'Test',
@@ -28,9 +31,12 @@ class RootStore {
     enableNotificationSound: true,
     isDarkTheme: false,
   };
+  @ignore
   online: any[] = [];
   messages: any[] = [];
+  @ignore
   messagesRef = createRef<HTMLDivElement>();
+  @ignore
   autoScrollDisabled = false;
 
   constructor() {
@@ -111,11 +117,6 @@ class RootStore {
           ...data,
         },
       };
-
-      if (this.settings.enableNotificationSound) {
-        const audio = new Audio(MessageSound);
-        audio.play();
-      }
 
       this.messages.push(newMessage);
 

@@ -5,7 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=production node ./dist/server.js",
     "build": "tsc",
-    "dev": "yarn build && NODE_ENV=development concurrently --kill-others \"tsc -w\" \"nodemon ./dist/server.js\"",
+    "dev": "NODE_ENV=development nodemon -e ts  --exec \"tsc && node ./dist/server.js\"",
     "lint": "echo \"not implemented\""
   },
   "license": "MIT",
