@@ -65,6 +65,9 @@ module.exports = (env, argv) => ({
     fallback: {
       crypto: require.resolve('crypto-browserify'),
       stream: require.resolve('stream-browserify'),
+      buffer: require.resolve('buffer/'),
+      string_decoder: false,
+      events: false,
     },
     plugins: [new TsconfigPathsPlugin()],
   },
@@ -73,10 +76,10 @@ module.exports = (env, argv) => ({
     path: path.resolve(__dirname, figmaPlugin.name),
   },
   plugins: [
-    argv.mode !== 'production' ? new BundleAnalyzerPlugin() : null,
-    new webpack.ProvidePlugin({
-      Buffer: ['buffer', 'Buffer'],
-    }),
+    // argv.mode !== 'production' ? new BundleAnalyzerPlugin() : null,
+    // new webpack.ProvidePlugin({
+    //   Buffer: ['buffer', 'Buffer'],
+    // }),
     new webpack.DefinePlugin({
       process: {
         env: {
