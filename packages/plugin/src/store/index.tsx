@@ -1,13 +1,14 @@
-import EventEmitter from '@plugin/shared/EventEmitter';
 import { makeAutoObservable, toJS } from 'mobx';
 import { AsyncTrunk, ignore } from 'mobx-sync';
 import React, { createRef } from 'react';
 import { createEncryptor } from 'simple-encryptor';
 import { DefaultTheme } from 'styled-components';
 
-import MessageSound from '@shared/assets/sound.mp3';
-import { ConnectionEnum, StoreSettings } from '@shared/utils/interfaces';
-import { darkTheme, lightTheme } from '@shared/utils/theme';
+import MessageSound from '@fc/shared/assets/sound.mp3';
+import { ConnectionEnum, StoreSettings } from '@fc/shared/utils/interfaces';
+import { darkTheme, lightTheme } from '@fc/shared/utils/theme';
+
+import EventEmitter from '../shared/EventEmitter';
 
 export class RootStore {
   constructor() {

@@ -1,14 +1,14 @@
-import { Chat } from '@web/views/Chat';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Route, BrowserRouter as Router, Switch, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { useSocket } from '@shared/utils/SocketProvider';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
 import LogoPNG from './assets/logo.png';
 import { useStore } from './store/RootStore';
+import { Chat } from './views/Chat';
 import { Login } from './views/Login';
 import { Settings } from './views/Settings';
 

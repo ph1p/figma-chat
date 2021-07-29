@@ -1,12 +1,11 @@
-import { useStore } from '@web/store/RootStore';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
-import Message from '@shared/components/Message';
-import { MAX_MESSAGES } from '@shared/utils/constants';
-import { MessageData } from '@shared/utils/interfaces';
+import Message from '../components/Message';
+import { MAX_MESSAGES } from '../utils/constants';
+import { MessageData } from '../utils/interfaces';
 
 interface Props {
   chatState: any;

@@ -1,12 +1,12 @@
-import EventEmitter from '@plugin/shared/EventEmitter';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { Messages } from '@shared/components/Messages';
-import { useSocket } from '@shared/utils/SocketProvider';
-import { MAX_MESSAGES } from '@shared/utils/constants';
+import { Messages } from '@fc/shared/components/Messages';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+import { MAX_MESSAGES } from '@fc/shared/utils/constants';
 
+import EventEmitter from '../../shared/EventEmitter';
 import { useStore } from '../../store';
 
 import Chatbar from './components/Chatbar';

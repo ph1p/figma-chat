@@ -3,8 +3,9 @@ import React, { FunctionComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Tooltip from '@shared/components/Tooltip';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import Tooltip from '@fc/shared/components/Tooltip';
+import { ConnectionEnum } from '@fc/shared/utils/interfaces';
+
 
 import { useStore } from '../store';
 

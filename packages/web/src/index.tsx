@@ -6,11 +6,10 @@ import ReactDOM from 'react-dom';
 import io, { Socket } from 'socket.io-client';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
-import { SocketProvider } from '@shared/utils/SocketProvider';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import { SocketProvider } from '@fc/shared/utils/SocketProvider';
+import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
 import { App } from './App';
-import reportWebVitals from './reportWebVitals';
 import { StoreProvider, trunk, useStore } from './store/RootStore';
 
 const GlobalStyle = createGlobalStyle`
@@ -106,5 +105,3 @@ trunk.init().then(() => {
     document.getElementById('root')
   );
 });
-
-reportWebVitals();

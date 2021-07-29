@@ -4,13 +4,13 @@ import React, { FunctionComponent, createRef } from 'react';
 import { createEncryptor } from 'simple-encryptor';
 import { DefaultTheme } from 'styled-components';
 
-import { EColors } from '@shared/utils/constants';
+import { EColors } from '@fc/shared/utils/constants';
 import {
   ConnectionEnum,
   MessageData,
   StoreSettings,
-} from '@shared/utils/interfaces';
-import { darkTheme, lightTheme } from '@shared/utils/theme';
+} from '@fc/shared/utils/interfaces';
+import { darkTheme, lightTheme } from '@fc/shared/utils/theme';
 
 class RootStore {
   settings: StoreSettings = {

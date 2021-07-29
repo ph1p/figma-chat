@@ -3,11 +3,11 @@ import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import EmojiIcon from '@shared/assets/icons/EmojiIcon';
-import SendArrowIcon from '@shared/assets/icons/SendArrowIcon';
-import Tooltip from '@shared/components/Tooltip';
-import { useSocket } from '@shared/utils/SocketProvider';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import EmojiIcon from '@fc/shared/assets/icons/EmojiIcon';
+import SendArrowIcon from '@fc/shared/assets/icons/SendArrowIcon';
+import Tooltip from '@fc/shared/components/Tooltip';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
 import { useStore } from '../../../store/RootStore';
 

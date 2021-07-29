@@ -1,5 +1,5 @@
 import './store';
-import { generateString } from '@shared/utils/helpers';
+import { generateString } from '@fc/shared/utils/helpers';
 
 import EventEmitter from '../shared/EventEmitter';
 

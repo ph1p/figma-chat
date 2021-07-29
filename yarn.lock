@@ -1666,22 +1666,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@craco/craco@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "@craco/craco@npm:6.2.0"
-  dependencies:
-    cross-spawn: ^7.0.0
-    lodash: ^4.17.15
-    semver: ^7.3.2
-    webpack-merge: ^4.2.2
-  peerDependencies:
-    react-scripts: ^4.0.0
-  bin:
-    craco: bin/craco.js
-  checksum: 51fb534a3e1a3cefdf2722201d532457c47a58a93e19115ad9ae6ea731ee4cd468e4a63959e5f793cc320b87557b2ef5ead76b4af0df955075a8d37aae2bc26d
-  languageName: node
-  linkType: hard
-
 "@csstools/convert-colors@npm:^1.4.0":
   version: 1.4.0
   resolution: "@csstools/convert-colors@npm:1.4.0"
@@ -1750,12 +1734,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@figma/plugin-typings@npm:^1.26.0":
-  version: 1.28.0
-  resolution: "@figma/plugin-typings@npm:1.28.0"
-  checksum: 71b812e13da1a074447be3dee1bee060c8daedd6642964817aa25868519c8ec337511abde5f99a4008cbbdec8dc6bb6a6beb8951f77063b28a323de9e011940c
+"@fc/shared@link:../shared/src::locator=plugin%40workspace%3Apackages%2Fplugin":
+  version: 0.0.0-use.local
+  resolution: "@fc/shared@link:../shared/src::locator=plugin%40workspace%3Apackages%2Fplugin"
   languageName: node
-  linkType: hard
+  linkType: soft
+
+"@fc/shared@link:../shared/src::locator=web%40workspace%3Apackages%2Fweb":
+  version: 0.0.0-use.local
+  resolution: "@fc/shared@link:../shared/src::locator=web%40workspace%3Apackages%2Fweb"
+  languageName: node
+  linkType: soft
 
 "@hapi/address@npm:2.x.x":
   version: 2.1.4
@@ -2693,6 +2682,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/figma@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@types/figma@npm:1.0.4"
+  checksum: 45001fc7ff85f1cb24d00d1f6a068eb98afa04b2446e72edb71abd1c34bc24b833327f4c27484a5b527cd054153ac75e6332f7534217f118ddb097ea4f2399ee
+  languageName: node
+  linkType: hard
+
 "@types/glob@npm:^7.1.1":
   version: 7.1.4
   resolution: "@types/glob@npm:7.1.4"
@@ -3069,7 +3065,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^4.28.4, @typescript-eslint/eslint-plugin@npm:^4.5.0":
+"@typescript-eslint/eslint-plugin@npm:^4.28.5, @typescript-eslint/eslint-plugin@npm:^4.5.0":
   version: 4.28.5
   resolution: "@typescript-eslint/eslint-plugin@npm:4.28.5"
   dependencies:
@@ -3643,6 +3639,19 @@ __metadata:
   version: 4.2.2
   resolution: "@xtuc/long@npm:4.2.2"
   checksum: 8ed0d477ce3bc9c6fe2bf6a6a2cc316bb9c4127c5a7827bae947fa8ec34c7092395c5a283cc300c05b5fa01cbbfa1f938f410a7bf75db7c7846fea41949989ec
+  languageName: node
+  linkType: hard
+
+"@yarnpkg/esbuild-plugin-pnp@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@yarnpkg/esbuild-plugin-pnp@npm:1.0.0"
+  dependencies:
+    tslib: ^1.13.0
+  peerDependencies:
+    esbuild: ">=0.8.36"
+  bin:
+    esbuild-plugin-pnp: ./lib/cli.js
+  checksum: 0f383fd0e43ab037d9b317b7a75263b7a56b910d8c6366471cfbda049d58cc9931594ab083ec2fbc75e4ecdf135d48c855de193d652b26e34ca0cd4423073a1f
   languageName: node
   linkType: hard
 
@@ -6990,7 +6999,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-loader@npm:^2.13.1":
+"esbuild-loader@npm:*, esbuild-loader@npm:^2.13.1":
   version: 2.13.1
   resolution: "esbuild-loader@npm:2.13.1"
   dependencies:
@@ -7237,7 +7246,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prefer-arrow@npm:^1.2.3":
+"eslint-plugin-prefer-arrow@npm:*, eslint-plugin-prefer-arrow@npm:^1.2.3":
   version: 1.2.3
   resolution: "eslint-plugin-prefer-arrow@npm:1.2.3"
   peerDependencies:
@@ -7261,7 +7270,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-app@npm:^6.2.2":
+"eslint-plugin-react-app@npm:*, eslint-plugin-react-app@npm:^6.2.2":
   version: 6.2.2
   resolution: "eslint-plugin-react-app@npm:6.2.2"
   dependencies:
@@ -7827,9 +7836,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "figma-chat@workspace:."
   dependencies:
+    "@typescript-eslint/eslint-plugin": ^4.28.5
     "@typescript-eslint/parser": ^4.28.5
+    eslint: ^7.31.0
+    eslint-config-prettier: ^8.3.0
     eslint-import-resolver-node: ^0.3.4
+    eslint-plugin-import: ^2.23.4
+    eslint-plugin-prefer-arrow: ^1.2.3
     eslint-plugin-prettier: ^3.4.0
+    eslint-plugin-react: ^7.24.0
+    eslint-plugin-react-app: ^6.2.2
+    prettier: ^2.3.2
+    typescript: ^4.3.5
   languageName: unknown
   linkType: soft
 
@@ -12440,25 +12458,17 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "plugin@workspace:packages/plugin"
   dependencies:
-    "@figma/plugin-typings": ^1.26.0
+    "@fc/shared": "link:../shared/src"
+    "@types/figma": ^1.0.4
     "@types/node": ^16.4.2
     "@types/react": ^17.0.15
     "@types/react-dom": ^17.0.9
     "@types/styled-components": ^5.1.11
-    "@typescript-eslint/eslint-plugin": ^4.28.4
-    "@typescript-eslint/parser": ^4.28.5
     buffer: ^6.0.3
     create-file-webpack: ^1.0.2
     crypto-browserify: ^3.12.0
     css-loader: ^6.2.0
     esbuild-loader: ^2.13.1
-    eslint: ^7.31.0
-    eslint-config-prettier: ^8.3.0
-    eslint-import-resolver-node: ^0.3.4
-    eslint-plugin-import: ^2.23.4
-    eslint-plugin-prefer-arrow: ^1.2.3
-    eslint-plugin-react: ^7.24.0
-    eslint-plugin-react-app: ^6.2.2
     html-webpack-plugin: ^5.3.2
     mobx: ^6.3.2
     mobx-react-lite: ^3.2.0
@@ -12473,7 +12483,6 @@ fsevents@^1.2.7:
     styled-components: ^5.3.0
     terser-webpack-plugin: v5.1.4
     tsconfig-paths-webpack-plugin: ^3.5.1
-    typescript: ^4.3.5
     uniqid: ^5.3.0
     url-loader: ^4.1.1
     webpack: ^5.47.0
@@ -13409,6 +13418,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"prettier@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "prettier@npm:2.3.2"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 17ce5784ac67621c292df58e2da60b2ee150c2d6aebea22a6ad9e52fcd6a5e66c349d0a8436ea3bd8ff9d778920a5f68000d7625b74f43558718a49755aa5259
+  languageName: node
+  linkType: hard
+
 "pretty-bytes@npm:^5.3.0":
   version: 5.6.0
   resolution: "pretty-bytes@npm:5.6.0"
@@ -13775,6 +13793,19 @@ fsevents@^1.2.7:
     regenerator-runtime: ^0.13.7
     whatwg-fetch: ^3.4.1
   checksum: 99e52a6b2229c7ca730cfd44ac95640f955be71d144225bd6c24fa47922a742658a371d0a2f0876d732533f1055b7cd7e9d534c89c29f8ca889ecd1b8d15f065
+  languageName: node
+  linkType: hard
+
+"react-app-rewired@npm:^2.1.8":
+  version: 2.1.8
+  resolution: "react-app-rewired@npm:2.1.8"
+  dependencies:
+    semver: ^5.6.0
+  peerDependencies:
+    react-scripts: ">=2.1.3"
+  bin:
+    react-app-rewired: bin/index.js
+  checksum: eb4a3003b8a5950a8cad73f459b3dc944be9569291cb9374ba61b837f89329301eff68cf3d42b7d7b2f6e583c6e9229440d98d2aac002e1e31a6c549a1574d7a
   languageName: node
   linkType: hard
 
@@ -14927,19 +14958,9 @@ resolve@^2.0.0-next.3:
   resolution: "server@workspace:packages/server"
   dependencies:
     "@types/express": ^4.17.13
-    "@typescript-eslint/eslint-plugin": ^4.28.4
-    "@typescript-eslint/parser": ^4.28.5
-    eslint: ^7.31.0
-    eslint-config-prettier: ^8.3.0
-    eslint-import-resolver-node: ^0.3.4
-    eslint-plugin-import: ^2.23.4
-    eslint-plugin-prefer-arrow: ^1.2.3
-    eslint-plugin-react: ^7.24.0
-    eslint-plugin-react-app: ^6.2.2
     express: ^4.17.1
     nodemon: ^2.0.12
     socket.io: ^4.1.3
-    typescript: ^4.3.5
   languageName: unknown
   linkType: soft
 
@@ -15023,15 +15044,6 @@ resolve@^2.0.0-next.3:
     "@types/react-router-dom": ^5.1.8
     "@types/react-timeago": ^4.1.3
     "@types/styled-components": ^5.1.11
-    "@typescript-eslint/eslint-plugin": ^4.28.4
-    "@typescript-eslint/parser": ^4.28.5
-    eslint: ^7.31.0
-    eslint-config-prettier: ^8.3.0
-    eslint-import-resolver-node: ^0.3.4
-    eslint-plugin-import: ^2.23.4
-    eslint-plugin-prefer-arrow: ^1.2.3
-    eslint-plugin-react: ^7.24.0
-    eslint-plugin-react-app: ^6.2.2
     linkifyjs: ^3.0.0-beta.3
     mobx: ^6.3.2
     mobx-react-lite: ^3.2.0
@@ -15042,7 +15054,6 @@ resolve@^2.0.0-next.3:
     react-timeago: ^6.2.1
     socket.io-client: ^4.1.3
     styled-components: ^5.3.0
-    typescript: ^4.3.5
   languageName: unknown
   linkType: soft
 
@@ -16342,7 +16353,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.8.1":
+"tslib@npm:^1.13.0, tslib@npm:^1.8.1":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
@@ -16993,8 +17004,7 @@ typescript@^4.3.5:
   version: 0.0.0-use.local
   resolution: "web@workspace:packages/web"
   dependencies:
-    "@craco/craco": ^6.2.0
-    "@figma/plugin-typings": ^1.26.0
+    "@fc/shared": "link:../shared/src"
     "@testing-library/jest-dom": ^5.14.1
     "@testing-library/react": ^12.0.0
     "@testing-library/user-event": ^13.2.1
@@ -17004,29 +17014,25 @@ typescript@^4.3.5:
     "@types/react-dom": ^17.0.9
     "@types/react-router-dom": ^5.1.8
     "@types/styled-components": ^5.1.11
-    "@typescript-eslint/eslint-plugin": ^4.28.4
-    "@typescript-eslint/parser": ^4.28.5
+    "@yarnpkg/esbuild-plugin-pnp": ^1.0.0
+    buffer: ^6.0.3
+    crypto-browserify: ^3.12.0
+    css-loader: ^6.2.0
     esbuild-loader: ^2.13.1
-    eslint: ^7.31.0
-    eslint-config-prettier: ^8.3.0
-    eslint-import-resolver-node: ^0.3.4
-    eslint-plugin-import: ^2.23.4
-    eslint-plugin-prefer-arrow: ^1.2.3
-    eslint-plugin-react: ^7.24.0
-    eslint-plugin-react-app: ^6.2.2
     mobx: ^6.3.2
     mobx-react-lite: ^3.2.0
     mobx-sync: ^3.0.0
     pnp-webpack-plugin: ^1.7.0
     react: ^17.0.2
+    react-app-rewired: ^2.1.8
     react-dom: ^17.0.2
     react-router-dom: ^5.2.0
     react-scripts: 4.0.3
     simple-encryptor: ^4.0.0
     socket.io-client: ^4.1.3
+    stream-browserify: ^3.0.0
     styled-components: ^5.3.0
     ts-loader: 8.2.0
-    tsconfig-paths-webpack-plugin: ^3.5.1
     typescript: ^4.3.5
     web-vitals: ^2.1.0
   languageName: unknown
@@ -17183,15 +17189,6 @@ typescript@^4.3.5:
   peerDependencies:
     webpack: 2 || 3 || 4
   checksum: ed1387774031a59bc1bd5f79150e7a49dcf5048a6d5e9652672637bed7f93df6220cbd88b2e371e7c8c8e7640b3a8ed6895f771c6b05a8bb90b721f82001ac25
-  languageName: node
-  linkType: hard
-
-"webpack-merge@npm:^4.2.2":
-  version: 4.2.2
-  resolution: "webpack-merge@npm:4.2.2"
-  dependencies:
-    lodash: ^4.17.15
-  checksum: ce58bc8ab53a3dd5d9a0df65684571349eef53372bf8f224521072110485391335b26ab097c5f07829b88d0c146056944149566e5a953f05997b0fe2cbaf8dd6
   languageName: node
   linkType: hard
 

@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "PORT=3001 craco start",
-    "build": "craco build",
-    "test": "craco test",
+    "start": "PORT=3001 react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "lint": "eslint  --ext .tsx,.ts,.json,.js src/ --fix",
-    "eject": "craco eject"
+    "eject": "react-app-rewired eject"
   },
   "dependencies": {
+    "@fc/shared": "link:../shared/src",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "mobx-sync": "^3.0.0",
@@ -19,9 +22,27 @@
     "react-scripts": "4.0.3",
     "simple-encryptor": "^4.0.0",
     "socket.io-client": "^4.1.3",
+    "stream-browserify": "^3.0.0",
     "styled-components": "^5.3.0",
-    "tsconfig-paths-webpack-plugin": "^3.5.1",
     "web-vitals": "^2.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.2",
+    "@types/react": "^17.0.15",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-router-dom": "^5.1.8",
+    "@types/styled-components": "^5.1.11",
+    "@yarnpkg/esbuild-plugin-pnp": "^1.0.0",
+    "css-loader": "^6.2.0",
+    "esbuild-loader": "^2.13.1",
+    "pnp-webpack-plugin": "^1.7.0",
+    "react-app-rewired": "^2.1.8",
+    "ts-loader": "8.2.0",
+    "typescript": "^4.3.5"
   },
   "browserslist": {
     "production": [
@@ -34,31 +55,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@craco/craco": "^6.2.0",
-    "@figma/plugin-typings": "^1.26.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^16.4.2",
-    "@types/react": "^17.0.15",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-router-dom": "^5.1.8",
-    "@types/styled-components": "^5.1.11",
-    "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "@typescript-eslint/parser": "^4.28.5",
-    "esbuild-loader": "^2.13.1",
-    "eslint": "^7.31.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-node": "^0.3.4",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-prefer-arrow": "^1.2.3",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-app": "^6.2.2",
-    "pnp-webpack-plugin": "^1.7.0",
-    "ts-loader": "8.2.0",
-    "typescript": "^4.3.5"
   }
 }

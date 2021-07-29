@@ -1,15 +1,16 @@
+
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, useRef, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
-import BellIcon from '@shared/assets/icons/BellIcon';
-import MessageIcon from '@shared/assets/icons/MessageIcon';
-import ThemeIcon from '@shared/assets/icons/ThemeIcon';
-import TrashIcon from '@shared/assets/icons/TrashIcon';
-import Tooltip from '@shared/components/Tooltip';
-import { useSocket } from '@shared/utils/SocketProvider';
-import { DEFAULT_SERVER_URL } from '@shared/utils/constants';
+import BellIcon from '@fc/shared/assets/icons/BellIcon';
+import MessageIcon from '@fc/shared/assets/icons/MessageIcon';
+import ThemeIcon from '@fc/shared/assets/icons/ThemeIcon';
+import TrashIcon from '@fc/shared/assets/icons/TrashIcon';
+import Tooltip from '@fc/shared/components/Tooltip';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+import { DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 
 import pkg from '../../../package.json';
 import { useStore } from '../../store';

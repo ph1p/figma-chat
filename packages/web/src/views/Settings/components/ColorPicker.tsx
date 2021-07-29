@@ -1,11 +1,12 @@
-import { useStore } from '@web/store/RootStore';
 import { observer } from 'mobx-react-lite';
 import React, { useRef, FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import Tooltip from '@shared/components/Tooltip';
-import { useSocket } from '@shared/utils/SocketProvider';
-import { EColors } from '@shared/utils/constants';
+import Tooltip from '@fc/shared/components/Tooltip';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+import { EColors } from '@fc/shared/utils/constants';
+
+import { useStore } from '../../../store/RootStore';
 
 const ColorPicker: FunctionComponent = observer(() => {
   const store = useStore();

@@ -3,10 +3,9 @@ import React, { FunctionComponent } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
-
-import ChatIcon from '@shared/assets/icons/ChatIcon';
-import SettingsIcon from '@shared/assets/icons/SettingsIcon';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import ChatIcon from '@fc/shared/assets/icons/ChatIcon';
+import SettingsIcon from '@fc/shared/assets/icons/SettingsIcon';
+import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
 import { useStore } from '../store';
 

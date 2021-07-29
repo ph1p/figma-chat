@@ -10,10 +10,10 @@ import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import nowStrings from 'react-timeago/lib/language-strings/en-short';
 import styled, { css } from 'styled-components';
 
-import HashIcon from '@shared/assets/icons/HashIcon';
-import { EColors } from '@shared/utils/constants';
-import { isOnlyEmoji } from '@shared/utils/helpers';
-import { MessageData } from '@shared/utils/interfaces';
+import HashIcon from '../assets/icons/HashIcon';
+import { EColors } from '../utils/constants';
+import { isOnlyEmoji } from '../utils/helpers';
+import { MessageData } from '../utils/interfaces';
 
 const formatter = buildFormatter(nowStrings);
 

@@ -4,7 +4,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { NotificationParams } from '@shared/utils/interfaces';
+import { NotificationParams } from '@fc/shared/utils/interfaces';
 
 import { useStore } from '../store';
 

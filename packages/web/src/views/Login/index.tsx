@@ -1,10 +1,11 @@
-import { useStore } from '@web/store/RootStore';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import React, { useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 
-import { useSocket } from '@shared/utils/SocketProvider';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+import { ConnectionEnum } from '@fc/shared/utils/interfaces';
+
+import { useStore } from '../../store/RootStore';
 
 export const Login = observer(() => {
   const store = useStore();
@@ -22,9 +23,13 @@ export const Login = observer(() => {
   };
 
   if (store.status !== ConnectionEnum.CONNECTED) {
-    return store.status === ConnectionEnum.ERROR
-      ? 'connection failed 🙈'
-      : 'connecting...';
+    return (
+      <>
+        {store.status === ConnectionEnum.ERROR
+          ? 'connection failed 🙈'
+          : 'connecting...'}
+      </>
+    );
   }
 
   return (

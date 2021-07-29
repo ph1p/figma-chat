@@ -1,16 +1,3 @@
-import Header from '@plugin/components/Header';
-import Notifications from '@plugin/components/Notifications';
-import {
-  getStoreFromMain,
-  StoreProvider,
-  trunk,
-  useStore,
-} from '@plugin/store';
-import '@plugin/style.css';
-import ChatView from '@plugin/views/Chat';
-import MinimizedView from '@plugin/views/Minimized';
-import SettingsView from '@plugin/views/Settings';
-import UserListView from '@plugin/views/UserList';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom';
@@ -23,25 +10,18 @@ import {
 import io, { Socket } from 'socket.io-client';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
-import { SocketProvider } from '@shared/utils/SocketProvider';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import { SocketProvider } from '@fc/shared/utils/SocketProvider';
+import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
+import Header from './components/Header';
+import Notifications from './components/Notifications';
 import EventEmitter from './shared/EventEmitter';
-
-// onmessage = (message) => {
-//   if (message.data.pluginMessage) {
-//     const { type } = message.data.pluginMessage;
-
-//     // initialize
-//     if (type === 'ready') {
-//       sendMainMessage('initialize');
-//     }
-
-//     if (type === 'initialize') {
-//       init();
-//     }
-//   }
-// };
+import { getStoreFromMain, StoreProvider, trunk, useStore } from './store';
+import ChatView from './views/Chat';
+import MinimizedView from './views/Minimized';
+import './style.css';
+import SettingsView from './views/Settings';
+import UserListView from './views/UserList';
 
 const GlobalStyle = createGlobalStyle`
   body {

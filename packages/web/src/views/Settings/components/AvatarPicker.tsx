@@ -1,10 +1,11 @@
-import { useStore } from '@web/store/RootStore';
 import { observer } from 'mobx-react-lite';
 import React, { useRef, FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import Tooltip from '@shared/components/Tooltip';
-import { useSocket } from '@shared/utils/SocketProvider';
+import Tooltip from '@fc/shared/components/Tooltip';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+
+import { useStore } from '../../../store/RootStore';
 
 const AvatarPicker: FunctionComponent = observer(() => {
   const store = useStore();
@@ -30,28 +31,42 @@ const AvatarPicker: FunctionComponent = observer(() => {
       )}
     >
       <Wrapper>
-        {['', '🐵', '🐮', '🐷', '🐨', '🦊', '🐻', '🐶', '🐸', '🐹'].map(
-          (emoji) => (
-            <div
-              key={emoji}
-              className={
-                (emoji === '' ? 'empty ' : ' ') +
-                (emoji === store.settings.avatar ? 'active' : '')
-              }
-              onClick={() => {
-                pickerRef.current.hide();
-                store.persistSettings(
-                  {
-                    avatar: emoji,
-                  },
-                  socket
-                );
-              }}
-            >
-              {emoji}
-            </div>
-          )
-        )}
+        {[
+          '',
+          '🐵',
+          '🐮',
+          '🐷',
+          '🐨',
+          '🦊',
+          '🐻',
+          '🐶',
+          '🐸',
+          '🐹',
+          '🦄',
+          '🐔',
+          '🐧',
+          '🐦',
+          '🐺',
+        ].map((emoji) => (
+          <div
+            key={emoji}
+            className={
+              (emoji === '' ? 'empty ' : ' ') +
+              (emoji === store.settings.avatar ? 'active' : '')
+            }
+            onClick={() => {
+              pickerRef.current.hide();
+              store.persistSettings(
+                {
+                  avatar: emoji,
+                },
+                socket
+              );
+            }}
+          >
+            {emoji}
+          </div>
+        ))}
       </Wrapper>
     </Tooltip>
   );

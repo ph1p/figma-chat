@@ -1,14 +1,4 @@
 {
-  "compilerOptions": {
-    "baseUrl": "./packages",
-    "paths": {
-      "@plugin/*": ["plugin/src/*"],
-      "@web/*": ["web/src/*"],
-      "@shared/*": ["shared/src/*"],
-      "@server/*": ["server/src/*"]
-    },
-    "typeRoots": ["./node_modules/@types", "./node_modules/@figma"]
-  },
   "files": [
     "./packages/shared/types/styled.d.ts",
     "./packages/shared/types/files.d.ts"

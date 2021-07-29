@@ -1,10 +1,11 @@
-import { useStore } from '@web/store/RootStore';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
-import { Messages } from '@shared/components/Messages';
-import { MAX_MESSAGES } from '@shared/utils/constants';
+import { Messages } from '@fc/shared/components/Messages';
+import { MAX_MESSAGES } from '@fc/shared/utils/constants';
+
+import { useStore } from '../../store/RootStore';
 
 import { ChatBar } from './components/ChatBar';
 

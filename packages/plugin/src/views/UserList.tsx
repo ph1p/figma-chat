@@ -3,7 +3,8 @@ import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { useSocket } from '@shared/utils/SocketProvider';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+
 
 import { useStore } from '../store';
 

@@ -2,8 +2,9 @@ import { observer } from 'mobx-react-lite';
 import React, { useRef, FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import Tooltip from '@shared/components/Tooltip';
-import { useSocket } from '@shared/utils/SocketProvider';
+import Tooltip from '@fc/shared/components/Tooltip';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+
 
 import { useStore } from '../../../store';
 

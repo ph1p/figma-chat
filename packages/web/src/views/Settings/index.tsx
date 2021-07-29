@@ -1,18 +1,15 @@
-import { useStore } from '@web/store/RootStore';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, useRef, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
-import BellIcon from '@shared/assets/icons/BellIcon';
-import MessageIcon from '@shared/assets/icons/MessageIcon';
-import ThemeIcon from '@shared/assets/icons/ThemeIcon';
-import TrashIcon from '@shared/assets/icons/TrashIcon';
-import Tooltip from '@shared/components/Tooltip';
-import { useSocket } from '@shared/utils/SocketProvider';
-import { DEFAULT_SERVER_URL } from '@shared/utils/constants';
+import ThemeIcon from '@fc/shared/assets/icons/ThemeIcon';
+import TrashIcon from '@fc/shared/assets/icons/TrashIcon';
+import Tooltip from '@fc/shared/components/Tooltip';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
+import { DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 
-import pkg from '../../../package.json';
+import { useStore } from '../../store/RootStore';
 
 import AvatarPicker from './components/AvatarPicker';
 import ColorPicker from './components/ColorPicker';
@@ -159,9 +156,7 @@ export const Settings: FunctionComponent = observer(() => {
         <VersionNote
           target="_blank"
           href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
-        >
-          v{pkg.version}
-        </VersionNote>
+        ></VersionNote>
       </div>
     </Wrapper>
   );

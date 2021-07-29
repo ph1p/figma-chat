@@ -69,7 +69,7 @@ module.exports = (env, argv) => ({
       string_decoder: false,
       events: false,
     },
-    plugins: [new TsconfigPathsPlugin()],
+    // plugins: [new TsconfigPathsPlugin()],
   },
   output: {
     filename: '[name].js',

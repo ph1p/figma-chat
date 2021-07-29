@@ -4,10 +4,11 @@ import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import EmojiIcon from '@shared/assets/icons/EmojiIcon';
-import SendArrowIcon from '@shared/assets/icons/SendArrowIcon';
-import Tooltip, { RefTooltip } from '@shared/components/Tooltip';
-import { ConnectionEnum } from '@shared/utils/interfaces';
+import EmojiIcon from '@fc/shared/assets/icons/EmojiIcon';
+import SendArrowIcon from '@fc/shared/assets/icons/SendArrowIcon';
+import Tooltip, { RefTooltip } from '@fc/shared/components/Tooltip';
+import { ConnectionEnum } from '@fc/shared/utils/interfaces';
+
 
 import { useStore } from '../../../store';
 
