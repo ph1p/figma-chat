@@ -4,7 +4,7 @@
   "description": "",
   "main": "code.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack --mode=production && rm ./Figma\\ Chat/ui.js*",
+    "build": "NODE_ENV=production webpack --mode=production && rm ../../release/Figma\\ Chat/ui.js  ../../release/Figma\\ Chat/ui.js.LICENSE.txt",
     "lint": "eslint  --ext .tsx,.ts,.json,.js src/ --fix",
     "start": "DEBUG=* webpack --watch"
   },

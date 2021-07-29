@@ -73,7 +73,7 @@ module.exports = (env, argv) => ({
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, figmaPlugin.name),
+    path: path.resolve(__dirname, '..', '..', 'release', figmaPlugin.name),
   },
   plugins: [
     // argv.mode !== 'production' ? new BundleAnalyzerPlugin() : null,
@@ -109,7 +109,7 @@ module.exports = (env, argv) => ({
       `,
     }),
     new CreateFileWebpack({
-      path: path.resolve(__dirname, figmaPlugin.name),
+      path: path.resolve(__dirname, '..', '..', 'release', figmaPlugin.name),
       fileName: 'manifest.json',
       content: JSON.stringify(figmaPlugin),
     }),

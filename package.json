@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "build": "yarn build:plugin && yarn build:web && yarn build:server",
     "start:plugin": "yarn workspace plugin start",
     "start:web": "yarn workspace web start",
     "start:server": "yarn workspace server dev",
