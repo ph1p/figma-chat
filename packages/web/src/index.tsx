@@ -15,6 +15,7 @@ import { StoreProvider, trunk, useStore } from './store/RootStore';
 const GlobalStyle = createGlobalStyle`
   #root, body, html {
     height: 100%;
+    background-color: ${(p) => p.theme.secondaryBackgroundColor};
   }
 
   ::-webkit-scrollbar-thumb {

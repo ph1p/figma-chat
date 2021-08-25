@@ -42,7 +42,6 @@ export const Settings: FunctionComponent = observer(() => {
   }, []);
 
   useEffect(() => {
-    console.log(store);
     settings.setName(store.settings.name);
     settings.setUrl(store.settings.url);
     settings.setEnableNotificationTooltip(
@@ -64,99 +63,101 @@ export const Settings: FunctionComponent = observer(() => {
 
   return (
     <Wrapper>
-      <Picker>
-        <AvatarPicker />
-        <ColorPicker />
-      </Picker>
-
-      <Username>
-        <label>Username</label>
-        <input
-          type="text"
-          ref={nameInputRef}
-          value={settings.name}
-          onBlur={() => saveSettings(false)}
-          onChange={({ target }: any) =>
-            settings.setName(target.value.substr(0, 20))
-          }
-          onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
-        />
-      </Username>
-      <ServerUrl>
-        <label htmlFor="server-url">
-          Server-URL
-          <span
-            onClick={() => {
-              settings.setUrl(DEFAULT_SERVER_URL);
-              saveSettings(settings.url !== store.settings.url);
-            }}
-          >
-            (reset)
-          </span>
-        </label>
-
-        <input
-          id="server-url"
-          type="text"
-          value={settings.url}
-          onBlur={({ target }: any) =>
-            saveSettings(target.value !== store.settings.url)
-          }
-          onChange={({ target }: any) =>
-            settings.setUrl(target.value.substr(0, 255))
-          }
-          onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
-        />
-      </ServerUrl>
-
       <div>
-        <ShortcutTiles>
-          <Tooltip
-            hover
-            handler={observer(
-              (_: any, ref: any) => (
-                <Tile
-                  name="trash"
-                  ref={ref}
-                  onClick={
-                    () => {}
-                    // store.clearChatHistory(() => saveSettings(true))
-                  }
-                >
-                  <TrashIcon />
-                </Tile>
-              ),
-              { forwardRef: true }
-            )}
-          >
-            History
-          </Tooltip>
-          <Tooltip
-            hover
-            handler={observer(
-              (_: any, ref: any) => (
-                <Tile
-                  name="theme"
-                  ref={ref}
-                  onClick={() => {
-                    store.setIsDarkTheme(!store.settings.isDarkTheme);
-                    saveSettings(false);
-                  }}
-                >
-                  <ThemeIcon active={store.settings.isDarkTheme} />
-                </Tile>
-              ),
-              { forwardRef: true }
-            )}
-          >
-            Theme
-          </Tooltip>
-        </ShortcutTiles>
+        <Picker>
+          <AvatarPicker />
+          <ColorPicker />
+        </Picker>
 
-        <VersionNote
-          target="_blank"
-          href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
-        ></VersionNote>
+        <Username>
+          <label>Username</label>
+          <input
+            type="text"
+            ref={nameInputRef}
+            value={settings.name}
+            onBlur={() => saveSettings(false)}
+            onChange={({ target }: any) =>
+              settings.setName(target.value.substr(0, 20))
+            }
+            onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
+          />
+        </Username>
+        <ServerUrl>
+          <label htmlFor="server-url">
+            Server-URL
+            <span
+              onClick={() => {
+                settings.setUrl(DEFAULT_SERVER_URL);
+                saveSettings(settings.url !== store.settings.url);
+              }}
+            >
+              (reset)
+            </span>
+          </label>
+
+          <input
+            id="server-url"
+            type="text"
+            value={settings.url}
+            onBlur={({ target }: any) =>
+              saveSettings(target.value !== store.settings.url)
+            }
+            onChange={({ target }: any) =>
+              settings.setUrl(target.value.substr(0, 255))
+            }
+            onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
+          />
+        </ServerUrl>
+
+        <div>
+          <ShortcutTiles>
+            <Tooltip
+              hover
+              handler={observer(
+                (_: any, ref: any) => (
+                  <Tile
+                    name="trash"
+                    ref={ref}
+                    onClick={
+                      () => {}
+                      // store.clearChatHistory(() => saveSettings(true))
+                    }
+                  >
+                    <TrashIcon />
+                  </Tile>
+                ),
+                { forwardRef: true }
+              )}
+            >
+              History
+            </Tooltip>
+            <Tooltip
+              hover
+              handler={observer(
+                (_: any, ref: any) => (
+                  <Tile
+                    name="theme"
+                    ref={ref}
+                    onClick={() => {
+                      store.setIsDarkTheme(!store.settings.isDarkTheme);
+                      saveSettings(false);
+                    }}
+                  >
+                    <ThemeIcon active={store.settings.isDarkTheme} />
+                  </Tile>
+                ),
+                { forwardRef: true }
+              )}
+            >
+              Theme
+            </Tooltip>
+          </ShortcutTiles>
+
+          <VersionNote
+            target="_blank"
+            href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
+          ></VersionNote>
+        </div>
       </div>
     </Wrapper>
   );
@@ -232,7 +233,7 @@ const ShortcutTiles = styled.div`
   display: flex;
   width: 207px;
   justify-content: space-between;
-  margin: 51px auto 64px;
+  margin: 51px auto 0;
 `;
 
 const VersionNote = styled.a`
@@ -255,9 +256,10 @@ const Wrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   z-index: 1;
-  padding: 49px 32px 0;
+  height: 100%;
+  padding: 40px;
 
   h4 {
     margin: 20px 0 15px;

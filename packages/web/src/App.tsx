@@ -13,21 +13,24 @@ import { Login } from './views/Login';
 import { Settings } from './views/Settings';
 
 const Wrapper = styled.div`
-  height: 550px;
+  height: 100%;
   max-height: 100%;
   max-width: 500px;
   background-color: ${(p) => p.theme.backgroundColor};
   @media (min-width: 450px) {
     border-radius: 8px;
-    box-shadow: 0 0 100px #eee;
+    box-shadow: 0 0 100px ${(p) => p.theme.backgroundColor};
     position: relative;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    height: 550px;
   }
 `;
 
-const Content = styled.div``;
+const Content = styled.div`
+  height: calc(100% - 50px);
+`;
 const Right = styled.div`
   display: flex;
   align-items: center;

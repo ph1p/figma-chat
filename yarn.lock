@@ -1746,31 +1746,6 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@fc/shared@workspace:packages/shared":
-  version: 0.0.0-use.local
-  resolution: "@fc/shared@workspace:packages/shared"
-  dependencies:
-    "@popperjs/core": ^2.9.3
-    "@types/linkifyjs": ^2.1.4
-    "@types/node": ^16.7.1
-    "@types/react": ^17.0.19
-    "@types/react-dom": ^17.0.9
-    "@types/react-router-dom": ^5.1.8
-    "@types/react-timeago": ^4.1.3
-    "@types/styled-components": ^5.1.12
-    linkifyjs: ^3.0.0-beta.3
-    mobx: ^6.3.2
-    mobx-react-lite: ^3.2.0
-    react: ^17.0.2
-    react-dom: ^17.0.2
-    react-popper: ^2.2.5
-    react-spring: ^9.2.4
-    react-timeago: ^6.2.1
-    socket.io-client: ^4.1.3
-    styled-components: ^5.3.1
-  languageName: unknown
-  linkType: soft
-
 "@hapi/address@npm:2.x.x":
   version: 2.1.4
   resolution: "@hapi/address@npm:2.1.4"
@@ -15108,6 +15083,31 @@ resolve@^2.0.0-next.3:
   checksum: f4c1de0837f106d2dbbfd5d0720a5d059d1c66b42b580965c8f06bb1db684be8783538b684092648c981294bf817869f743a066538771dbecb293df78f765e00
   languageName: node
   linkType: hard
+
+"shared@workspace:packages/shared":
+  version: 0.0.0-use.local
+  resolution: "shared@workspace:packages/shared"
+  dependencies:
+    "@popperjs/core": ^2.9.3
+    "@types/linkifyjs": ^2.1.4
+    "@types/node": ^16.7.1
+    "@types/react": ^17.0.19
+    "@types/react-dom": ^17.0.9
+    "@types/react-router-dom": ^5.1.8
+    "@types/react-timeago": ^4.1.3
+    "@types/styled-components": ^5.1.12
+    linkifyjs: ^3.0.0-beta.3
+    mobx: ^6.3.2
+    mobx-react-lite: ^3.2.0
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-popper: ^2.2.5
+    react-spring: ^9.2.4
+    react-timeago: ^6.2.1
+    socket.io-client: ^4.1.3
+    styled-components: ^5.3.1
+  languageName: unknown
+  linkType: soft
 
 "shebang-command@npm:^1.2.0":
   version: 1.2.0

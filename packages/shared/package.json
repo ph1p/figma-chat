@@ -1,5 +1,5 @@
 {
-  "name": "@fc/shared",
+  "name": "shared",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
