@@ -5,6 +5,7 @@ import { createEncryptor } from 'simple-encryptor';
 import { DefaultTheme } from 'styled-components';
 
 import MessageSound from '@fc/shared/assets/sound.mp3';
+import { DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 import { ConnectionEnum, StoreSettings } from '@fc/shared/utils/interfaces';
 import { darkTheme, lightTheme } from '@fc/shared/utils/theme';
 
@@ -15,6 +16,7 @@ export class RootStore {
     makeAutoObservable(this);
   }
 
+  @ignore
   get encryptor() {
     return createEncryptor(this.secret);
   }
@@ -73,10 +75,12 @@ export class RootStore {
     this.autoScrollDisabled = disable;
   }
 
+  @ignore
   get theme(): DefaultTheme {
     return this.settings.isDarkTheme ? darkTheme : lightTheme;
   }
 
+  @ignore
   get selectionCount() {
     // fallback
     if (this.selection?.length) {
@@ -107,7 +111,7 @@ export class RootStore {
     name: '',
     avatar: '',
     color: '#4F4F4F',
-    url: '',
+    url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     enableNotificationSound: true,
     isDarkTheme: false,
@@ -186,6 +190,7 @@ export class RootStore {
 
   addMessage(messageData) {
     const isLocal = !messageData.user;
+
     const decryptedMessage = this.encryptor.decrypt(
       isLocal ? messageData : messageData.message
     );

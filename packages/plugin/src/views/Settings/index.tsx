@@ -1,4 +1,3 @@
-
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, useRef, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -26,7 +25,7 @@ const SettingsView: FunctionComponent = observer(() => {
   const history = useHistory();
   const settings = useLocalObservable(() => ({
     name: '',
-    url: '',
+    url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     setUrl(url) {
       this.url = url;
@@ -110,7 +109,6 @@ const SettingsView: FunctionComponent = observer(() => {
             (reset)
           </span>
         </label>
-
         <input
           id="server-url"
           type="text"

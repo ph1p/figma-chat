@@ -183,13 +183,13 @@ const App = observer(() => {
   );
 });
 
-getStoreFromMain().then((store) => {
-  trunk.init(store).then(() => {
+getStoreFromMain().then((store) =>
+  trunk.init(store).then(() =>
     ReactDOM.render(
       <StoreProvider>
         <App />
       </StoreProvider>,
       document.getElementById('app')
-    );
-  });
-});
+    )
+  )
+);

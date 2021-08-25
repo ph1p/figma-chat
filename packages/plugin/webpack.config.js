@@ -63,13 +63,12 @@ module.exports = (env, argv) => ({
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.mp3'],
     fallback: {
-      crypto: require.resolve('crypto-browserify'),
       stream: require.resolve('stream-browserify'),
+      crypto: require.resolve('crypto-browserify'),
       buffer: require.resolve('buffer/'),
       string_decoder: false,
       events: false,
     },
-    // plugins: [new TsconfigPathsPlugin()],
   },
   output: {
     filename: '[name].js',
@@ -77,9 +76,9 @@ module.exports = (env, argv) => ({
   },
   plugins: [
     // argv.mode !== 'production' ? new BundleAnalyzerPlugin() : null,
-    // new webpack.ProvidePlugin({
-    //   Buffer: ['buffer', 'Buffer'],
-    // }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
     new webpack.DefinePlugin({
       process: {
         env: {

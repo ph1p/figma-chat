@@ -33,27 +33,27 @@
     "simple-encryptor": "^4.0.0",
     "socket.io-client": "^4.1.3",
     "stream-browserify": "^3.0.0",
-    "styled-components": "^5.3.0",
+    "styled-components": "^5.3.1",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
-    "uniqid": "^5.3.0"
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "@types/figma": "^1.0.4",
-    "@types/node": "^16.4.2",
-    "@types/react": "^17.0.15",
+    "@types/node": "^16.7.1",
+    "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
-    "@types/styled-components": "^5.1.11",
+    "@types/styled-components": "^5.1.12",
     "create-file-webpack": "^1.0.2",
     "css-loader": "^6.2.0",
-    "esbuild-loader": "^2.13.1",
+    "esbuild-loader": "^2.15.1",
     "html-webpack-plugin": "^5.3.2",
     "style-loader": "^3.2.1",
     "terser-webpack-plugin": "v5.1.4",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "url-loader": "^4.1.1",
-    "webpack": "^5.47.0",
+    "webpack": "^5.51.1",
     "webpack-bundle-analyzer": "^4.4.2",
-    "webpack-cli": "^4.7.2"
+    "webpack-cli": "^4.8.0"
   },
   "figmaPlugin": {
     "name": "Figma Chat",
@@ -62,6 +62,10 @@
     "main": "code.js",
     "ui": "ui.html",
     "enableProposedApi": false,
+    "editorType": [
+      "figma",
+      "figjam"
+    ],
     "relaunchButtons": [
       {
         "command": "open",

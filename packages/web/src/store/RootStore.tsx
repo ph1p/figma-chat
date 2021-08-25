@@ -4,7 +4,7 @@ import React, { FunctionComponent, createRef } from 'react';
 import { createEncryptor } from 'simple-encryptor';
 import { DefaultTheme } from 'styled-components';
 
-import { EColors } from '@fc/shared/utils/constants';
+import { EColors, DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 import {
   ConnectionEnum,
   MessageData,
@@ -17,7 +17,7 @@ class RootStore {
     name: 'Test',
     avatar: '',
     color: '#4F4F4F',
-    url: 'https://figma-chat.ph1p.dev',
+    url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     enableNotificationSound: true,
     isDarkTheme: false,
