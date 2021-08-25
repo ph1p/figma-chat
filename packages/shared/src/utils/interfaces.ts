@@ -8,7 +8,7 @@ export enum ConnectionEnum {
 }
 
 export interface NotificationParams {
-  id: string;
+  id: number;
   text: string;
   type: string;
 }

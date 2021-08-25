@@ -10,11 +10,11 @@ import {
 import io, { Socket } from 'socket.io-client';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
+import Notifications from '@fc/shared/components/Notifications';
 import { SocketProvider } from '@fc/shared/utils/SocketProvider';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
 import Header from './components/Header';
-import Notifications from './components/Notifications';
 import EventEmitter from './shared/EventEmitter';
 import { getStoreFromMain, StoreProvider, trunk, useStore } from './store';
 import ChatView from './views/Chat';
@@ -159,7 +159,7 @@ const App = observer(() => {
 
         <SocketProvider socket={socket}>
           <Router>
-            <Notifications />
+            <Notifications notifications={store.notifications} />
             {store.settings.name && <Header minimized={store.isMinimized} />}
             {store.isMinimized && <Redirect to="/minimized" />}
             <Switch>

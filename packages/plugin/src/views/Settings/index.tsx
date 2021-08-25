@@ -88,6 +88,7 @@ const SettingsView: FunctionComponent = observer(() => {
         />
       </Username>
       <Invite>
+        {`${store.roomName};${store.secret}`}
         <label>Invite Link</label>
         <input
           type="text"

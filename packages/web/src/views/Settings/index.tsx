@@ -51,7 +51,7 @@ export const Settings: FunctionComponent = observer(() => {
 
   const saveSettings = (shouldClose = true) => {
     if (store.settings.name !== settings.name) {
-      // store.addNotification(`Name successfully updated`);
+      store.addNotification(`Name successfully updated`);
     }
 
     store.persistSettings(settings, socket);

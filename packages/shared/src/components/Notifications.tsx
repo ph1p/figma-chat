@@ -6,12 +6,13 @@ import styled from 'styled-components';
 
 import { NotificationParams } from '@fc/shared/utils/interfaces';
 
-import { useStore } from '../store';
-
 import Notification from './Notification';
 
-const Notifications: FunctionComponent = () => {
-  const store = useStore();
+interface Props {
+  notifications: NotificationParams[];
+}
+
+const Notifications: FunctionComponent<Props> = (props: Props) => {
   const location = useLocation();
   const [isRoot, setIsRoot] = useState(true);
 
@@ -19,17 +20,17 @@ const Notifications: FunctionComponent = () => {
     setIsRoot(location.pathname === '/');
   }, [location]);
 
-  const deleteNotification = (id: string) =>
-    store.notifications.splice(
-      store.notifications.findIndex((n) => n.id === id),
+  const deleteNotification = (id: number) =>
+    props.notifications.splice(
+      props.notifications.findIndex((n) => n.id === id),
       1
     );
 
-  if (store.notifications.length === 0) return null;
+  if (props.notifications.length === 0) return null;
 
   return (
     <NotificationsContainer isRoot={isRoot}>
-      {store.notifications.map((data: NotificationParams, key) => (
+      {props.notifications.map((data: NotificationParams, key) => (
         <Notification
           key={key}
           {...data}
@@ -40,7 +41,7 @@ const Notifications: FunctionComponent = () => {
   );
 };
 
-const NotificationsContainer = styled.div`
+const NotificationsContainer = styled.div<{ isRoot: boolean }>`
   display: flex;
   flex-direction: column-reverse;
   position: absolute;

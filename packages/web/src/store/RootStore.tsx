@@ -8,6 +8,7 @@ import { EColors, DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 import {
   ConnectionEnum,
   MessageData,
+  NotificationParams,
   StoreSettings,
 } from '@fc/shared/utils/interfaces';
 import { darkTheme, lightTheme } from '@fc/shared/utils/theme';
@@ -42,8 +43,19 @@ class RootStore {
   @ignore
   autoScrollDisabled = false;
 
+  @ignore
+  notifications: NotificationParams[] = [];
+
   constructor() {
     makeAutoObservable(this);
+  }
+
+  addNotification(text: string, type: string = '') {
+    this.notifications.push({
+      id: Math.random(),
+      text,
+      type,
+    });
   }
 
   disableAutoScroll(autoScrollDisabled: boolean) {
@@ -97,7 +109,7 @@ class RootStore {
 
     // set server URL
     if (!isInit && settings.url && settings.url !== oldUrl) {
-      // this.addNotification('Updated server-URL');
+      this.addNotification('Updated server-URL');
     }
 
     if (socket && socket.connected) {

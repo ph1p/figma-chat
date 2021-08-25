@@ -3,6 +3,7 @@ import React from 'react';
 import { Route, BrowserRouter as Router, Switch, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Notifications from '@fc/shared/components/Notifications';
 import { useSocket } from '@fc/shared/utils/SocketProvider';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
@@ -69,6 +70,7 @@ export const App = observer(() => {
   return (
     <Wrapper>
       <Router>
+        <Notifications notifications={store.notifications} />
         <Header>
           <Link to="/">
             <img src={LogoPNG} />

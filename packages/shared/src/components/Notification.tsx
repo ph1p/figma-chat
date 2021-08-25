@@ -1,14 +1,15 @@
-import React, { useEffect, useState, FunctionComponent } from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { NotificationParams } from '../shared/interfaces';
+import { NotificationParams } from '../utils/interfaces';
 
-const Notification: FunctionComponent<
-  NotificationParams & {
-    deleteNotification: (id: string) => any;
+const Notification = (
+  props: NotificationParams & {
+    deleteNotification: (id: number) => any;
   }
-> = (props) => {
-  const [tm, setTm] = useState(null);
+) => {
+  const [tm, setTm] = useState<any>();
   const hideNotification = () => props.deleteNotification(props.id);
 
   useEffect(() => {
@@ -46,4 +47,4 @@ const NotificationContainer = styled.div`
   }
 `;
 
-export default Notification;
+export default observer(Notification);

@@ -73,8 +73,7 @@ trunk.init().then(() => {
             message = 'leaves the conversation';
           }
 
-          console.log(`${username} ${message}`);
-          // store.addNotification(`${username} ${message}`);
+          store.addNotification(`${username} ${message}`);
         });
 
         socket.on('online', (data) => store.setOnline(data));
