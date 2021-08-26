@@ -146,14 +146,15 @@ const Users = styled.div`
 `;
 
 const Chip = styled.div`
-  min-width: 19px;
-  min-height: 19px;
-  max-height: 19px;
+  min-width: 29px;
+  min-height: 29px;
+  max-height: 29px;
   background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 40px;
   padding: 2px 2px;
   text-align: center;
   color: #000;
+  border: 3px solid #fff;
 `;
 
 const UserChips = styled.div`
@@ -162,8 +163,8 @@ const UserChips = styled.div`
   margin-right: 4px;
   ${Chip} {
     margin-left: -10px;
-    line-height: 15px;
-    font-size: 9px;
+    line-height: 20px;
+    font-size: 12px;
     text-align: center;
   }
 `;
