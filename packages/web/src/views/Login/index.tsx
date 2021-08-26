@@ -24,7 +24,6 @@ export const Login = observer(() => {
 
       if (room && secret) {
         socket.emit('login', {
-          secret,
           room,
           settings: toJS(store.settings),
         });

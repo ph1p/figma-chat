@@ -43,7 +43,11 @@ trunk.init().then(() => {
 
     useEffect(() => {
       if (socket) {
-        socket.offAny();
+        socket.io.off('error');
+        socket.io.off('reconnect_error');
+        socket.off('chat message');
+        socket.off('join leave message');
+        socket.off('online');
         socket.disconnect();
       }
 
@@ -62,10 +66,17 @@ trunk.init().then(() => {
           store.setStatus(ConnectionEnum.CONNECTED);
 
           if (store.room && store.secret) {
-            socket?.emit('set user', toJS(store.settings));
-            socket?.emit('join room', {
+            socket.emit('login', {
               room: store.room,
               settings: toJS(store.settings),
+            });
+
+            socket.once('login failed', () => {
+              store.addNotification('Credentials not valid');
+              store.setSecret('');
+              store.setRoom('');
+              store.setOnline([]);
+              socket?.disconnect();
             });
           }
         };
