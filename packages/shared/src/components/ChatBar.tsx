@@ -1,4 +1,3 @@
-
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
@@ -95,7 +94,7 @@ export const ChatBar: FunctionComponent = observer(() => {
             )}
           >
             <EmojiList>
-              {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩'].map((emoji) => (
+              {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩', '🚀'].map((emoji) => (
                 <span
                   key={emoji}
                   data-emoji={emoji}
