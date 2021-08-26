@@ -88,14 +88,13 @@ const SettingsView: FunctionComponent = observer(() => {
         />
       </Username>
       <Invite>
-        {`${store.roomName};${store.secret}`}
-        <label>Invite Link</label>
+        <label>Auth-String</label>
         <input
           type="text"
           readOnly
-          value={`${settings.url}?auth=${Buffer.from(
-            `${store.roomName};${store.secret}`
-          ).toString('base64')}`}
+          value={Buffer.from(`${store.roomName};${store.secret}`).toString(
+            'base64'
+          )}
         />
       </Invite>
       <ServerUrl>

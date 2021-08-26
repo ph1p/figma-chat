@@ -11,15 +11,18 @@ import { useStore } from '../../store/RootStore';
 export const Login = observer(() => {
   const store = useStore();
   const socket = useSocket();
-  const [room, setRoom] = useState('');
-  const [secret, setSecret] = useState('');
+  const [authString, setAuthString] = useState('');
 
-  const enterRoom = (e: React.FormEvent<HTMLFormElement>) => {
+  const enterChat = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (socket) {
       socket.connect();
 
-      if (secret && room) {
+      const [room, secret] = Buffer.from(authString, 'base64')
+        .toString('utf8')
+        .split(';');
+
+      if (room && secret) {
         socket.emit('login', {
           secret,
           room,
@@ -55,22 +58,16 @@ export const Login = observer(() => {
 
   return (
     <Wrapper>
-      <form onSubmit={enterRoom}>
-        <label htmlFor="room">Room</label>
+      <form onSubmit={enterChat}>
+        <label htmlFor="auth-string">Auth-String</label>
         <input
           type="text"
-          value={room}
-          onChange={(e) => setRoom(e.currentTarget.value)}
-        />
-        <label htmlFor="secret">Secret</label>
-        <input
-          type="text"
-          value={secret}
-          onChange={(e) => setSecret(e.currentTarget.value)}
+          value={authString}
+          onChange={(e) => setAuthString(e.currentTarget.value)}
         />
 
         <button type="submit" className="button">
-          Enter Room
+          Enter Chat
         </button>
       </form>
     </Wrapper>
