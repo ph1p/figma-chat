@@ -11,6 +11,7 @@ import io, { Socket } from 'socket.io-client';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 import Notifications from '@fc/shared/components/Notifications';
+import UserListView from '@fc/shared/components/UserList';
 import { SocketProvider } from '@fc/shared/utils/SocketProvider';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
@@ -21,7 +22,6 @@ import ChatView from './views/Chat';
 import MinimizedView from './views/Minimized';
 import './style.css';
 import SettingsView from './views/Settings';
-import UserListView from './views/UserList';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -185,7 +185,7 @@ const App = observer(() => {
                 <MinimizedView />
               </Route>
               <Route exact path="/user-list">
-                <UserListView />
+                <UserListView users={store.online} socketId={socket?.id || ''} />
               </Route>
               <Route exact path="/settings">
                 <SettingsView />

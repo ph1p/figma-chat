@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Switch, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Notifications from '@fc/shared/components/Notifications';
+import UserListView from '@fc/shared/components/UserList';
 import { useSocket } from '@fc/shared/utils/SocketProvider';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
@@ -12,6 +13,83 @@ import { useStore } from './store/RootStore';
 import { Chat } from './views/Chat';
 import { Login } from './views/Login';
 import { Settings } from './views/Settings';
+
+export const App = observer(() => {
+  const store = useStore();
+  const socket = useSocket();
+
+  const leaveRoom = () => {
+    store.setSecret('');
+    store.setRoom('');
+    socket?.disconnect();
+  };
+
+  return (
+    <Wrapper>
+      <Router>
+        <Notifications
+          notifications={store.notifications}
+          deleteNotification={store.deleteNotification}
+        />
+        <Header>
+          <Link to="/">
+            <img src={LogoPNG} />
+          </Link>
+
+          <Right>
+            {store.status === ConnectionEnum.CONNECTED ? (
+              <Link style={{ marginLeft: 'auto' }} to="/user-list">
+                <Users>
+                  <UserChips>
+                    {store.online
+                      .filter((_, i) => i < 5)
+                      .map((user) => (
+                        <Chip
+                          key={user.id}
+                          style={{ backgroundColor: user.color }}
+                        >
+                          {user?.avatar || ''}
+                        </Chip>
+                      ))}
+                  </UserChips>
+                  {store.online.length > 5 && (
+                    <Chip>+{store.online.length - 5}</Chip>
+                  )}
+                </Users>
+              </Link>
+            ) : (
+              <Users />
+            )}
+            <Link className="button" to="/settings">
+              <span>Settings</span>
+            </Link>
+
+            {store.room &&
+              store.settings &&
+              store.status === ConnectionEnum.CONNECTED && (
+                <button className="button" onClick={leaveRoom}>
+                  leave room
+                </button>
+              )}
+          </Right>
+        </Header>
+        <Content>
+          <Switch>
+            <Route path="/user-list">
+              <UserListView users={store.online} socketId={socket?.id || ''} />
+            </Route>
+            <Route path="/settings">
+              <Settings />
+            </Route>
+            <Route path="/">
+              {!store.room || !store.secret ? <Login /> : <Chat />}
+            </Route>
+          </Switch>
+        </Content>
+      </Router>
+    </Wrapper>
+  );
+});
 
 const Wrapper = styled.div`
   height: 100%;
@@ -39,6 +117,9 @@ const Right = styled.div`
   button {
     margin-left: 7px;
   }
+  a {
+    text-decoration: none;
+  }
 `;
 
 const Header = styled.div`
@@ -58,53 +139,32 @@ const Header = styled.div`
   }
 `;
 
-export const App = observer(() => {
-  const store = useStore();
-  const socket = useSocket();
+const Users = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 7px;
+`;
 
-  const leaveRoom = () => {
-    store.setSecret('');
-    store.setRoom('');
-    socket?.disconnect();
-  };
+const Chip = styled.div`
+  min-width: 19px;
+  min-height: 19px;
+  max-height: 19px;
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
+  border-radius: 40px;
+  padding: 2px 2px;
+  text-align: center;
+  color: #000;
+`;
 
-  return (
-    <Wrapper>
-      <Router>
-        <Notifications
-          notifications={store.notifications}
-          deleteNotification={store.deleteNotification}
-        />
-        <Header>
-          <Link to="/">
-            <img src={LogoPNG} />
-          </Link>
-
-          <Right>
-            <Link className="button" to="/settings">
-              <span>Settings</span>
-            </Link>
-
-            {store.room &&
-              store.settings &&
-              store.status === ConnectionEnum.CONNECTED && (
-                <button className="button" onClick={leaveRoom}>
-                  leave room
-                </button>
-              )}
-          </Right>
-        </Header>
-        <Content>
-          <Switch>
-            <Route path="/settings">
-              <Settings />
-            </Route>
-            <Route path="/">
-              {!store.room || !store.secret ? <Login /> : <Chat />}
-            </Route>
-          </Switch>
-        </Content>
-      </Router>
-    </Wrapper>
-  );
-});
+const UserChips = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  margin-right: 4px;
+  ${Chip} {
+    margin-left: -10px;
+    line-height: 15px;
+    font-size: 9px;
+    text-align: center;
+  }
+`;

@@ -1,41 +1,39 @@
-// store
-import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { useSocket } from '@fc/shared/utils/SocketProvider';
+interface Props {
+  users: {
+    id: string;
+    name: string;
+    avatar: string;
+    color: string;
+  }[];
+  socketId: string;
+}
 
-
-import { useStore } from '../store';
-
-const UserList: FunctionComponent = observer(() => {
-  const store = useStore();
-  const socket = useSocket();
-
-  return (
-    <Wrapper>
-      <h5>Active Users</h5>
-      <div className="users">
-        {store.online.map((user) => {
-          return (
-            <div key={user.id} className="user">
-              <div
-                className="color"
-                style={{ backgroundColor: user.color || '#000' }}
-              >
-                {user.avatar}
-              </div>
-              <div className={`name ${!user.name ? 'empty' : ''}`}>
-                {user.name || 'Anon'}
-                {user.id === socket.id && <p>you</p>}
-              </div>
+const UserList: FunctionComponent<Props> = (props) => (
+  <Wrapper>
+    <h5>Active Users</h5>
+    <div className="users">
+      {props.users.map((user) => {
+        return (
+          <div key={user.id} className="user">
+            <div
+              className="color"
+              style={{ backgroundColor: user.color || '#000' }}
+            >
+              {user.avatar}
             </div>
-          );
-        })}
-      </div>
-    </Wrapper>
-  );
-});
+            <div className={`name ${!user.name ? 'empty' : ''}`}>
+              {user.name || 'Anon'}
+              {user.id === props.socketId && <p>you</p>}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </Wrapper>
+);
 
 const Wrapper = styled.div`
   display: grid;
