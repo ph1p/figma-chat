@@ -46,7 +46,7 @@ export const Login = observer(() => {
       <Wrapper>
         <Info>
           {store.status === ConnectionEnum.ERROR
-            ? 'Can\'t connect to the server 🙈'
+            ? "Can't connect to the server 🙈"
             : 'connecting...'}
         </Info>
       </Wrapper>
@@ -69,7 +69,9 @@ export const Login = observer(() => {
           onChange={(e) => setSecret(e.currentTarget.value)}
         />
 
-        <button type="submit">Enter Room</button>
+        <button type="submit" className="button">
+          Enter Room
+        </button>
       </form>
     </Wrapper>
   );
@@ -88,6 +90,10 @@ const Wrapper = styled.div`
   padding: 30px;
   height: 100%;
   justify-content: center;
+  form {
+    width: 80%;
+    margin: 0 auto;
+  }
 
   label {
     margin: 0 0 5px;

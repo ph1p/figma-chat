@@ -22,7 +22,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${(p) => p.theme.scrollbarColor};
   }
 
-  button, .button {
+  .button {
     color: ${(p) => p.theme.fontColor};
     background-color: ${(p) => p.theme.thirdBackgroundColor};
     border: 0;

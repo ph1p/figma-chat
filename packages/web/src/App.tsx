@@ -88,7 +88,9 @@ export const App = observer(() => {
             {store.room &&
               store.settings &&
               store.status === ConnectionEnum.CONNECTED && (
-                <button onClick={leaveRoom}>leave room</button>
+                <button className="button" onClick={leaveRoom}>
+                  leave room
+                </button>
               )}
           </Right>
         </Header>

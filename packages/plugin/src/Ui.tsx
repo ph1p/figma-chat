@@ -114,7 +114,6 @@ const App = observer(() => {
           });
 
           socket.on('join leave message', (data) => {
-            console.log('hmm');
             const username = data.user.name || 'Anon';
             let message = 'joins the conversation';
 
