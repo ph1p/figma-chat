@@ -55,13 +55,17 @@ const App = observer(() => {
     store.setStatus(ConnectionEnum.NONE);
 
     if (socket) {
-      socket.offAny();
+      socket.io.off('error');
+      socket.io.off('reconnect_error');
+      socket.off('chat message');
+      socket.off('join leave message');
+      socket.off('online');
       socket.disconnect();
     }
 
     setSocket(
       io(url, {
-        reconnectionAttempts: 3,
+        reconnectionAttempts: 5,
         forceNew: true,
         transports: ['websocket'],
       })
@@ -72,6 +76,12 @@ const App = observer(() => {
     if (socket && store.status === ConnectionEnum.NONE) {
       socket.on('connect', () => {
         EventEmitter.ask('root-data').then((rootData: any) => {
+          socket.io.off('error');
+          socket.io.off('reconnect_error');
+          socket.off('chat message');
+          socket.off('join leave message');
+          socket.off('online');
+
           const {
             roomName: dataRoomName = '',
             secret: dataSecret = '',
@@ -104,6 +114,7 @@ const App = observer(() => {
           });
 
           socket.on('join leave message', (data) => {
+            console.log('hmm');
             const username = data.user.name || 'Anon';
             let message = 'joins the conversation';
 
@@ -132,7 +143,12 @@ const App = observer(() => {
 
     return () => {
       if (socket) {
-        socket.offAny();
+        socket.off('connect');
+        socket.io.off('error');
+        socket.io.off('reconnect_error');
+        socket.off('chat message');
+        socket.off('join leave message');
+        socket.off('online');
         socket.disconnect();
       }
     };
@@ -159,7 +175,10 @@ const App = observer(() => {
 
         <SocketProvider socket={socket}>
           <Router>
-            <Notifications notifications={store.notifications} />
+            <Notifications
+              notifications={store.notifications}
+              deleteNotification={store.deleteNotification}
+            />
             {store.settings.name && <Header minimized={store.isMinimized} />}
             {store.isMinimized && <Redirect to="/minimized" />}
             <Switch>

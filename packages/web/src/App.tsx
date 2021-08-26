@@ -32,19 +32,20 @@ const Wrapper = styled.div`
 const Content = styled.div`
   height: calc(100% - 50px);
 `;
+
 const Right = styled.div`
   display: flex;
   align-items: center;
-  a {
-    color: ${(p) => p.theme.fontColor};
-    margin-right: 10px;
+  button {
+    margin-left: 7px;
   }
 `;
+
 const Header = styled.div`
   height: 50px;
   overflow: hidden;
   border-bottom: 1px solid ${(p) => p.theme.secondaryBackgroundColor};
-  padding: 0 14px;
+  padding: 0 7px 0 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,14 +71,17 @@ export const App = observer(() => {
   return (
     <Wrapper>
       <Router>
-        <Notifications notifications={store.notifications} />
+        <Notifications
+          notifications={store.notifications}
+          deleteNotification={store.deleteNotification}
+        />
         <Header>
           <Link to="/">
             <img src={LogoPNG} />
           </Link>
 
           <Right>
-            <Link to="/settings">
+            <Link className="button" to="/settings">
               <span>Settings</span>
             </Link>
 

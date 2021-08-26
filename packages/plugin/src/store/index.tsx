@@ -146,7 +146,14 @@ export class RootStore {
       type,
     });
   }
-  // ---
+
+  deleteNotification(id: number) {
+    this.notifications.splice(
+      this.notifications.findIndex((n) => n.id === id),
+      1
+    );
+  }
+
   toggleMinimizeChat() {
     this.isMinimized = !this.isMinimized;
     EventEmitter.emit('minimize', this.isMinimized);

@@ -1,3 +1,4 @@
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -13,12 +14,30 @@ export const Login = observer(() => {
   const [room, setRoom] = useState('');
   const [secret, setSecret] = useState('');
 
-  const enterRoom = () => {
+  const enterRoom = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (socket) {
-      store.setSecret(secret);
-      store.setRoom(room);
-
       socket.connect();
+
+      if (secret && room) {
+        socket.emit('login', {
+          secret,
+          room,
+          settings: toJS(store.settings),
+        });
+
+        socket.once('login succeeded', () => {
+          store.setSecret(secret);
+          store.setRoom(room);
+          socket.connect();
+        });
+
+        socket.once('login failed', () =>
+          store.addNotification('Credentials not valid')
+        );
+      } else {
+        store.addNotification('Enter a room and a secret');
+      }
     }
   };
 
@@ -34,7 +53,7 @@ export const Login = observer(() => {
 
   return (
     <Wrapper>
-      <div>
+      <form onSubmit={enterRoom}>
         <label htmlFor="room">Room</label>
         <input
           type="text"
@@ -48,8 +67,8 @@ export const Login = observer(() => {
           onChange={(e) => setSecret(e.currentTarget.value)}
         />
 
-        <button onClick={enterRoom}>Enter Room</button>
-      </div>
+        <button type="submit">Enter Room</button>
+      </form>
     </Wrapper>
   );
 });
@@ -72,14 +91,13 @@ const Wrapper = styled.div`
   input[type='text'] {
     margin-bottom: 20px;
     font-size: 14px;
-    text-align: center;
     width: 100%;
     border-width: 1px;
     border-color: ${(p) => p.theme.secondaryBackgroundColor};
     border-style: solid;
     background-color: transparent;
     color: ${(p) => p.theme.fontColor};
-    padding: 8px 18px 9px;
+    padding: 8px 10px 9px;
     outline: none;
     border-radius: 7px;
     font-weight: 400;
@@ -89,13 +107,5 @@ const Wrapper = styled.div`
     &:focus {
       border-color: #1e1940;
     }
-  }
-  button {
-    color: ${(p) => p.theme.fontColor};
-    background-color: ${(p) => p.theme.secondaryBackgroundColor};
-    border: 0;
-    padding: 10px 14px;
-    border-radius: 4px;
-    cursor: pointer;
   }
 `;

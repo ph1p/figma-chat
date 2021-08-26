@@ -21,6 +21,19 @@ const GlobalStyle = createGlobalStyle`
   ::-webkit-scrollbar-thumb {
     background-color: ${(p) => p.theme.scrollbarColor};
   }
+
+  button, .button {
+    color: ${(p) => p.theme.fontColor};
+    background-color: ${(p) => p.theme.thirdBackgroundColor};
+    border: 0;
+    padding: 10px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    &:hover {
+      background-color: ${(p) => p.theme.secondaryBackgroundColor};
+    }
+  }
 `;
 
 trunk.init().then(() => {
@@ -45,27 +58,20 @@ trunk.init().then(() => {
 
     useEffect(() => {
       if (socket) {
-        socket.on('connect', () => {
+        const connect = () => {
           store.setStatus(ConnectionEnum.CONNECTED);
 
           if (store.room && store.secret) {
-            socket.emit('set user', toJS(store.settings));
-            socket.emit('join room', {
+            socket?.emit('set user', toJS(store.settings));
+            socket?.emit('join room', {
               room: store.room,
               settings: toJS(store.settings),
             });
           }
-        });
-
-        socket.io.on('error', () => store.setStatus(ConnectionEnum.ERROR));
-
-        socket.io.on('reconnect_error', () =>
-          store.setStatus(ConnectionEnum.ERROR)
-        );
-
-        socket.on('chat message', (data) => store.addReceivedMessage(data));
-
-        socket.on('join leave message', (data) => {
+        };
+        const error = () => store.setStatus(ConnectionEnum.ERROR);
+        const chatMessage = (data: any) => store.addReceivedMessage(data);
+        const joinLeave = (data: any) => {
           const username = data.user.name || 'Anon';
           let message = 'joins the conversation';
 
@@ -74,14 +80,25 @@ trunk.init().then(() => {
           }
 
           store.addNotification(`${username} ${message}`);
-        });
+        };
+        const online = (data: any) => store.setOnline(data);
 
-        socket.on('online', (data) => store.setOnline(data));
+        socket.on('connect', connect);
+        socket.io.on('error', error);
+        socket.io.on('reconnect_error', error);
+        socket.on('chat message', chatMessage);
+        socket.on('join leave message', joinLeave);
+        socket.on('online', online);
       }
+
       return () => {
         if (socket) {
-          socket.offAny();
-          socket.disconnect();
+          socket.off('connect');
+          socket.io.off('error');
+          socket.io.off('reconnect_error');
+          socket.off('chat message');
+          socket.off('join leave message');
+          socket.off('online');
         }
       };
     }, [socket]);

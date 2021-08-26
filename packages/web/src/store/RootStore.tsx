@@ -58,6 +58,18 @@ class RootStore {
     });
   }
 
+  deleteNotification(id: number) {
+    this.notifications.splice(
+      this.notifications.findIndex((n) => n.id === id),
+      1
+    );
+  }
+
+  clearChatHistory() {
+    this.messages = [];
+    this.addNotification('History cleared');
+  }
+
   disableAutoScroll(autoScrollDisabled: boolean) {
     this.autoScrollDisabled = autoScrollDisabled;
   }

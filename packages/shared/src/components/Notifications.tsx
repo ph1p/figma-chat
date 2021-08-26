@@ -10,6 +10,7 @@ import Notification from './Notification';
 
 interface Props {
   notifications: NotificationParams[];
+  deleteNotification: (id: number) => void;
 }
 
 const Notifications: FunctionComponent<Props> = (props: Props) => {
@@ -20,12 +21,6 @@ const Notifications: FunctionComponent<Props> = (props: Props) => {
     setIsRoot(location.pathname === '/');
   }, [location]);
 
-  const deleteNotification = (id: number) =>
-    props.notifications.splice(
-      props.notifications.findIndex((n) => n.id === id),
-      1
-    );
-
   if (props.notifications.length === 0) return null;
 
   return (
@@ -34,7 +29,7 @@ const Notifications: FunctionComponent<Props> = (props: Props) => {
         <Notification
           key={key}
           {...data}
-          deleteNotification={() => deleteNotification(data.id)}
+          deleteNotification={() => props.deleteNotification(data.id)}
         />
       ))}
     </NotificationsContainer>

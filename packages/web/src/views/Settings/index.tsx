@@ -118,10 +118,7 @@ export const Settings: FunctionComponent = observer(() => {
                   <Tile
                     name="trash"
                     ref={ref}
-                    onClick={
-                      () => {}
-                      // store.clearChatHistory(() => saveSettings(true))
-                    }
+                    onClick={() => store.clearChatHistory()}
                   >
                     <TrashIcon />
                   </Tile>
@@ -152,11 +149,6 @@ export const Settings: FunctionComponent = observer(() => {
               Theme
             </Tooltip>
           </ShortcutTiles>
-
-          <VersionNote
-            target="_blank"
-            href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
-          ></VersionNote>
         </div>
       </div>
     </Wrapper>
@@ -234,22 +226,6 @@ const ShortcutTiles = styled.div`
   width: 207px;
   justify-content: space-between;
   margin: 51px auto 0;
-`;
-
-const VersionNote = styled.a`
-  position: absolute;
-  left: 0;
-  text-align: center;
-  color: #999;
-  bottom: 10px;
-  margin-top: 5px;
-  width: 100%;
-  text-decoration: none;
-  font-size: 10px;
-  display: block;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const Wrapper = styled.div`

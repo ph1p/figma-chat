@@ -10,6 +10,7 @@ declare module 'styled-components' {
     fontColorInverse: string;
     backgroundColor: string;
     secondaryBackgroundColor: string;
+    thirdBackgroundColor: string;
     backgroundColorInverse: string;
     scrollbarColor: string;
     borderColor: string;

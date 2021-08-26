@@ -87,6 +87,32 @@ io.on('connection', (socket) => {
     }
   });
 
+  const joinRoom = ({ room, settings }: any) => {
+    sock.join(room);
+
+    sock.user = {
+      ...sock.user,
+      ...settings,
+      room,
+    };
+
+    joinLeave(sock);
+    sendOnline(room);
+  };
+
+  socket.on('login', ({ room, settings }) => {
+    if (io.sockets.adapter.rooms.has(room)) {
+      joinRoom({
+        room,
+        settings,
+      });
+
+      sock.emit('login succeeded');
+    } else {
+      sock.emit('login failed');
+    }
+  });
+
   sock.on('set user', (userOptions) => {
     sock.user = {
       ...sock.user,
@@ -102,18 +128,7 @@ io.on('connection', (socket) => {
     sock.emit('user reconnected');
   });
 
-  sock.on('join room', ({ room, settings }) => {
-    sock.join(room);
-
-    sock.user = {
-      ...sock.user,
-      ...settings,
-      room,
-    };
-
-    joinLeave(sock);
-    sendOnline(room);
-  });
+  sock.on('join room', joinRoom);
 
   sock.on('disconnect', () => {
     joinLeave(sock, 'LEAVE');

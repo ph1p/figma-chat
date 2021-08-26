@@ -107,10 +107,10 @@ const goToPage = (id) => {
 
 let previousSelection = figma.currentPage.selection || [];
 
-EventEmitter.on('clear-chat-history', () => {
+EventEmitter.on('clear-chat-history', (_, send) => {
   figma.root.setPluginData('history', '[]');
 
-  postMessage('history', JSON.parse('[]'));
+  send('history', JSON.parse('[]'));
 });
 
 EventEmitter.on('minimize', (flag) => {
