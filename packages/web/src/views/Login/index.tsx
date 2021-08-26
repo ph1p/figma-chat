@@ -43,11 +43,13 @@ export const Login = observer(() => {
 
   if (store.status !== ConnectionEnum.CONNECTED) {
     return (
-      <>
-        {store.status === ConnectionEnum.ERROR
-          ? 'connection failed 🙈'
-          : 'connecting...'}
-      </>
+      <Wrapper>
+        <Info>
+          {store.status === ConnectionEnum.ERROR
+            ? 'Can\'t connect to the server 🙈'
+            : 'connecting...'}
+        </Info>
+      </Wrapper>
     );
   }
 
@@ -72,6 +74,11 @@ export const Login = observer(() => {
     </Wrapper>
   );
 });
+
+const Info = styled.div`
+  font-size: 14px;
+  text-align: center;
+`;
 
 const Wrapper = styled.div`
   position: relative;
