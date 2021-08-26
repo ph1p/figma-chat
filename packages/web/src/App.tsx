@@ -21,6 +21,7 @@ export const App = observer(() => {
   const leaveRoom = () => {
     store.setSecret('');
     store.setRoom('');
+    store.setOnline([]);
     socket?.disconnect();
   };
 
@@ -57,9 +58,7 @@ export const App = observer(() => {
                   )}
                 </Users>
               </Link>
-            ) : (
-              <Users />
-            )}
+            ) : null}
             <Link className="button" to="/settings">
               <span>Settings</span>
             </Link>
