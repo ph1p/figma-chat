@@ -3,6 +3,7 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useHistory } from 'react-router-dom';
 import io, { Socket } from 'socket.io-client';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
@@ -40,6 +41,7 @@ trunk.init().then(() => {
   const InitApp = observer(() => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const store = useStore();
+    const history = useHistory();
 
     useEffect(() => {
       if (socket) {
@@ -77,6 +79,7 @@ trunk.init().then(() => {
               store.setRoom('');
               store.setOnline([]);
               socket?.disconnect();
+              history.replace('/');
             });
           }
         };

@@ -2813,10 +2813,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:^16.7.1":
+"@types/node@npm:*, @types/node@npm:>=10.0.0":
   version: 16.7.1
   resolution: "@types/node@npm:16.7.1"
   checksum: fcf1a2c7b1f19c2201574b2110176b49c6efd824a39b2ed8ac3e6688740e2a35bef95a3334dfa345f4bd4873fd8b79d8ac8cfcc9fcd3d2f4f8f993c2c37ce4ab
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^16.7.3":
+  version: 16.7.3
+  resolution: "@types/node@npm:16.7.3"
+  checksum: 615d65c40131c7b987d9728d42835a35873117bc5840090bca9d3665ef4a32fd11522681c5a5babc6e2ed1ba27b7d57eb268d0a8a2125e3a4e926bf5f992aa69
   languageName: node
   linkType: hard
 
@@ -2968,14 +2975,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/styled-components@npm:^5.1.12":
-  version: 5.1.12
-  resolution: "@types/styled-components@npm:5.1.12"
+"@types/styled-components@npm:^5.1.13":
+  version: 5.1.13
+  resolution: "@types/styled-components@npm:5.1.13"
   dependencies:
     "@types/hoist-non-react-statics": "*"
     "@types/react": "*"
     csstype: ^3.0.2
-  checksum: f7ea1edbcd6ed24f7223f8f311bd33e3f1b832783a8e7fb6e180b9e6b5e57d72cd864b8cab8f334d047a6823589e086707c430a3de9d1c3e262ed49afc368a15
+  checksum: 9e7244149344232a95997ac7f9df1bd6fb422609b7e5bc5c810d02e1ab709f3874425ba7f8096a8823c529348a8ce909cea660986af2799399f85d16ad10db71
   languageName: node
   linkType: hard
 
@@ -7848,20 +7855,6 @@ __metadata:
 "figma-chat@workspace:.":
   version: 0.0.0-use.local
   resolution: "figma-chat@workspace:."
-  dependencies:
-    "@typescript-eslint/eslint-plugin": ^4.29.3
-    "@typescript-eslint/parser": ^4.29.3
-    eslint: ^7.32.0
-    eslint-config-prettier: ^8.3.0
-    eslint-import-resolver-node: ^0.3.6
-    eslint-plugin-import: ^2.24.2
-    eslint-plugin-prefer-arrow: ^1.2.3
-    eslint-plugin-prettier: ^3.4.1
-    eslint-plugin-react: ^7.24.0
-    eslint-plugin-react-app: ^6.2.2
-    prettier: ^2.3.2
-    string_decoder: ^1.3.0
-    typescript: ^4.3.5
   languageName: unknown
   linkType: soft
 
@@ -12512,19 +12505,30 @@ fsevents@^1.2.7:
   dependencies:
     "@fc/shared": "link:../shared/src"
     "@types/figma": ^1.0.4
-    "@types/node": ^16.7.1
+    "@types/node": ^16.7.3
     "@types/react": ^17.0.19
     "@types/react-dom": ^17.0.9
-    "@types/styled-components": ^5.1.12
+    "@types/styled-components": ^5.1.13
+    "@typescript-eslint/eslint-plugin": ^4.29.3
+    "@typescript-eslint/parser": ^4.29.3
     buffer: ^6.0.3
     create-file-webpack: ^1.0.2
     crypto-browserify: ^3.12.0
     css-loader: ^6.2.0
     esbuild-loader: ^2.15.1
+    eslint: ^7.32.0
+    eslint-config-prettier: ^8.3.0
+    eslint-import-resolver-node: ^0.3.6
+    eslint-plugin-import: ^2.24.2
+    eslint-plugin-prefer-arrow: ^1.2.3
+    eslint-plugin-prettier: ^3.4.1
+    eslint-plugin-react: ^7.24.0
+    eslint-plugin-react-app: ^6.2.2
     html-webpack-plugin: ^5.3.2
     mobx: ^6.3.2
     mobx-react-lite: ^3.2.0
     mobx-sync: ^3.0.0
+    prettier: ^2.3.2
     react: ^17.0.2
     react-dom: ^17.0.2
     react-router-dom: ^5.2.0
@@ -12535,6 +12539,7 @@ fsevents@^1.2.7:
     styled-components: ^5.3.1
     terser-webpack-plugin: v5.1.4
     tsconfig-paths-webpack-plugin: ^3.5.1
+    typescript: ^4.4.2
     uniqid: ^5.4.0
     url-loader: ^4.1.1
     webpack: ^5.51.1
@@ -15010,10 +15015,21 @@ resolve@^2.0.0-next.3:
   resolution: "server@workspace:packages/server"
   dependencies:
     "@types/express": ^4.17.13
+    "@typescript-eslint/eslint-plugin": ^4.29.3
+    "@typescript-eslint/parser": ^4.29.3
+    eslint: ^7.32.0
+    eslint-config-prettier: ^8.3.0
+    eslint-import-resolver-node: ^0.3.6
+    eslint-plugin-import: ^2.24.2
+    eslint-plugin-prefer-arrow: ^1.2.3
+    eslint-plugin-prettier: ^3.4.1
+    eslint-plugin-react: ^7.24.0
+    eslint-plugin-react-app: ^6.2.2
     express: ^4.17.1
     nodemon: ^2.0.12
+    prettier: ^2.3.2
     socket.io: ^4.1.3
-    typescript: ^4.3.5
+    typescript: ^4.4.2
   languageName: unknown
   linkType: soft
 
@@ -15091,15 +15107,26 @@ resolve@^2.0.0-next.3:
   dependencies:
     "@popperjs/core": ^2.9.3
     "@types/linkifyjs": ^2.1.4
-    "@types/node": ^16.7.1
+    "@types/node": ^16.7.3
     "@types/react": ^17.0.19
     "@types/react-dom": ^17.0.9
     "@types/react-router-dom": ^5.1.8
     "@types/react-timeago": ^4.1.3
-    "@types/styled-components": ^5.1.12
+    "@types/styled-components": ^5.1.13
+    "@typescript-eslint/eslint-plugin": ^4.29.3
+    "@typescript-eslint/parser": ^4.29.3
+    eslint: ^7.32.0
+    eslint-config-prettier: ^8.3.0
+    eslint-import-resolver-node: ^0.3.6
+    eslint-plugin-import: ^2.24.2
+    eslint-plugin-prefer-arrow: ^1.2.3
+    eslint-plugin-prettier: ^3.4.1
+    eslint-plugin-react: ^7.24.0
+    eslint-plugin-react-app: ^6.2.2
     linkifyjs: ^3.0.0-beta.3
     mobx: ^6.3.2
     mobx-react-lite: ^3.2.0
+    prettier: ^2.3.2
     react: ^17.0.2
     react-dom: ^17.0.2
     react-popper: ^2.2.5
@@ -15107,6 +15134,7 @@ resolve@^2.0.0-next.3:
     react-timeago: ^6.2.1
     socket.io-client: ^4.1.3
     styled-components: ^5.3.1
+    typescript: ^4.4.2
   languageName: unknown
   linkType: soft
 
@@ -15746,7 +15774,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"string_decoder@npm:^1.0.0, string_decoder@npm:^1.1.1, string_decoder@npm:^1.3.0":
+"string_decoder@npm:^1.0.0, string_decoder@npm:^1.1.1":
   version: 1.3.0
   resolution: "string_decoder@npm:1.3.0"
   dependencies:
@@ -16546,23 +16574,23 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-typescript@^4.3.5:
-  version: 4.3.5
-  resolution: "typescript@npm:4.3.5"
+typescript@^4.4.2:
+  version: 4.4.2
+  resolution: "typescript@npm:4.4.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: bab033b5e2b0790dd35b77fd005df976ef80b8d84fd2c6e63cc31808151875beae9216e5a315fe7068e8499905c3c354248fe83272cdfc13b7705635f0c66c97
+  checksum: 194e08e9d1971d667d6fd1a0554616b7022312a2319d70e81a64e502a265992061ee7817ed9a69b52bbabe7a9b85e7938cb8c11c433e40a516b277f8c4dacd51
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>":
-  version: 4.3.5
-  resolution: "typescript@patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"
+"typescript@patch:typescript@^4.4.2#~builtin<compat/typescript>":
+  version: 4.4.2
+  resolution: "typescript@patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=d8b4e7"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: bc2c4fdf0f1557fdafe4ef74848c72ebd9c8c60829568248f869121aea2bb20e16649a252431d0acb185ec118143be22bed73d08f64379557810d82756afedde
+  checksum: 11d6ab6e868117908c388401e2ac06d503c5c8709115ab80ee69a1a6352c1f98471d1e595636bfe6a2d6b20b03a44df6bb2d3d198cea97c0c328968cd18d2b70
   languageName: node
   linkType: hard
 
@@ -17063,20 +17091,31 @@ typescript@^4.3.5:
     "@testing-library/react": ^12.0.0
     "@testing-library/user-event": ^13.2.1
     "@types/jest": ^27.0.1
-    "@types/node": ^16.7.1
+    "@types/node": ^16.7.3
     "@types/react": ^17.0.19
     "@types/react-dom": ^17.0.9
     "@types/react-router-dom": ^5.1.8
-    "@types/styled-components": ^5.1.12
+    "@types/styled-components": ^5.1.13
+    "@typescript-eslint/eslint-plugin": ^4.29.3
+    "@typescript-eslint/parser": ^4.29.3
     "@yarnpkg/esbuild-plugin-pnp": ^1.0.0
     buffer: ^6.0.3
     crypto-browserify: ^3.12.0
     css-loader: ^6.2.0
     esbuild-loader: ^2.15.1
+    eslint: ^7.32.0
+    eslint-config-prettier: ^8.3.0
+    eslint-import-resolver-node: ^0.3.6
+    eslint-plugin-import: ^2.24.2
+    eslint-plugin-prefer-arrow: ^1.2.3
+    eslint-plugin-prettier: ^3.4.1
+    eslint-plugin-react: ^7.24.0
+    eslint-plugin-react-app: ^6.2.2
     mobx: ^6.3.2
     mobx-react-lite: ^3.2.0
     mobx-sync: ^3.0.0
     pnp-webpack-plugin: ^1.7.0
+    prettier: ^2.3.2
     react: ^17.0.2
     react-app-rewired: ^2.1.8
     react-dom: ^17.0.2
@@ -17087,7 +17126,7 @@ typescript@^4.3.5:
     stream-browserify: ^3.0.0
     styled-components: ^5.3.1
     ts-loader: 8.2.0
-    typescript: ^4.3.5
+    typescript: ^4.4.2
     web-vitals: ^2.1.0
   languageName: unknown
   linkType: soft

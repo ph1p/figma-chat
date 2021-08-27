@@ -1,6 +1,12 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
-import { Route, BrowserRouter as Router, Switch, Link } from 'react-router-dom';
+import React, { FunctionComponent } from 'react';
+import {
+  Route,
+  BrowserRouter as Router,
+  Switch,
+  useHistory,
+  useRouteMatch,
+} from 'react-router-dom';
 import styled from 'styled-components';
 
 import Notifications from '@fc/shared/components/Notifications';
@@ -14,15 +20,44 @@ import { Chat } from './views/Chat';
 import { Login } from './views/Login';
 import { Settings } from './views/Settings';
 
+const CustomLink: FunctionComponent<{
+  to: string;
+  style?: any;
+  className?: string;
+}> = ({ children, to, style = {}, className = '' }) => {
+  const history = useHistory();
+  const match = useRouteMatch({
+    path: to,
+    exact: true,
+  });
+
+  return (
+    <div
+      style={{
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        ...style,
+      }}
+      onClick={() => history.push(to)}
+      className={match ? `${className} active` : className}
+    >
+      {children}
+    </div>
+  );
+};
+
 export const App = observer(() => {
   const store = useStore();
   const socket = useSocket();
+  const history = useHistory();
 
   const leaveRoom = () => {
     store.setSecret('');
     store.setRoom('');
     store.setOnline([]);
     socket?.disconnect();
+    history.replace('/');
   };
 
   return (
@@ -33,13 +68,12 @@ export const App = observer(() => {
           deleteNotification={store.deleteNotification}
         />
         <Header>
-          <Link to="/">
-            <img src={LogoPNG} />
-          </Link>
-
-          <Right>
+          <Left>
+            <CustomLink to="/">
+              <img src={LogoPNG} />
+            </CustomLink>
             {store.status === ConnectionEnum.CONNECTED ? (
-              <Link style={{ marginLeft: 'auto' }} to="/user-list">
+              <CustomLink style={{ marginLeft: 'auto' }} to="/user-list">
                 <Users>
                   <UserChips>
                     {store.online
@@ -57,20 +91,26 @@ export const App = observer(() => {
                     <Chip>+{store.online.length - 5}</Chip>
                   )}
                 </Users>
-              </Link>
+              </CustomLink>
             ) : null}
-            <Link className="button" to="/settings">
+          </Left>
+
+          <Menu>
+            <CustomLink className="menu-item" to="/">
+              Chat
+            </CustomLink>
+            <CustomLink className="menu-item" to="/settings">
               <span>Settings</span>
-            </Link>
+            </CustomLink>
 
             {store.room &&
               store.settings &&
               store.status === ConnectionEnum.CONNECTED && (
-                <button className="button" onClick={leaveRoom}>
-                  leave room
+                <button className="menu-item logout" onClick={leaveRoom}>
+                  Logout
                 </button>
               )}
-          </Right>
+          </Menu>
         </Header>
         <Content>
           <Switch>
@@ -93,7 +133,7 @@ export const App = observer(() => {
 const Wrapper = styled.div`
   height: 100%;
   max-height: 100%;
-  max-width: 500px;
+  max-width: 600px;
   background-color: ${(p) => p.theme.backgroundColor};
   @media (min-width: 450px) {
     border-radius: 8px;
@@ -110,12 +150,32 @@ const Content = styled.div`
   height: calc(100% - 50px);
 `;
 
-const Right = styled.div`
+const Menu = styled.div`
+  display: flex;
+  align-self: flex-end;
+  .menu-item {
+    text-decoration: none;
+    color: ${(p) => p.theme.fontColor};
+    display: inline-block;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    padding: 4px 8px 14px;
+    transition: 0.2s all;
+    &.logout {
+      color: ${(p) => p.theme.placeholder};
+    }
+    &:hover,
+    &.active {
+      border-color: ${(p) => p.theme.fontColor};
+    }
+  }
+`;
+
+const Left = styled.div`
   display: flex;
   align-items: center;
-  button {
-    margin-left: 7px;
-  }
   a {
     text-decoration: none;
   }
@@ -129,6 +189,7 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   img {
     width: 30px;
     height: 30px;
@@ -141,30 +202,27 @@ const Header = styled.div`
 const Users = styled.div`
   display: flex;
   align-items: center;
-  margin-left: auto;
-  margin-right: 7px;
+  margin-left: 10px;
 `;
 
 const Chip = styled.div`
-  min-width: 29px;
-  min-height: 29px;
-  max-height: 29px;
+  min-width: 36px;
+  min-height: 36px;
+  max-height: 36px;
   background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 40px;
-  padding: 2px 2px;
+  padding: 3px 0 0 3px;
   text-align: center;
   color: #000;
-  border: 3px solid #fff;
+  border: 3px solid ${(p) => p.theme.backgroundColor};
 `;
 
 const UserChips = styled.div`
   display: flex;
-  flex-direction: row-reverse;
   margin-right: 4px;
   ${Chip} {
-    margin-left: -10px;
-    line-height: 20px;
-    font-size: 12px;
-    text-align: center;
+    margin-right: -10px;
+    line-height: 25px;
+    font-size: 17px;
   }
 `;

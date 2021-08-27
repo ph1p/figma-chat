@@ -28,22 +28,5 @@
   "license": "ISC",
   "workspaces": [
     "packages/*"
-  ],
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.29.3",
-    "@typescript-eslint/parser": "^4.29.3",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-node": "^0.3.6",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-prefer-arrow": "^1.2.3",
-    "eslint-plugin-prettier": "^3.4.1",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-app": "^6.2.2",
-    "prettier": "^2.3.2",
-    "typescript": "^4.3.5"
-  },
-  "dependencies": {
-    "string_decoder": "^1.3.0"
-  }
+  ]
 }

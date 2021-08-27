@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import Tooltip from '@fc/shared/components/Tooltip';
 import { useSocket } from '@fc/shared/utils/SocketProvider';
 
-
 import { useStore } from '../../../store';
 
 const AvatarPicker: FunctionComponent = observer(() => {
@@ -32,28 +31,42 @@ const AvatarPicker: FunctionComponent = observer(() => {
       )}
     >
       <Wrapper>
-        {['', '🐵', '🐮', '🐷', '🐨', '🦊', '🐻', '🐶', '🐸', '🐹'].map(
-          (emoji) => (
-            <div
-              key={emoji}
-              className={
-                (emoji === '' ? 'empty ' : ' ') +
-                (emoji === store.settings.avatar ? 'active' : '')
-              }
-              onClick={() => {
-                pickerRef.current.hide();
-                store.persistSettings(
-                  {
-                    avatar: emoji,
-                  },
-                  socket
-                );
-              }}
-            >
-              {emoji}
-            </div>
-          )
-        )}
+        {[
+          '',
+          '🐵',
+          '🐮',
+          '🐷',
+          '🐨',
+          '🦊',
+          '🐻',
+          '🐶',
+          '🐸',
+          '🐹',
+          '🦄',
+          '🐔',
+          '🐧',
+          '🐦',
+          '🐺',
+        ].map((emoji) => (
+          <div
+            key={emoji}
+            className={
+              (emoji === '' ? 'empty ' : ' ') +
+              (emoji === store.settings.avatar ? 'active' : '')
+            }
+            onClick={() => {
+              pickerRef.current.hide();
+              store.persistSettings(
+                {
+                  avatar: emoji,
+                },
+                socket
+              );
+            }}
+          >
+            {emoji}
+          </div>
+        ))}
       </Wrapper>
     </Tooltip>
   );

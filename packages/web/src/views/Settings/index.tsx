@@ -223,9 +223,11 @@ const Tile = styled.div<{ name: string }>`
 
 const ShortcutTiles = styled.div`
   display: flex;
-  width: 207px;
-  justify-content: space-between;
   margin: 51px auto 0;
+  justify-content: center;
+  > div {
+    margin-right: 10px;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -235,7 +237,13 @@ const Wrapper = styled.div`
   justify-content: center;
   z-index: 1;
   height: 100%;
+  width: 100%;
   padding: 40px;
+  margin: 0 auto;
+
+  @media (min-width: 450px) {
+    width: 400px;
+  }
 
   h4 {
     margin: 20px 0 15px;
