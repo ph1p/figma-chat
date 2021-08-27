@@ -43,6 +43,17 @@ trunk.init().then(() => {
     const store = useStore();
     const history = useHistory();
 
+    const logout = () => {
+      store.addNotification('Credentials not valid');
+      store.setSecret('');
+      store.setRoom('');
+      store.setOnline([]);
+      socket?.disconnect();
+      if (history) {
+        history.replace('/');
+      }
+    };
+
     useEffect(() => {
       if (socket) {
         socket.io.off('error');
@@ -73,14 +84,7 @@ trunk.init().then(() => {
               settings: toJS(store.settings),
             });
 
-            socket.once('login failed', () => {
-              store.addNotification('Credentials not valid');
-              store.setSecret('');
-              store.setRoom('');
-              store.setOnline([]);
-              socket?.disconnect();
-              history.replace('/');
-            });
+            socket.once('login failed', logout);
           }
         };
         const error = () => store.setStatus(ConnectionEnum.ERROR);
