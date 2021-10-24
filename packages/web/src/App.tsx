@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -52,13 +52,16 @@ export const App = observer(() => {
   const socket = useSocket();
   const history = useHistory();
 
-  const leaveRoom = () => {
+  const leaveRoom = useCallback(() => {
     store.setSecret('');
     store.setRoom('');
     store.setOnline([]);
     socket?.disconnect();
-    history.replace('/');
-  };
+
+    if (history) {
+      history.replace('/');
+    }
+  }, [store, history, socket]);
 
   return (
     <Wrapper>
