@@ -2550,7 +2550,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^12.0.0":
+"@testing-library/react@npm:^12.1.2":
   version: 12.1.2
   resolution: "@testing-library/react@npm:12.1.2"
   dependencies:
@@ -2563,7 +2563,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^13.2.1":
+"@testing-library/user-event@npm:^13.5.0":
   version: 13.5.0
   resolution: "@testing-library/user-event@npm:13.5.0"
   dependencies:
@@ -2818,7 +2818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^27.0.1":
+"@types/jest@npm:^27.0.2":
   version: 27.0.2
   resolution: "@types/jest@npm:27.0.2"
   dependencies:
@@ -2872,7 +2872,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.11.4, @types/node@npm:^16.7.3":
+"@types/node@npm:^16.11.4":
   version: 16.11.4
   resolution: "@types/node@npm:16.11.4"
   checksum: 96e08c0f8bb17601c18640a8eac61e2f236fe0c8a6b01a9221c10749157358fb29fdef4b5e264f72559e72f9830e6093f3ab5fef2df90afdad562ffa45ac534c
@@ -2928,7 +2928,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^17.0.10, @types/react-dom@npm:^17.0.9":
+"@types/react-dom@npm:^17.0.10":
   version: 17.0.10
   resolution: "@types/react-dom@npm:17.0.10"
   dependencies:
@@ -2937,7 +2937,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-dom@npm:^5.1.8, @types/react-router-dom@npm:^5.3.1":
+"@types/react-router-dom@npm:^5.3.1":
   version: 5.3.1
   resolution: "@types/react-router-dom@npm:5.3.1"
   dependencies:
@@ -2978,7 +2978,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^17.0.19, @types/react@npm:^17.0.32":
+"@types/react@npm:^17.0.32":
   version: 17.0.32
   resolution: "@types/react@npm:17.0.32"
   dependencies:
@@ -3038,7 +3038,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/styled-components@npm:^5.1.13, @types/styled-components@npm:^5.1.15":
+"@types/styled-components@npm:^5.1.15":
   version: 5.1.15
   resolution: "@types/styled-components@npm:5.1.15"
   dependencies:
@@ -6252,7 +6252,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-loader@npm:^6.2.0, css-loader@npm:^6.4.0":
+"css-loader@npm:^6.4.0":
   version: 6.4.0
   resolution: "css-loader@npm:6.4.0"
   dependencies:
@@ -7463,7 +7463,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-loader@npm:^2.15.1, esbuild-loader@npm:^2.16.0":
+"esbuild-loader@npm:^2.16.0":
   version: 2.16.0
   resolution: "esbuild-loader@npm:2.16.0"
   dependencies:
@@ -7780,7 +7780,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.24.2, eslint-plugin-import@npm:^2.25.2":
+"eslint-plugin-import@npm:^2.25.2":
   version: 2.25.2
   resolution: "eslint-plugin-import@npm:2.25.2"
   dependencies:
@@ -7937,7 +7937,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.24.0, eslint-plugin-react@npm:^7.26.1":
+"eslint-plugin-react@npm:^7.26.1":
   version: 7.26.1
   resolution: "eslint-plugin-react@npm:7.26.1"
   dependencies:
@@ -12127,7 +12127,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mobx-react-lite@npm:^3.2.0, mobx-react-lite@npm:^3.2.1":
+"mobx-react-lite@npm:^3.2.1":
   version: 3.2.1
   resolution: "mobx-react-lite@npm:3.2.1"
   peerDependencies:
@@ -12153,7 +12153,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mobx@npm:^6.3.2, mobx@npm:^6.3.5":
+"mobx@npm:^6.3.5":
   version: 6.3.5
   resolution: "mobx@npm:6.3.5"
   checksum: 9d5578ca55a3fd07610ed7416ca933b367005f483817d9fa653c8ec60fe9f2be65dc22dd0a93995ddabc18bcffd14feffb4365eddfc5e6b80c36eb9b05a98540
@@ -14284,7 +14284,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.3.2, prettier@npm:^2.4.1":
+"prettier@npm:^2.4.1":
   version: 2.4.1
   resolution: "prettier@npm:2.4.1"
   bin:
@@ -14768,7 +14768,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^5.2.0, react-router-dom@npm:^5.3.0":
+"react-router-dom@npm:^5.3.0":
   version: 5.3.0
   resolution: "react-router-dom@npm:5.3.0"
   dependencies:
@@ -16113,7 +16113,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"socket.io-client@npm:^4.1.3, socket.io-client@npm:^4.3.2":
+"socket.io-client@npm:^4.3.2":
   version: 4.3.2
   resolution: "socket.io-client@npm:4.3.2"
   dependencies:
@@ -16764,7 +16764,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"styled-components@npm:^5.3.1, styled-components@npm:^5.3.3":
+"styled-components@npm:^5.3.3":
   version: 5.3.3
   resolution: "styled-components@npm:5.3.3"
   dependencies:
@@ -17446,7 +17446,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"typescript@^4.4.2, typescript@^4.4.4":
+typescript@^4.4.4:
   version: 4.4.4
   resolution: "typescript@npm:4.4.4"
   bin:
@@ -17456,7 +17456,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.4.2#~builtin<compat/typescript>, typescript@patch:typescript@^4.4.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.4.4#~builtin<compat/typescript>":
   version: 4.4.4
   resolution: "typescript@patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=d8b4e7"
   bin:
@@ -17948,7 +17948,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^2.1.0":
+"web-vitals@npm:^2.1.2":
   version: 2.1.2
   resolution: "web-vitals@npm:2.1.2"
   checksum: 488c93a514504ad0a056d3afc41ef143494e5562e08175c0122f704ea3d3c08a1f62de445042ed51a1937d49bf868a50842e20066fe3dc99677937e5625ffa3e
@@ -17961,46 +17961,46 @@ resolve@^2.0.0-next.3:
   dependencies:
     "@fc/shared": "link:../shared/src"
     "@testing-library/jest-dom": ^5.14.1
-    "@testing-library/react": ^12.0.0
-    "@testing-library/user-event": ^13.2.1
-    "@types/jest": ^27.0.1
-    "@types/node": ^16.7.3
-    "@types/react": ^17.0.19
-    "@types/react-dom": ^17.0.9
-    "@types/react-router-dom": ^5.1.8
-    "@types/styled-components": ^5.1.13
+    "@testing-library/react": ^12.1.2
+    "@testing-library/user-event": ^13.5.0
+    "@types/jest": ^27.0.2
+    "@types/node": ^16.11.4
+    "@types/react": ^17.0.32
+    "@types/react-dom": ^17.0.10
+    "@types/react-router-dom": ^5.3.1
+    "@types/styled-components": ^5.1.15
     "@typescript-eslint/eslint-plugin": ^4.29.3
     "@typescript-eslint/parser": ^4.29.3
     "@yarnpkg/esbuild-plugin-pnp": ^1.0.0
     buffer: ^6.0.3
     crypto-browserify: ^3.12.0
-    css-loader: ^6.2.0
-    esbuild-loader: ^2.15.1
+    css-loader: ^6.4.0
+    esbuild-loader: ^2.16.0
     eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
     eslint-import-resolver-node: ^0.3.6
-    eslint-plugin-import: ^2.24.2
+    eslint-plugin-import: ^2.25.2
     eslint-plugin-prefer-arrow: ^1.2.3
     eslint-plugin-prettier: ^3.4.1
-    eslint-plugin-react: ^7.24.0
+    eslint-plugin-react: ^7.26.1
     eslint-plugin-react-app: ^6.2.2
-    mobx: ^6.3.2
-    mobx-react-lite: ^3.2.0
+    mobx: ^6.3.5
+    mobx-react-lite: ^3.2.1
     mobx-sync: ^3.0.0
     pnp-webpack-plugin: ^1.7.0
-    prettier: ^2.3.2
+    prettier: ^2.4.1
     react: ^17.0.2
     react-app-rewired: ^2.1.8
     react-dom: ^17.0.2
-    react-router-dom: ^5.2.0
+    react-router-dom: ^5.3.0
     react-scripts: 4.0.3
     simple-encryptor: ^4.0.0
-    socket.io-client: ^4.1.3
+    socket.io-client: ^4.3.2
     stream-browserify: ^3.0.0
-    styled-components: ^5.3.1
+    styled-components: ^5.3.3
     ts-loader: 8.2.0
-    typescript: ^4.4.2
-    web-vitals: ^2.1.0
+    typescript: ^4.4.4
+    web-vitals: ^2.1.2
   languageName: unknown
   linkType: soft
 

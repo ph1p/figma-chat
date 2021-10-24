@@ -1,5 +1,5 @@
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import React, { useEffect, useRef, FunctionComponent } from 'react';
+import React, { useEffect, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 

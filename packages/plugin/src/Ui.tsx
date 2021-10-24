@@ -1,3 +1,4 @@
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom';
@@ -22,8 +23,6 @@ import ChatView from './views/Chat';
 import MinimizedView from './views/Minimized';
 import './style.css';
 import SettingsView from './views/Settings';
-
-import { toJS } from 'mobx';
 
 const GlobalStyle = createGlobalStyle`
   body {
