@@ -62,7 +62,12 @@ const SettingsView: FunctionComponent = observer(() => {
         <ColorPicker />
       </Picker>
       <Invite>
-        <label>Auth-String</label>
+        <label>
+          Auth-String -{' '}
+          <a href="https://figma-chat.vercel.app/" target="_blank">
+            Open external Chat
+          </a>
+        </label>
         <input
           type="text"
           readOnly
@@ -203,17 +208,14 @@ const ServerUrl = styled.div`
 `;
 
 const Invite = styled.div`
-  margin: 0 0 14px;
-`;
-const Username = styled.div`
-  margin: 20px 0 14px;
+  margin: 0 0 24px;
 `;
 
 const Picker = styled.div`
   display: flex;
   justify-content: space-between;
   width: 125px;
-  margin: 0 auto;
+  margin: 0 auto 20px;
 `;
 
 const Tile = styled.div<{ name: string }>`
@@ -269,15 +271,16 @@ const ShortcutTiles = styled.div`
   display: flex;
   width: 207px;
   justify-content: space-between;
-  margin: 51px auto 64px;
+  margin: 51px auto 84px;
 `;
 
 const VersionNote = styled.a`
   position: absolute;
   left: 0;
   text-align: center;
-  color: #999;
-  bottom: 10px;
+  color: #999 !important;
+  font-weight: normal !important;
+  bottom: 20px;
   margin-top: 5px;
   width: 100%;
   text-decoration: none;
@@ -308,6 +311,10 @@ const Settings = styled.div`
     margin: 0 0 0 8px;
     font-size: 10px;
     cursor: pointer;
+  }
+  a {
+    color: #000;
+    font-weight: bold;
   }
   label {
     margin: 0 0 5px;
