@@ -21,7 +21,6 @@ const SettingsView: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
 
-  const nameInputRef = useRef(null);
   const history = useHistory();
   const settings = useLocalObservable(() => ({
     name: '',
@@ -29,9 +28,6 @@ const SettingsView: FunctionComponent = observer(() => {
     enableNotificationTooltip: true,
     setUrl(url) {
       this.url = url;
-    },
-    setName(name) {
-      this.name = name;
     },
     setEnableNotificationTooltip(flag) {
       this.enableNotificationTooltip = flag;
@@ -42,13 +38,9 @@ const SettingsView: FunctionComponent = observer(() => {
     if (store.isMinimized) {
       store.toggleMinimizeChat();
     }
-    if (!store.settings.name) {
-      nameInputRef.current.focus();
-    }
   }, []);
 
   useEffect(() => {
-    settings.setName(store.settings.name);
     settings.setUrl(store.settings.url);
     settings.setEnableNotificationTooltip(
       store.settings.enableNotificationTooltip
@@ -56,10 +48,6 @@ const SettingsView: FunctionComponent = observer(() => {
   }, [store.settings]);
 
   const saveSettings = (shouldClose = true) => {
-    if (store.settings.name !== settings.name) {
-      store.addNotification(`Name successfully updated`);
-    }
-
     store.persistSettings(settings, socket);
 
     if (shouldClose) {
@@ -73,20 +61,6 @@ const SettingsView: FunctionComponent = observer(() => {
         <AvatarPicker />
         <ColorPicker />
       </Picker>
-
-      <Username>
-        <label>Username</label>
-        <input
-          type="text"
-          ref={nameInputRef}
-          value={settings.name}
-          onBlur={() => saveSettings(false)}
-          onChange={({ target }: any) =>
-            settings.setName(target.value.substr(0, 20))
-          }
-          onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
-        />
-      </Username>
       <Invite>
         <label>Auth-String</label>
         <input

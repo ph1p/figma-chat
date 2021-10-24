@@ -6,7 +6,11 @@ import { DefaultTheme } from 'styled-components';
 
 import MessageSound from '@fc/shared/assets/sound.mp3';
 import { DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
-import { ConnectionEnum, StoreSettings } from '@fc/shared/utils/interfaces';
+import {
+  ConnectionEnum,
+  CurrentUser,
+  StoreSettings,
+} from '@fc/shared/utils/interfaces';
 import { darkTheme, lightTheme } from '@fc/shared/utils/theme';
 
 import EventEmitter from '../shared/EventEmitter';
@@ -43,9 +47,17 @@ export class RootStore {
   @ignore
   selection = undefined;
 
+  @ignore
+  currentUser: CurrentUser;
+
   setStatus(status) {
     this.status = status;
   }
+
+  setCurrentUser(currentUser) {
+    this.currentUser = currentUser;
+  }
+
   setSecret(secret) {
     this.secret = secret;
   }
@@ -107,8 +119,7 @@ export class RootStore {
   @ignore
   isMinimized = false;
 
-  settings: StoreSettings = {
-    name: '',
+  settings: Omit<StoreSettings, 'name'> = {
     avatar: '',
     color: '#4F4F4F',
     url: DEFAULT_SERVER_URL,
@@ -178,6 +189,7 @@ export class RootStore {
 
     this.settings = {
       ...this.settings,
+      ...this.currentUser,
       ...settings,
     };
 
@@ -216,9 +228,9 @@ export class RootStore {
         newMessage = {
           id: this.instanceId,
           user: {
+            ...this.currentUser,
             avatar: this.settings.avatar,
             color: this.settings.color,
-            name: this.settings.name,
           },
           message: {
             ...data,

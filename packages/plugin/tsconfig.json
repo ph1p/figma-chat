@@ -8,7 +8,8 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@figma"]
   },
   "include": ["src"]
 }

@@ -22,7 +22,9 @@ const AvatarPicker: FunctionComponent = observer(() => {
       handler={observer(
         (p, ref) => (
           <AvatarPickerAction {...p} ref={ref}>
-            {store.settings.avatar}
+            {store.settings.avatar || (
+              <img width="100%" src={store.currentUser.photoUrl} />
+            )}
           </AvatarPickerAction>
         ),
         {
@@ -50,10 +52,7 @@ const AvatarPicker: FunctionComponent = observer(() => {
         ].map((emoji) => (
           <div
             key={emoji}
-            className={
-              (emoji === '' ? 'empty ' : ' ') +
-              (emoji === store.settings.avatar ? 'active' : '')
-            }
+            className={emoji === store.settings.avatar ? 'active' : ''}
             onClick={() => {
               pickerRef.current.hide();
               store.persistSettings(
@@ -64,7 +63,7 @@ const AvatarPicker: FunctionComponent = observer(() => {
               );
             }}
           >
-            {emoji}
+            {emoji || <img width="100%" src={store.currentUser.photoUrl} />}
           </div>
         ))}
       </Wrapper>
@@ -81,6 +80,7 @@ const AvatarPickerAction = styled.div`
   text-align: center;
   line-height: 62px;
   cursor: pointer;
+  overflow: hidden;
 `;
 
 const Wrapper = styled.div`

@@ -10,7 +10,6 @@ import EventEmitter from '../../shared/EventEmitter';
 import { useStore } from '../../store';
 
 import Chatbar from './components/Chatbar';
-import TodoList from './components/TodoList';
 
 const Chat: FunctionComponent = observer(() => {
   const store = useStore();
@@ -105,10 +104,6 @@ const Chat: FunctionComponent = observer(() => {
   }, []);
 
   useEffect(() => store.scrollToBottom(), [store.messages]);
-
-  if (!store.settings.name) {
-    return <TodoList />;
-  }
 
   const onClickSelection = (selection) => {
     let selectionData = null;

@@ -81,7 +81,12 @@ export const App = observer(() => {
                       .map((user) => (
                         <Chip
                           key={user.id}
-                          style={{ backgroundColor: user.color }}
+                          style={{
+                            backgroundColor: user.color,
+                            backgroundImage: !user?.avatar
+                              ? `url(${user.photoUrl})`
+                              : undefined,
+                          }}
                         >
                           {user?.avatar || ''}
                         </Chip>
@@ -209,9 +214,10 @@ const Chip = styled.div`
   min-width: 36px;
   min-height: 36px;
   max-height: 36px;
+  background-size: cover;
   background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 40px;
-  padding: 3px 0 0 3px;
+  padding: 4px 0 0;
   text-align: center;
   color: #000;
   border: 3px solid ${(p) => p.theme.backgroundColor};

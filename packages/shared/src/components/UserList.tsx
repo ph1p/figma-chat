@@ -7,6 +7,7 @@ interface Props {
     name: string;
     avatar: string;
     color: string;
+    photoUrl: string;
   }[];
   socketId: string;
 }
@@ -20,7 +21,12 @@ const UserList: FunctionComponent<Props> = (props) => (
           <div key={user.id} className="user">
             <div
               className="color"
-              style={{ backgroundColor: user.color || '#000' }}
+              style={{
+                backgroundColor: user.color || '#000',
+                backgroundImage: !user?.avatar
+                  ? `url(${user.photoUrl})`
+                  : undefined,
+              }}
             >
               {user.avatar}
             </div>
@@ -69,6 +75,7 @@ const Wrapper = styled.div`
         }
       }
       .color {
+        background-size: cover;
         border-radius: 14px 14px 3px 14px;
         width: 41px;
         height: 41px;

@@ -155,6 +155,7 @@ EventEmitter.answer('root-data', async () => {
     secret,
     history,
     instanceId,
+    currentUser: figma.currentUser,
     selection: getSelectionIds(),
   };
 });

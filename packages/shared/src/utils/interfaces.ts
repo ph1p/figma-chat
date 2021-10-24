@@ -7,6 +7,14 @@ export enum ConnectionEnum {
   CONNECTING = 'CONNECTING',
 }
 
+export interface CurrentUser {
+  color: string;
+  id: string;
+  name: string;
+  photoUrl: string;
+  sessionId: string;
+}
+
 export interface NotificationParams {
   id: number;
   text: string;
@@ -18,6 +26,7 @@ export interface MessageData {
   message: {
     date: string;
     text: string;
+    external?: any;
     selection?: {
       nodes?: string[];
       page?: {
@@ -31,6 +40,7 @@ export interface MessageData {
     id?: string;
     color: keyof typeof EColors;
     room?: string;
+    photoUrl?: string;
   };
 }
 

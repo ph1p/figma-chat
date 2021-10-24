@@ -1,4 +1,4 @@
-import Linkify from 'linkifyjs/react';
+import Linkify from 'linkify-react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect, useState } from 'react';
@@ -27,6 +27,7 @@ const Message: FunctionComponent<Props> = observer(
   ({ data, instanceId, onClickSelection }) => {
     const username = data.user.name || '';
     const avatar = data.user.avatar || '';
+    const photoUrl = data.user.photoUrl || '';
     const colorClass = EColors[data.user.color] || 'blue';
     const selection = toJS(data?.message?.selection);
     const isLocalMessage = data.id === instanceId;
@@ -36,6 +37,7 @@ const Message: FunctionComponent<Props> = observer(
 
     const text = data?.message?.text || '';
     const date = data?.message?.date || null;
+    const external = data?.message?.external || false;
     const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
     const [mounted, setMounted] = useState(false);
 
@@ -59,7 +61,13 @@ const Message: FunctionComponent<Props> = observer(
               {!isLocalMessage && username && (
                 <MessageHeader>
                   <div className="user">
-                    {avatar && avatar + ' '}
+                    {avatar ? (
+                      avatar + ' '
+                    ) : photoUrl && !external ? (
+                      <img src={photoUrl} />
+                    ) : (
+                      ''
+                    )}
                     {username}
                   </div>
                 </MessageHeader>
@@ -115,7 +123,13 @@ const MessageHeader = styled.header`
   color: #fff;
   .user {
     line-height: 11px;
-    opacity: 0.6;
+    opacity: 1;
+    img {
+      border-radius: 100%;
+      width: 10px;
+      display: inline-block;
+      margin-right: 4px;
+    }
   }
 `;
 

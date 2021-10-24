@@ -23,6 +23,8 @@ import MinimizedView from './views/Minimized';
 import './style.css';
 import SettingsView from './views/Settings';
 
+import { toJS } from 'mobx';
+
 const GlobalStyle = createGlobalStyle`
   body {
     background-color: ${(p) => p.theme.backgroundColor};
@@ -90,17 +92,20 @@ const App = observer(() => {
               page: '',
               nodes: [],
             },
-            settings = {},
+            currentUser,
             instanceId = '',
           } = rootData;
 
+          store.setCurrentUser(currentUser);
           store.setSecret(dataSecret);
           store.setRoomName(dataRoomName);
           store.setMessages(messages);
           store.setInstanceId(instanceId);
           store.setSelection(selection);
 
-          store.persistSettings(settings, socket, true);
+          // console.log(settings);
+
+          // store.persistSettings({ ...settings, ...currentUser }, socket, true);
 
           // socket listener
           socket.io.on('error', () => store.setStatus(ConnectionEnum.ERROR));
@@ -129,10 +134,17 @@ const App = observer(() => {
 
           store.setStatus(ConnectionEnum.CONNECTED);
 
-          socket.emit('set user', store.settings);
+          const settings = {
+            ...toJS(store.settings),
+            id: currentUser.id,
+            name: currentUser.name,
+            photoUrl: currentUser.photoUrl,
+          };
+
+          socket.emit('set user', settings);
           socket.emit('join room', {
+            settings,
             room: dataRoomName,
-            settings: store.settings,
           });
 
           EventEmitter.emit('ask-for-relaunch-message');
@@ -178,14 +190,17 @@ const App = observer(() => {
               notifications={store.notifications}
               deleteNotification={store.deleteNotification}
             />
-            {store.settings.name && <Header minimized={store.isMinimized} />}
+            <Header minimized={store.isMinimized} />
             {store.isMinimized && <Redirect to="/minimized" />}
             <Switch>
               <Route exact path="/minimized">
                 <MinimizedView />
               </Route>
               <Route exact path="/user-list">
-                <UserListView users={store.online} socketId={socket?.id || ''} />
+                <UserListView
+                  users={store.online}
+                  socketId={socket?.id || ''}
+                />
               </Route>
               <Route exact path="/settings">
                 <SettingsView />

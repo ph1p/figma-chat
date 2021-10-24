@@ -68,7 +68,15 @@ const Header: FunctionComponent<Props> = (props) => {
               {store.online
                 .filter((_, i) => i < 5)
                 .map((user) => (
-                  <Chip key={user.id} style={{ backgroundColor: user.color }}>
+                  <Chip
+                    key={user.id}
+                    style={{
+                      backgroundColor: user.color,
+                      backgroundImage: !user?.avatar
+                        ? `url(${user.photoUrl})`
+                        : undefined,
+                    }}
+                  >
                     {user?.avatar || ''}
                   </Chip>
                 ))}
@@ -92,9 +100,11 @@ const Users = styled.div`
 
 const Chip = styled.div`
   min-width: 19px;
+  overflow: hidden;
   min-height: 19px;
   max-height: 19px;
   background-color: ${(p) => p.theme.secondaryBackgroundColor};
+  background-size: cover;
   border-radius: 40px;
   padding: 2px 2px;
   text-align: center;
