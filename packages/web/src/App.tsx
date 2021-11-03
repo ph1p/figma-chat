@@ -75,32 +75,6 @@ export const App = observer(() => {
             <CustomLink to="/">
               <img src={LogoPNG} />
             </CustomLink>
-            {store.status === ConnectionEnum.CONNECTED ? (
-              <CustomLink style={{ marginLeft: 'auto' }} to="/user-list">
-                <Users>
-                  <UserChips>
-                    {store.online
-                      .filter((_, i) => i < 5)
-                      .map((user) => (
-                        <Chip
-                          key={user.id}
-                          style={{
-                            backgroundColor: user.color,
-                            backgroundImage: !user?.avatar
-                              ? `url(${user.photoUrl})`
-                              : undefined,
-                          }}
-                        >
-                          {user?.avatar || ''}
-                        </Chip>
-                      ))}
-                  </UserChips>
-                  {store.online.length > 5 && (
-                    <Chip>+{store.online.length - 5}</Chip>
-                  )}
-                </Users>
-              </CustomLink>
-            ) : null}
           </Left>
 
           <Menu>
@@ -204,34 +178,5 @@ const Header = styled.div`
     border-radius: 30px;
     display: block;
     margin-top: 1px;
-  }
-`;
-
-const Users = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-`;
-
-const Chip = styled.div`
-  min-width: 36px;
-  min-height: 36px;
-  max-height: 36px;
-  background-size: cover;
-  background-color: ${(p) => p.theme.secondaryBackgroundColor};
-  border-radius: 40px;
-  padding: 4px 0 0;
-  text-align: center;
-  color: #000;
-  border: 3px solid ${(p) => p.theme.backgroundColor};
-`;
-
-const UserChips = styled.div`
-  display: flex;
-  margin-right: 4px;
-  ${Chip} {
-    margin-right: -10px;
-    line-height: 25px;
-    font-size: 17px;
   }
 `;

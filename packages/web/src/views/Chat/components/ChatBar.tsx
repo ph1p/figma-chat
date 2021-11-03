@@ -1,10 +1,13 @@
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import EmojiIcon from '@fc/shared/assets/icons/EmojiIcon';
+import GearIcon from '@fc/shared/assets/icons/GearIcon';
 import SendArrowIcon from '@fc/shared/assets/icons/SendArrowIcon';
+import { CustomLink } from '@fc/shared/components/CustomLink';
 import Tooltip from '@fc/shared/components/Tooltip';
 import { useSocket } from '@fc/shared/utils/SocketProvider';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
@@ -14,6 +17,8 @@ import { useStore } from '../../../store/RootStore';
 export const ChatBar: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
+
+  const isSettings = useRouteMatch('/settings');
   const emojiPickerRef = useRef<React.ElementRef<typeof Tooltip>>(null);
   const chatTextInput = useRef<HTMLInputElement>(null);
   const [messageText, setMessageText] = useState('');
@@ -21,7 +26,7 @@ export const ChatBar: FunctionComponent = observer(() => {
   const [isFailed, setIsFailed] = useState(
     store.status === ConnectionEnum.ERROR
   );
-  const [connected, setConnected] = useState(
+  const [isConnected, setIsConnected] = useState(
     store.status === ConnectionEnum.CONNECTED
   );
 
@@ -29,7 +34,7 @@ export const ChatBar: FunctionComponent = observer(() => {
     () =>
       autorun(() => {
         setIsFailed(store.status === ConnectionEnum.ERROR);
-        setConnected(store.status === ConnectionEnum.CONNECTED);
+        setIsConnected(store.status === ConnectionEnum.CONNECTED);
       }),
     []
   );
@@ -59,15 +64,44 @@ export const ChatBar: FunctionComponent = observer(() => {
       setMessageText('');
     }
   };
-
   return (
-    <ChatBarForm onSubmit={sendMessage}>
-      <ConnectionInfo connected={connected}>
-        {isFailed ? 'connection failed 🙈' : 'connecting...'}
-      </ConnectionInfo>
+    <ChatBarForm isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
+      <ChatInputWrapper>
+        <SettingsAndUsers>
+          <CustomLink to="/settings">
+            <div className={`gear ${store.settings.isDarkTheme ? 'dark' : ''}`}>
+              <GearIcon />
+            </div>
+          </CustomLink>
+          {store.status === ConnectionEnum.CONNECTED && (
+            <CustomLink to="/user-list">
+              <Users>
+                <UserChips>
+                  {store.online
+                    .filter((_, i) => i < 2)
+                    .map((user) => (
+                      <Chip
+                        key={user.id}
+                        style={{
+                          backgroundColor: user.color,
+                          backgroundImage: !user?.avatar
+                            ? `url(${user.photoUrl})`
+                            : undefined,
+                        }}
+                      >
+                        {user?.avatar || ''}
+                      </Chip>
+                    ))}
+                  {store.online.length > 2 && (
+                    <Chip>+{store.online.length - 2}</Chip>
+                  )}
+                </UserChips>
+              </Users>
+            </CustomLink>
+          )}
+        </SettingsAndUsers>
 
-      <ChatInputWrapper connected={connected}>
-        <ChatInput>
+        <ChatInput isConnected={isConnected}>
           <input
             ref={chatTextInput}
             type="input"
@@ -116,6 +150,67 @@ export const ChatBar: FunctionComponent = observer(() => {
   );
 });
 
+const Users = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-left: 5px;
+`;
+
+const Chip = styled.div`
+  min-width: 24px;
+  overflow: hidden;
+  min-height: 24px;
+  max-height: 24px;
+  background-color: #4b5a6a;
+  background-size: cover;
+  border-radius: 40px;
+  padding: 2px 2px;
+  text-align: center;
+  color: #000;
+`;
+
+const UserChips = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  ${Chip} {
+    margin-left: -16px;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    &:last-child {
+      margin-left: 0;
+      font-size: 11px;
+    }
+  }
+`;
+
+const SettingsAndUsers = styled.div`
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
+  margin-right: 5px;
+  padding: 0 6px;
+  border-radius: 94px;
+  display: flex;
+  align-items: center;
+  .gear {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${(p) => p.theme.chatbarSecondaryBackground};
+    border-radius: 100%;
+    &.dark {
+      svg path {
+        fill: ${({ theme }) => theme.thirdFontColor};
+      }
+    }
+  }
+`;
+
 const EmojiList = styled.div`
   display: flex;
   font-size: 25px;
@@ -130,58 +225,37 @@ const EmojiList = styled.div`
 `;
 
 const EmojiPickerStyled = styled.div`
-  position: absolute;
+  /* position: absolute;
   right: 51px;
-  top: 11px;
+  top: 11px; */
   z-index: 5;
   cursor: pointer;
 `;
 
-const ConnectionInfo = styled.div<{ connected: boolean }>`
+const ChatBarForm = styled.form<{ isSettings: boolean }>`
+  padding: 0 9px;
+  z-index: 3;
+  margin: 0;
+  transition: opacity 0.2s;
+  position: relative;
+  opacity: ${({ isSettings }) => (isSettings ? 0 : 1)};
+`;
+
+const ChatInputWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  position: relative;
+`;
+
+const ChatInput = styled.div<{ isConnected: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr 18px auto auto;
   align-items: center;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  z-index: 6;
-  bottom: -5px;
-  text-align: center;
-  color: ${(p) => p.theme.fontColor};
-  font-weight: bold;
-  transition: opacity 0.2s;
-  opacity: ${(props) => (props.connected ? 0 : 1)};
-  z-index: ${(props) => (props.connected ? -1 : 1)};
-  span {
-    text-decoration: underline;
-    cursor: pointer;
-    margin-left: 5px;
-  }
-`;
-
-const ChatBarForm = styled.form`
-  padding: 0 14px 14px 14px;
-  z-index: 3;
-  margin: 0;
-  transition: opacity 0.2s;
-  position: relative;
-`;
-
-const ChatInputWrapper = styled.div<{ connected: boolean }>`
-  display: flex;
-  transition: opacity 0.3s;
-  opacity: ${(props) => (props.connected ? 1 : 0)};
-  position: relative;
-`;
-
-const ChatInput = styled.div`
-  display: flex;
   margin: 0;
   z-index: 3;
-  transition: width 0.3s;
+  transition: width 0.3s, opacity 0.3s;
+  opacity: ${({ isConnected }) => (isConnected ? 1 : 0)};
   background-color: ${(p) => p.theme.secondaryBackgroundColor};
-  border-radius: 10px 10px 0 10px;
+  border-radius: 94px;
   width: 100%;
 
   input {
@@ -192,8 +266,8 @@ const ChatInput = styled.div`
     border-radius: 6px;
     width: 100%;
     border: 0;
-    padding: 14px 82px 14px 18px;
-    height: 41px;
+    padding: 12px 15px 12px 15px;
+    height: 35px;
     outline: none;
     color: ${(p) => p.theme.fontColor};
     &::placeholder {
@@ -219,16 +293,15 @@ const ChatInput = styled.div`
 `;
 
 const SendButton = styled.div`
-  position: absolute;
+  position: relative;
   display: flex;
   z-index: 3;
   cursor: pointer;
-  right: 4px;
-  top: 4px;
-  background-color: ${(props) => props.color};
-  width: 33px;
-  height: 33px;
-  border-radius: 9px 9px 4px 9px;
+  margin: 0 4px;
+  background-color: ${({ color }) => color};
+  width: 27px;
+  height: 27px;
+  border-radius: 94px;
   justify-content: center;
   svg {
     align-self: center;
