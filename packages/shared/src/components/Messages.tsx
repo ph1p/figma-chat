@@ -114,7 +114,7 @@ const Wrapper = styled.div<{ isWeb?: boolean }>`
 `;
 
 const ScrollWrapper = styled.div`
-  padding: 14px 14px 0;
+  padding: 9px 9px 0;
   width: 100%;
   align-self: end;
   &::after {
@@ -122,14 +122,14 @@ const ScrollWrapper = styled.div`
     transition: opacity 0.3s;
     opacity: 1;
     position: fixed;
-    bottom: 41px;
+    bottom: 30px;
     left: 14px;
     right: 14px;
     background: transparent;
     height: 14px;
     pointer-events: none;
     box-shadow: 0 3px 10px 14px ${(p) => p.theme.backgroundColor};
-    border-radius: 40px;
+    border-radius: 0;
   }
 `;
 

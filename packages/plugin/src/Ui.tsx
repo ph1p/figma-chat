@@ -16,7 +16,6 @@ import UserListView from '@fc/shared/components/UserList';
 import { SocketProvider } from '@fc/shared/utils/SocketProvider';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
-import Header from './components/Header';
 import EventEmitter from './shared/EventEmitter';
 import { getStoreFromMain, StoreProvider, trunk, useStore } from './store';
 import ChatView from './views/Chat';
@@ -74,6 +73,8 @@ const App = observer(() => {
   };
 
   useEffect(() => {
+    EventEmitter.ask('current-user').then((user) => store.setCurrentUser(user));
+
     if (socket && store.status === ConnectionEnum.NONE) {
       socket.on('connect', () => {
         EventEmitter.ask('root-data').then((rootData: any) => {
@@ -135,7 +136,7 @@ const App = observer(() => {
 
           const settings = {
             ...toJS(store.settings),
-            id: currentUser.id,
+            figmaId: currentUser.id,
             name: currentUser.name,
             photoUrl: currentUser.photoUrl,
           };
@@ -189,7 +190,7 @@ const App = observer(() => {
               notifications={store.notifications}
               deleteNotification={store.deleteNotification}
             />
-            <Header minimized={store.isMinimized} />
+            {/* <Header minimized={store.isMinimized} /> */}
             {store.isMinimized && <Redirect to="/minimized" />}
             <Switch>
               <Route exact path="/minimized">

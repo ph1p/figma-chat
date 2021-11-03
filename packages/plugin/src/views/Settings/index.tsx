@@ -3,7 +3,9 @@ import React, { useEffect, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
+import BackIcon from '@fc/shared/assets/icons/BackIcon';
 import BellIcon from '@fc/shared/assets/icons/BellIcon';
+import ChainIcon from '@fc/shared/assets/icons/ChainIcon';
 import MessageIcon from '@fc/shared/assets/icons/MessageIcon';
 import ThemeIcon from '@fc/shared/assets/icons/ThemeIcon';
 import TrashIcon from '@fc/shared/assets/icons/TrashIcon';
@@ -11,11 +13,9 @@ import Tooltip from '@fc/shared/components/Tooltip';
 import { useSocket } from '@fc/shared/utils/SocketProvider';
 import { DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 
-import pkg from '../../../package.json';
 import { useStore } from '../../store';
 
-import AvatarPicker from './components/AvatarPicker';
-import ColorPicker from './components/ColorPicker';
+import AvatarColorPicker from './components/AvatarColorPicker';
 
 const SettingsView: FunctionComponent = observer(() => {
   const store = useStore();
@@ -58,71 +58,64 @@ const SettingsView: FunctionComponent = observer(() => {
   return (
     <Settings>
       <Picker>
-        <AvatarPicker />
-        <ColorPicker />
+        <AvatarColorPicker />
       </Picker>
-      <Invite>
-        <label>
-          Auth-String -{' '}
-          <a href="https://figma-chat.vercel.app/" target="_blank">
-            Open external Chat
-          </a>
-        </label>
-        <input
-          type="text"
-          readOnly
-          value={Buffer.from(`${store.roomName};${store.secret}`).toString(
-            'base64'
-          )}
-        />
-      </Invite>
-      <ServerUrl>
-        <label htmlFor="server-url">
-          Server-URL
-          <span
-            onClick={() => {
-              settings.setUrl(DEFAULT_SERVER_URL);
-              saveSettings(settings.url !== store.settings.url);
-            }}
-          >
-            (reset)
-          </span>
-        </label>
-        <input
-          id="server-url"
-          type="text"
-          value={settings.url}
-          onBlur={({ target }: any) =>
-            saveSettings(target.value !== store.settings.url)
-          }
-          onChange={({ target }: any) =>
-            settings.setUrl(target.value.substr(0, 255))
-          }
-          onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
-        />
-      </ServerUrl>
 
-      <div>
-        <ShortcutTiles>
-          <Tooltip
-            hover
-            handler={observer(
-              (_, ref) => (
-                <Tile
-                  name="trash"
-                  ref={ref}
-                  onClick={() =>
-                    store.clearChatHistory(() => saveSettings(true))
-                  }
-                >
-                  <TrashIcon />
-                </Tile>
-              ),
-              { forwardRef: true }
+      <InputWrapper>
+        <Invite>
+          <label>
+            Auth-String -{' '}
+            <a href="https://figma-chat.vercel.app/" target="_blank">
+              Open external Chat
+            </a>
+          </label>
+          <input
+            type="text"
+            readOnly
+            value={Buffer.from(`${store.roomName};${store.secret}`).toString(
+              'base64'
             )}
-          >
-            History
-          </Tooltip>
+          />
+          <div className="icon">
+            <a href="https://figma-chat.vercel.app/" target="_blank">
+              <ChainIcon />
+            </a>
+          </div>
+        </Invite>
+        <ServerUrl>
+          <label htmlFor="server-url">
+            Server-URL
+            <span
+              onClick={() => {
+                settings.setUrl(DEFAULT_SERVER_URL);
+                saveSettings(settings.url !== store.settings.url);
+              }}
+            >
+              <strong>(reset)</strong>
+            </span>
+          </label>
+          <input
+            id="server-url"
+            type="text"
+            value={settings.url}
+            onBlur={({ target }: any) =>
+              saveSettings(target.value !== store.settings.url)
+            }
+            onChange={({ target }: any) =>
+              settings.setUrl(target.value.substr(0, 255))
+            }
+            onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
+          />
+        </ServerUrl>
+      </InputWrapper>
+
+      <Footer>
+        <ShortcutTiles>
+          <Tile name="back" onClick={() => history.push('/')}>
+            <BackIcon />
+          </Tile>
+        </ShortcutTiles>
+        <ShortcutTiles>
           <Tooltip
             hover
             handler={observer(
@@ -188,18 +181,34 @@ const SettingsView: FunctionComponent = observer(() => {
           >
             Sound
           </Tooltip>
+          <Tooltip
+            hover
+            handler={observer(
+              (_, ref) => (
+                <Tile
+                  name="trash"
+                  ref={ref}
+                  onClick={() =>
+                    store.clearChatHistory(() => saveSettings(true))
+                  }
+                >
+                  <TrashIcon />
+                </Tile>
+              ),
+              { forwardRef: true }
+            )}
+          >
+            History
+          </Tooltip>
         </ShortcutTiles>
-
-        <VersionNote
-          target="_blank"
-          href="https://github.com/ph1p/figma-chat/blob/master/CHANGELOG.md"
-        >
-          v{pkg.version}
-        </VersionNote>
-      </div>
+      </Footer>
     </Settings>
   );
 });
+
+const InputWrapper = styled.div`
+  padding: 0 12px;
+`;
 
 const ServerUrl = styled.div`
   input[type='text'] {
@@ -207,42 +216,74 @@ const ServerUrl = styled.div`
   }
 `;
 
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 9px;
+`;
+
 const Invite = styled.div`
   margin: 0 0 24px;
+  position: relative;
+  input {
+    padding-right: 30px !important;
+  }
+  .icon {
+    position: absolute;
+    right: 0;
+    bottom: 9px;
+    svg path {
+      fill: ${(p) => p.theme.inputColor};
+    }
+  }
 `;
 
 const Picker = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 125px;
-  margin: 0 auto 20px;
+  align-items: center;
+  margin: 0 auto;
 `;
 
 const Tile = styled.div<{ name: string }>`
-  width: 45px;
-  height: 45px;
-  background-color: ${(p) => p.theme.secondaryBackgroundColor};
-  border-radius: 14px;
+  width: 24px;
+  height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: ${(p) => p.theme.chatbarSecondaryBackground};
+  border-radius: 100%;
   cursor: pointer;
+  svg {
+    transform: scale(0.8);
+  }
   ${(p) => {
     if (p.name === 'trash') {
       return css`
+        background-color: #fd5959;
         svg {
           path {
-            fill: ${({ theme }) => theme.thirdFontColor};
-            stroke: ${({ theme }) => theme.thirdFontColor};
+            fill: #fff;
+            stroke: #fff;
           }
           path:last-child {
-            stroke: ${({ theme }) => theme.secondaryBackgroundColor};
+            stroke: #fd5959;
           }
         }
       `;
     }
 
     if (p.name === 'theme') {
+      return css`
+        svg {
+          path {
+            fill: ${({ theme }) => theme.thirdFontColor};
+          }
+        }
+      `;
+    }
+
+    if (p.name === 'back') {
       return css`
         svg {
           path {
@@ -268,37 +309,27 @@ const Tile = styled.div<{ name: string }>`
 `;
 
 const ShortcutTiles = styled.div`
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
+  padding: 6px;
+  border-radius: 94px;
+  align-items: center;
   display: flex;
-  width: 207px;
   justify-content: space-between;
-  margin: 51px auto 84px;
-`;
-
-const VersionNote = styled.a`
-  position: absolute;
-  left: 0;
-  text-align: center;
-  color: #999 !important;
-  font-weight: normal !important;
-  bottom: 20px;
-  margin-top: 5px;
-  width: 100%;
-  text-decoration: none;
-  font-size: 10px;
-  display: block;
-  &:hover {
-    text-decoration: underline;
+  & > div {
+    margin-right: 5px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
 `;
 
 const Settings = styled.div`
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   z-index: 1;
-  height: calc(100vh - 37px);
-  padding: 49px 32px 0;
+  padding: 0 9px;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 242px 1fr 44px;
 
   h4 {
     margin: 20px 0 15px;
@@ -313,34 +344,32 @@ const Settings = styled.div`
     cursor: pointer;
   }
   a {
-    color: #000;
+    color: ${(p) => p.theme.inputColor};
     font-weight: bold;
   }
   label {
     margin: 0 0 5px;
     color: #a2adc0;
-    text-align: center;
+    text-transform: uppercase;
     font-size: 10px;
     display: block;
   }
   input[type='text'] {
     font-size: 14px;
-    text-align: center;
     width: 100%;
-    border-width: 1px;
+    border-width: 0 0 1px;
     border-color: ${(p) => p.theme.secondaryBackgroundColor};
     border-style: solid;
     background-color: transparent;
-    color: ${(p) => p.theme.fontColor};
-    padding: 8px 18px 9px;
+    color: ${(p) => p.theme.inputColor};
+    padding: 8px 0 9px;
     outline: none;
-    border-radius: 7px;
-    font-weight: 400;
+    font-weight: bold;
     &::placeholder {
       color: #999;
     }
     &:focus {
-      border-color: #1e1940;
+      border-color: ${(p) => p.theme.inputColor};
     }
   }
 `;

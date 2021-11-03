@@ -18,5 +18,7 @@ declare module 'styled-components' {
     placeholder: string;
     brighterInputFont: string;
     tooltipShadow: string;
+    chatbarSecondaryBackground: string;
+    inputColor: string;
   }
 }

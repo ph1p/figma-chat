@@ -1,4 +1,4 @@
-import { makeAutoObservable, toJS } from 'mobx';
+import { action, makeAutoObservable, observable, toJS } from 'mobx';
 import { AsyncTrunk, ignore } from 'mobx-sync';
 import React, { createRef } from 'react';
 import { createEncryptor } from 'simple-encryptor';
@@ -48,7 +48,13 @@ export class RootStore {
   selection = undefined;
 
   @ignore
-  currentUser: CurrentUser;
+  currentUser: CurrentUser = {
+    id: '',
+    name: '',
+    sessionId: '',
+    color: '',
+    photoUrl: '',
+  };
 
   setStatus(status) {
     this.status = status;
@@ -119,6 +125,7 @@ export class RootStore {
   @ignore
   isMinimized = false;
 
+  @observable.deep
   settings: Omit<StoreSettings, 'name'> = {
     avatar: '',
     color: '#4F4F4F',
@@ -189,8 +196,10 @@ export class RootStore {
 
     this.settings = {
       ...this.settings,
-      ...this.currentUser,
       ...settings,
+      figmaId: this.currentUser.id,
+      name: this.currentUser.name,
+      photoUrl: this.currentUser.photoUrl,
     };
 
     // save user settings in main

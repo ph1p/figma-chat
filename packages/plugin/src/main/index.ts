@@ -147,6 +147,8 @@ EventEmitter.on('notification', (payload) => {
   }
 });
 
+EventEmitter.answer('current-user', async () => figma.currentUser);
+
 EventEmitter.answer('root-data', async () => {
   const { roomName, secret, history, instanceId } = await main();
 
@@ -224,7 +226,11 @@ figma.on('selectionchange', () => {
     if (previousSelection.length > 0) {
       // tidy up 🧹
       for (const node of previousSelection) {
-        if (node.setRelaunchData && isValidShape(node)) {
+        if (
+          node.setRelaunchData &&
+          isValidShape(node) &&
+          figma.getNodeById(node.id)
+        ) {
           node.setRelaunchData({});
         }
       }

@@ -1,40 +1,16 @@
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ChatIcon from '@fc/shared/assets/icons/ChatIcon';
 import SettingsIcon from '@fc/shared/assets/icons/SettingsIcon';
-import { ConnectionEnum } from '@fc/shared/utils/interfaces';
+import { CustomLink } from '@fc/shared/components/CustomLink';
 
 import { useStore } from '../store';
 
 interface Props {
   minimized?: boolean;
 }
-
-const CustomLink = ({ children, to, style = {}, className = '' }) => {
-  const history = useHistory();
-  const match = useRouteMatch({
-    path: to,
-    exact: true,
-  });
-
-  return (
-    <div
-      style={{
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        ...style,
-      }}
-      onClick={() => history.push(to)}
-      className={match ? `${className} active` : className}
-    >
-      {children}
-    </div>
-  );
-};
 
 const Header: FunctionComponent<Props> = (props) => {
   const store = useStore();
@@ -61,67 +37,11 @@ const Header: FunctionComponent<Props> = (props) => {
         </div>
         <span>Settings</span>
       </CustomLink>
-      {store.status === ConnectionEnum.CONNECTED ? (
-        <CustomLink style={{ marginLeft: 'auto' }} to="/user-list">
-          <Users>
-            <UserChips>
-              {store.online
-                .filter((_, i) => i < 5)
-                .map((user) => (
-                  <Chip
-                    key={user.id}
-                    style={{
-                      backgroundColor: user.color,
-                      backgroundImage: !user?.avatar
-                        ? `url(${user.photoUrl})`
-                        : undefined,
-                    }}
-                  >
-                    {user?.avatar || ''}
-                  </Chip>
-                ))}
-            </UserChips>
-            {store.online.length > 5 && <Chip>+{store.online.length - 5}</Chip>}
-          </Users>
-        </CustomLink>
-      ) : (
-        <Users />
-      )}
+
       <div className="minus" onClick={() => store.toggleMinimizeChat()}></div>
     </Head>
   );
 };
-
-const Users = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-`;
-
-const Chip = styled.div`
-  min-width: 19px;
-  overflow: hidden;
-  min-height: 19px;
-  max-height: 19px;
-  background-color: ${(p) => p.theme.secondaryBackgroundColor};
-  background-size: cover;
-  border-radius: 40px;
-  padding: 2px 2px;
-  text-align: center;
-  color: #000;
-`;
-
-const UserChips = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  margin-right: 4px;
-  ${Chip} {
-    margin-left: -10px;
-    line-height: 15px;
-    font-size: 9px;
-    text-align: center;
-  }
-`;
 
 const Head = styled.div`
   display: flex;

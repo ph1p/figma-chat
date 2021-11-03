@@ -40,7 +40,7 @@ const NotificationsContainer = styled.div<{ isRoot: boolean }>`
   display: flex;
   flex-direction: column-reverse;
   position: absolute;
-  top: 37px;
+  top: 0;
   z-index: 11;
   padding: 11px;
   width: 100%;

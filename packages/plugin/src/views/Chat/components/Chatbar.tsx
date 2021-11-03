@@ -5,10 +5,11 @@ import { useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import EmojiIcon from '@fc/shared/assets/icons/EmojiIcon';
+import GearIcon from '@fc/shared/assets/icons/GearIcon';
 import SendArrowIcon from '@fc/shared/assets/icons/SendArrowIcon';
+import { CustomLink } from '@fc/shared/components/CustomLink';
 import Tooltip, { RefTooltip } from '@fc/shared/components/Tooltip';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
-
 
 import { useStore } from '../../../store';
 
@@ -54,32 +55,50 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
   };
 
   return (
-    <ChatBarForm isSettings={isSettings} onSubmit={sendMessage}>
+    <ChatBarForm isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
       <ConnectionInfo isConnected={isConnected}>
         {isFailed ? 'connection failed 🙈' : 'connecting...'}
       </ConnectionInfo>
 
-      <ChatInputWrapper isConnected={isConnected}>
+      <ChatInputWrapper>
         <RefTooltip hover ref={selectionTooltipRef} handler={selectionRef}>
           Add selection ({store.selectionCount} elements)
         </RefTooltip>
+        <SettingsAndUsers>
+          <CustomLink to="/settings">
+            <div className={`gear ${store.settings.isDarkTheme ? 'dark' : ''}`}>
+              <GearIcon />
+            </div>
+          </CustomLink>
+          {store.status === ConnectionEnum.CONNECTED && (
+            <CustomLink to="/user-list">
+              <Users>
+                <UserChips>
+                  {store.online
+                    .filter((_, i) => i < 2)
+                    .map((user) => (
+                      <Chip
+                        key={user.id}
+                        style={{
+                          backgroundColor: user.color,
+                          backgroundImage: !user?.avatar
+                            ? `url(${user.photoUrl})`
+                            : undefined,
+                        }}
+                      >
+                        {user?.avatar || ''}
+                      </Chip>
+                    ))}
+                  {store.online.length > 2 && (
+                    <Chip>+{store.online.length - 2}</Chip>
+                  )}
+                </UserChips>
+              </Users>
+            </CustomLink>
+          )}
+        </SettingsAndUsers>
 
-        <SelectionCheckbox
-          ref={selectionRef}
-          color={store.settings.color}
-          checked={props.selectionIsChecked}
-          hasSelection={hasSelection}
-          onMouseEnter={() => selectionTooltipRef.current.show()}
-          onMouseLeave={() => selectionTooltipRef.current.hide()}
-          onClick={() => {
-            props.setSelectionIsChecked(!props.selectionIsChecked);
-            chatTextInput.current.focus();
-          }}
-        >
-          <div>{store.selectionCount < 10 && store.selectionCount}</div>
-        </SelectionCheckbox>
-
-        <ChatInput hasSelection={hasSelection}>
+        <ChatInput isConnected={isConnected}>
           <input
             ref={chatTextInput}
             type="input"
@@ -120,6 +139,21 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
             </EmojiList>
           </Tooltip>
 
+          <SelectionCheckbox
+            ref={selectionRef}
+            color={store.settings.color}
+            checked={props.selectionIsChecked}
+            hasSelection={hasSelection}
+            onMouseEnter={() => selectionTooltipRef.current.show()}
+            onMouseLeave={() => selectionTooltipRef.current.hide()}
+            onClick={() => {
+              props.setSelectionIsChecked(!props.selectionIsChecked);
+              chatTextInput.current.focus();
+            }}
+          >
+            <div>{store.selectionCount < 10 && store.selectionCount}</div>
+          </SelectionCheckbox>
+
           <SendButton color={store.settings.color} onClick={sendMessage}>
             <SendArrowIcon />
           </SendButton>
@@ -128,6 +162,67 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
     </ChatBarForm>
   );
 };
+
+const Users = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-left: 5px;
+`;
+
+const Chip = styled.div`
+  min-width: 24px;
+  overflow: hidden;
+  min-height: 24px;
+  max-height: 24px;
+  background-color: #4b5a6a;
+  background-size: cover;
+  border-radius: 40px;
+  padding: 2px 2px;
+  text-align: center;
+  color: #000;
+`;
+
+const UserChips = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  ${Chip} {
+    margin-left: -16px;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    &:last-child {
+      margin-left: 0;
+      font-size: 11px;
+    }
+  }
+`;
+
+const SettingsAndUsers = styled.div`
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
+  margin-right: 5px;
+  padding: 0 6px;
+  border-radius: 94px;
+  display: flex;
+  align-items: center;
+  .gear {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${(p) => p.theme.chatbarSecondaryBackground};
+    border-radius: 100%;
+    &.dark {
+      svg path {
+        fill: ${({ theme }) => theme.thirdFontColor};
+      }
+    }
+  }
+`;
 
 const EmojiList = styled.div`
   display: flex;
@@ -143,21 +238,21 @@ const EmojiList = styled.div`
 `;
 
 const EmojiPickerStyled = styled.div`
-  position: absolute;
+  /* position: absolute;
   right: 51px;
-  top: 11px;
+  top: 11px; */
   z-index: 5;
   cursor: pointer;
 `;
 
-const ConnectionInfo = styled.div`
+const ConnectionInfo = styled.div<{ isConnected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
+  left: 50px;
+  top: 0px;
+  width: calc(100% - 70px);
   z-index: 6;
   bottom: -5px;
   text-align: center;
@@ -172,8 +267,8 @@ const ConnectionInfo = styled.div`
   }
 `;
 
-const ChatBarForm = styled.form`
-  padding: 0 14px;
+const ChatBarForm = styled.form<{ isSettings: boolean }>`
+  padding: 0 9px;
   z-index: 3;
   margin: 0;
   transition: opacity 0.2s;
@@ -183,18 +278,19 @@ const ChatBarForm = styled.form`
 
 const ChatInputWrapper = styled.div`
   display: flex;
-  transition: opacity 0.3s;
-  opacity: ${({ isConnected }) => (isConnected ? 1 : 0)};
   position: relative;
 `;
 
-const ChatInput = styled.div`
-  display: flex;
+const ChatInput = styled.div<{ isConnected: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr 18px auto auto;
+  align-items: center;
   margin: 0;
   z-index: 3;
-  transition: width 0.3s;
+  transition: width 0.3s, opacity 0.3s;
+  opacity: ${({ isConnected }) => (isConnected ? 1 : 0)};
   background-color: ${(p) => p.theme.secondaryBackgroundColor};
-  border-radius: 10px 10px 0 10px;
+  border-radius: 94px;
   width: 100%;
 
   input {
@@ -205,8 +301,8 @@ const ChatInput = styled.div`
     border-radius: 6px;
     width: 100%;
     border: 0;
-    padding: 14px 82px 14px 18px;
-    height: 41px;
+    padding: 12px 15px 12px 15px;
+    height: 35px;
     outline: none;
     color: ${(p) => p.theme.fontColor};
     &::placeholder {
@@ -232,31 +328,34 @@ const ChatInput = styled.div`
 `;
 
 const SendButton = styled.div`
-  position: absolute;
+  position: relative;
   display: flex;
   z-index: 3;
   cursor: pointer;
-  right: 4px;
-  top: 4px;
+  margin: 0 4px;
   background-color: ${({ color }) => color};
-  width: 33px;
-  height: 33px;
-  border-radius: 9px 9px 4px 9px;
+  width: 27px;
+  height: 27px;
+  border-radius: 94px;
   justify-content: center;
   svg {
     align-self: center;
   }
 `;
 
-const SelectionCheckbox = styled.div`
+const SelectionCheckbox = styled.div<{
+  hasSelection: boolean;
+  checked: boolean;
+}>`
   animation-delay: 0.2s;
   transition: all 0.2s;
-  background-color: ${(p) => p.theme.secondaryBackgroundColor};
-  border-radius: 10px;
-  height: 41px;
-  width: ${(p) => (p.hasSelection ? 49 : 0)}px;
-  margin-right: ${(p) => (p.hasSelection ? 8 : 0)}px;
+  border-radius: 100%;
+  height: 26px;
+  margin-left: ${(p) => (p.hasSelection ? 8 : 0)}px;
+  width: ${(p) => (p.hasSelection ? 26 : 0)}px;
+  pointer-events: ${(p) => (p.hasSelection ? 'all' : 'none')};
   opacity: ${(p) => (p.hasSelection ? 1 : 0)};
+  border: 1px solid ${(p) => (p.checked ? p.color : '#a2adc0')};
   overflow: hidden;
   display: flex;
   justify-items: center;
@@ -288,8 +387,8 @@ const SelectionCheckbox = styled.div`
       position: absolute;
       height: 1px;
       top: 0;
-      left: -3px;
-      right: -3px;
+      left: -2px;
+      right: -2px;
       background-color: ${(p) => (p.checked ? p.color : '#a2adc0')};
       box-shadow: 0 11px 0px ${(p) => (p.checked ? p.color : '#a2adc0')};
     }
@@ -298,8 +397,8 @@ const SelectionCheckbox = styled.div`
       position: absolute;
       width: 1px;
       left: 0;
-      top: -3px;
-      bottom: -3px;
+      top: -2px;
+      bottom: -2px;
       background-color: ${(p) => (p.checked ? p.color : '#a2adc0')};
       box-shadow: 11px 0px 0px ${(p) => (p.checked ? p.color : '#a2adc0')};
     }

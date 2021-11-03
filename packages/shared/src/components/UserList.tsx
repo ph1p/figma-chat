@@ -1,5 +1,8 @@
 import React, { FunctionComponent } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
+
+import BackIcon from '@fc/shared/assets/icons/BackIcon';
 
 interface Props {
   users: {
@@ -12,51 +15,61 @@ interface Props {
   socketId: string;
 }
 
-const UserList: FunctionComponent<Props> = (props) => (
-  <Wrapper>
-    <h5>Active Users</h5>
-    <div className="users">
-      {props.users.map((user) => {
-        return (
-          <div key={user.id} className="user">
-            <div
-              className="color"
-              style={{
-                backgroundColor: user.color || '#000',
-                backgroundImage: !user?.avatar
-                  ? `url(${user.photoUrl})`
-                  : undefined,
-              }}
-            >
-              {user.avatar}
+const UserList: FunctionComponent<Props> = (props) => {
+  const history = useHistory();
+
+  return (
+    <Wrapper>
+      <h5>Active Users</h5>
+      <div className="users">
+        {props.users.map((user) => {
+          return (
+            <div key={user.id} className="user">
+              <div
+                className="color"
+                style={{
+                  backgroundColor: user.color || '#000',
+                  backgroundImage: !user?.avatar
+                    ? `url(${user.photoUrl})`
+                    : undefined,
+                }}
+              >
+                {user.avatar}
+              </div>
+              <div className={`name ${!user.name ? 'empty' : ''}`}>
+                {user.name || 'Anon'}
+                {user.id === props.socketId && <p>you</p>}
+              </div>
             </div>
-            <div className={`name ${!user.name ? 'empty' : ''}`}>
-              {user.name || 'Anon'}
-              {user.id === props.socketId && <p>you</p>}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </Wrapper>
-);
+          );
+        })}
+      </div>
+      <ShortcutTiles>
+        <Tile name="back" onClick={() => history.push('/')}>
+          <BackIcon />
+        </Tile>
+      </ShortcutTiles>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr 35px;
   width: 100vw;
-  height: calc(100vh - 33px);
-  padding: 8px 16px;
+  padding: 9px;
+  height: 100%;
+
   h5 {
     color: #a2adc0;
     font-weight: normal;
-    margin: 10px 0;
+    margin: 0 0 10px;
     font-size: 10px;
   }
   .users {
     overflow-y: auto;
     .user {
-      padding: 8px 0;
+      padding: 4px 0;
       font-size: 14px;
       font-weight: bold;
       display: flex;
@@ -76,7 +89,7 @@ const Wrapper = styled.div`
       }
       .color {
         background-size: cover;
-        border-radius: 14px 14px 3px 14px;
+        border-radius: 100%;
         width: 41px;
         height: 41px;
         margin-right: 17px;
@@ -86,6 +99,31 @@ const Wrapper = styled.div`
       }
     }
   }
+`;
+
+const Tile = styled.div<{ name: string }>`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(p) => p.theme.chatbarSecondaryBackground};
+  border-radius: 100%;
+  cursor: pointer;
+  svg {
+    transform: scale(0.8);
+
+    path {
+      fill: ${({ theme }) => theme.thirdFontColor};
+    }
+  }
+`;
+
+const ShortcutTiles = styled.div`
+  background-color: ${(p) => p.theme.secondaryBackgroundColor};
+  padding: 6px;
+  border-radius: 94px;
+  justify-self: start;
 `;
 
 export default UserList;
