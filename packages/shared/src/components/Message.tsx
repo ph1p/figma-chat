@@ -1,7 +1,9 @@
+import { GiphyFetch } from '@giphy/js-fetch-api';
+import { Gif } from '@giphy/react-components';
 import Linkify from 'linkify-react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import TimeAgo from 'react-timeago';
 // @ts-ignore
@@ -17,14 +19,17 @@ import { MessageData } from '../utils/interfaces';
 
 const formatter = buildFormatter(nowStrings);
 
+const gf = new GiphyFetch('omj1iPoq5H5GTi2Xjz2E9NFCcVqGLuPZ');
+
 interface Props {
   data: MessageData;
   instanceId: string;
   onClickSelection?: (selection: any) => void;
+  store: any;
 }
 
 const Message: FunctionComponent<Props> = observer(
-  ({ data, instanceId, onClickSelection }) => {
+  ({ data, instanceId, onClickSelection, store }) => {
     const username = data.user.name || '';
     const avatar = data.user.avatar || '';
     const photoUrl = data.user.photoUrl || '';
@@ -35,11 +40,24 @@ const Message: FunctionComponent<Props> = observer(
 
     const selectionCount = (selection?.nodes && selection?.nodes?.length) || 0;
 
+    const giphy = data?.message?.giphy || null;
     const text = data?.message?.text || '';
     const date = data?.message?.date || null;
     const external = data?.message?.external || false;
     const isSingleEmoji = !selectionCount && isOnlyEmoji(text);
     const [mounted, setMounted] = useState(false);
+    const [giphyImage, setGiphyImage] = useState<any>(null);
+
+    useEffect(() => {
+      if (giphy) {
+        gf.gif(giphy).then((gif) => {
+          setGiphyImage(gif.data);
+          if (store.scrollToBottom) {
+            store.scrollToBottom();
+          }
+        });
+      }
+    }, [giphy]);
 
     useEffect(() => {
       setMounted(true);
@@ -54,6 +72,7 @@ const Message: FunctionComponent<Props> = observer(
         <MessageFlex isLocalMessage={isLocalMessage}>
           <div className="message">
             <MessageContainer
+              isGiphy={Boolean(giphy)}
               className={`${isLocalMessage ? 'me' : colorClass} ${
                 isSingleEmoji && 'emoji'
               }`}
@@ -72,7 +91,14 @@ const Message: FunctionComponent<Props> = observer(
                   </div>
                 </MessageHeader>
               )}
-              {selection ? (
+
+              {giphy ? (
+                giphyImage ? (
+                  <Gif noLink gif={giphyImage} width={220} />
+                ) : (
+                  <LoadingGif>loading...</LoadingGif>
+                )
+              ) : selection ? (
                 <span
                   onClick={() =>
                     onClickSelection ? onClickSelection(toJS(selection)) : null
@@ -115,6 +141,10 @@ const Message: FunctionComponent<Props> = observer(
     );
   }
 );
+
+const LoadingGif = styled.div`
+  padding: 10px;
+`;
 
 const MessageHeader = styled.header`
   display: flex;
@@ -187,7 +217,8 @@ const SelectionButton = styled('button')<{ isLocalMessage: boolean }>`
   }
 `;
 
-const MessageContainer = styled.div`
+const MessageContainer = styled.div<{ isGiphy: boolean }>`
+  position: relative;
   background-color: #18a0fb;
   border-radius: 4px 14px 14px 14px;
   color: #fff;
@@ -196,11 +227,29 @@ const MessageContainer = styled.div`
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
-  padding: 10px;
   word-break: break-word;
   margin-bottom: 4px;
   max-width: 240px;
   text-align: left;
+  overflow: ${(p) => (p.isGiphy ? 'hidden' : 'initial')};
+  padding: ${(p) => (p.isGiphy ? 0 : 10)}px;
+
+  ${(p) =>
+    p.isGiphy
+      ? css`
+          ${MessageHeader} {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 4px 6px;
+            color: #fff;
+          }
+        `
+      : ''}
+
   header {
     margin-bottom: 4px;
   }

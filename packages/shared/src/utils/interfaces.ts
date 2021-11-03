@@ -26,6 +26,7 @@ export interface MessageData {
   message: {
     date: string;
     text: string;
+    giphy?: string;
     external?: any;
     selection?: {
       nodes?: string[];

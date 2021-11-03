@@ -22,6 +22,8 @@
   "license": "ISC",
   "dependencies": {
     "@fc/shared": "link:../shared/src",
+    "@giphy/js-fetch-api": "^4.1.2",
+    "@giphy/react-components": "^5.4.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "linkify-react": "^3.0.3",

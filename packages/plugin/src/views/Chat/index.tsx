@@ -37,6 +37,7 @@ const Chat: FunctionComponent = observer(() => {
     if (e) {
       e.preventDefault();
     }
+
     if (store.roomName) {
       let data = {
         text: chatState.textMessage,

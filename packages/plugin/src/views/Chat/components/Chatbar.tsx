@@ -8,6 +8,7 @@ import EmojiIcon from '@fc/shared/assets/icons/EmojiIcon';
 import GearIcon from '@fc/shared/assets/icons/GearIcon';
 import SendArrowIcon from '@fc/shared/assets/icons/SendArrowIcon';
 import { CustomLink } from '@fc/shared/components/CustomLink';
+import { GiphyGrid } from '@fc/shared/components/GiphyGrid';
 import Tooltip, { RefTooltip } from '@fc/shared/components/Tooltip';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
@@ -49,119 +50,174 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
     []
   );
 
+  useEffect(() => {}, [props.textMessage]);
+
   const sendMessage = (e) => {
-    props.sendMessage(e);
-    chatTextInput.current.value = '';
+    e.preventDefault();
+    if (!chatTextInput.current.value.startsWith('/giphy')) {
+      props.sendMessage(e);
+      chatTextInput.current.value = '';
+    }
   };
 
   return (
-    <ChatBarForm isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
-      <ConnectionInfo isConnected={isConnected}>
-        {isFailed ? 'connection failed 🙈' : 'connecting...'}
-      </ConnectionInfo>
+    <>
+      <GiphyGrid
+        store={store}
+        setTextMessage={(p) => {
+          props.setTextMessage(p);
+          chatTextInput.current.value = '';
+        }}
+        textMessage={props.textMessage}
+      />
+      <ChatBarForm isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
+        <ConnectionInfo isConnected={isConnected}>
+          {isFailed ? 'connection failed 🙈' : 'connecting...'}
+        </ConnectionInfo>
 
-      <ChatInputWrapper>
-        <RefTooltip hover ref={selectionTooltipRef} handler={selectionRef}>
-          Add selection ({store.selectionCount} elements)
-        </RefTooltip>
-        <SettingsAndUsers>
-          <CustomLink to="/settings">
-            <div className={`gear ${store.settings.isDarkTheme ? 'dark' : ''}`}>
-              <GearIcon />
-            </div>
-          </CustomLink>
-          {store.status === ConnectionEnum.CONNECTED && (
-            <CustomLink to="/user-list">
-              <Users>
-                <UserChips>
-                  {store.online
-                    .filter((_, i) => i < 2)
-                    .map((user) => (
-                      <Chip
-                        key={user.id}
-                        style={{
-                          backgroundColor: user.color,
-                          backgroundImage: !user?.avatar
-                            ? `url(${user.photoUrl})`
-                            : undefined,
-                        }}
-                      >
-                        {user?.avatar || ''}
-                      </Chip>
-                    ))}
-                  {store.online.length > 2 && (
-                    <Chip>+{store.online.length - 2}</Chip>
-                  )}
-                </UserChips>
-              </Users>
+        <ChatInputWrapper>
+          <RefTooltip hover ref={selectionTooltipRef} handler={selectionRef}>
+            Add selection ({store.selectionCount} elements)
+          </RefTooltip>
+          <SettingsAndUsers>
+            <CustomLink to="/settings">
+              <div
+                className={`gear ${store.settings.isDarkTheme ? 'dark' : ''}`}
+              >
+                <GearIcon />
+              </div>
             </CustomLink>
-          )}
-        </SettingsAndUsers>
+            {store.status === ConnectionEnum.CONNECTED && (
+              <CustomLink to="/user-list">
+                <Users>
+                  <UserChips>
+                    {store.online
+                      .filter((_, i) => i < 2)
+                      .map((user) => (
+                        <Chip
+                          key={user.id}
+                          style={{
+                            backgroundColor: user.color,
+                            backgroundImage: !user?.avatar
+                              ? `url(${user.photoUrl})`
+                              : undefined,
+                          }}
+                        >
+                          {user?.avatar || ''}
+                        </Chip>
+                      ))}
+                    {store.online.length > 2 && (
+                      <Chip>+{store.online.length - 2}</Chip>
+                    )}
+                  </UserChips>
+                </Users>
+              </CustomLink>
+            )}
+          </SettingsAndUsers>
 
-        <ChatInput isConnected={isConnected}>
-          <input
-            ref={chatTextInput}
-            type="input"
-            onChange={({ target }: any) =>
-              props.setTextMessage(target.value.substr(0, 1000))
-            }
-            placeholder={`Write something ... ${
-              props.selectionIsChecked ? '(optional)' : ''
-            }`}
-          />
+          <ChatInput isConnected={isConnected}>
+            <input
+              ref={chatTextInput}
+              type="input"
+              onChange={({ target }: any) =>
+                props.setTextMessage(target.value.substr(0, 1000))
+              }
+              placeholder={`Write something ... ${
+                props.selectionIsChecked ? '(optional)' : ''
+              }`}
+            />
 
-          <Tooltip
-            ref={emojiPickerRef}
-            style={{
-              paddingTop: 11,
-              paddingBottom: 11,
-              paddingLeft: 17,
-              paddingRight: 17,
-            }}
-            handler={React.forwardRef((p, ref) => (
-              <EmojiPickerStyled {...p} ref={ref}>
-                <EmojiIcon />
-              </EmojiPickerStyled>
-            ))}
-          >
-            <EmojiList>
-              {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩'].map((emoji) => (
-                <span
-                  key={emoji}
-                  data-emoji={emoji}
-                  onClick={(e) => {
-                    props.setTextMessage(emoji);
-                    sendMessage(e);
-                    emojiPickerRef.current.hide();
-                  }}
-                />
+            <Tooltip
+              ref={emojiPickerRef}
+              style={{
+                paddingTop: 11,
+                paddingBottom: 11,
+                paddingLeft: 17,
+                paddingRight: 17,
+              }}
+              handler={React.forwardRef((p, ref) => (
+                <EmojiPickerStyled {...p} ref={ref}>
+                  <EmojiIcon />
+                </EmojiPickerStyled>
               ))}
-            </EmojiList>
-          </Tooltip>
+            >
+              <EmojiList>
+                {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩'].map((emoji) => (
+                  <span
+                    key={emoji}
+                    data-emoji={emoji}
+                    onClick={(e) => {
+                      props.setTextMessage(emoji);
+                      sendMessage(e);
+                      emojiPickerRef.current.hide();
+                    }}
+                  />
+                ))}
+              </EmojiList>
+            </Tooltip>
 
-          <SelectionCheckbox
-            ref={selectionRef}
-            color={store.settings.color}
-            checked={props.selectionIsChecked}
-            hasSelection={hasSelection}
-            onMouseEnter={() => selectionTooltipRef.current.show()}
-            onMouseLeave={() => selectionTooltipRef.current.hide()}
-            onClick={() => {
-              props.setSelectionIsChecked(!props.selectionIsChecked);
-              chatTextInput.current.focus();
-            }}
-          >
-            <div>{store.selectionCount < 10 && store.selectionCount}</div>
-          </SelectionCheckbox>
+            <SelectionCheckbox
+              ref={selectionRef}
+              color={store.settings.color}
+              checked={props.selectionIsChecked}
+              hasSelection={hasSelection}
+              onMouseEnter={() => selectionTooltipRef.current.show()}
+              onMouseLeave={() => selectionTooltipRef.current.hide()}
+              onClick={() => {
+                props.setSelectionIsChecked(!props.selectionIsChecked);
+                chatTextInput.current.focus();
+              }}
+            >
+              <div>{store.selectionCount < 10 && store.selectionCount}</div>
+            </SelectionCheckbox>
 
-          <SendButton color={store.settings.color} onClick={sendMessage}>
-            <SendArrowIcon />
-          </SendButton>
-        </ChatInput>
-      </ChatInputWrapper>
-    </ChatBarForm>
+            <SendButton color={store.settings.color} onClick={sendMessage}>
+              <SendArrowIcon />
+            </SendButton>
+          </ChatInput>
+        </ChatInputWrapper>
+      </ChatBarForm>
+    </>
   );
 };
+
+const GiphyHeader = styled.div`
+  display: flex;
+  padding: 4px 5px 12px;
+  .logo {
+    svg {
+      width: 70px;
+      height: 15px;
+    }
+  }
+  .searchterm {
+    color: #4c4c4c;
+    margin-left: 6px;
+  }
+`;
+const Giphy = styled.div`
+  position: absolute;
+  bottom: 54px;
+  left: 9px;
+  width: 315px;
+  height: 250px;
+  overflow: auto;
+  background-color: #000;
+  border-radius: 14px;
+  padding: 9px;
+  .overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    cursor: pointer;
+    transition: all 0.3s;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
+`;
 
 const Users = styled.div`
   display: flex;
