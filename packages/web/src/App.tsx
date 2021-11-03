@@ -1,14 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useCallback } from 'react';
-import {
-  Route,
-  BrowserRouter as Router,
-  Switch,
-  useHistory,
-  useRouteMatch,
-} from 'react-router-dom';
+import { Route, Routes, useNavigate, useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { CustomLink } from '@fc/shared/components/CustomLink';
 import Notifications from '@fc/shared/components/Notifications';
 import UserListView from '@fc/shared/components/UserList';
 import { useSocket } from '@fc/shared/utils/SocketProvider';
@@ -20,37 +15,10 @@ import { Chat } from './views/Chat';
 import { Login } from './views/Login';
 import { Settings } from './views/Settings';
 
-const CustomLink: FunctionComponent<{
-  to: string;
-  style?: any;
-  className?: string;
-}> = ({ children, to, style = {}, className = '' }) => {
-  const history = useHistory();
-  const match = useRouteMatch({
-    path: to,
-    exact: true,
-  });
-
-  return (
-    <div
-      style={{
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        ...style,
-      }}
-      onClick={() => history.push(to)}
-      className={match ? `${className} active` : className}
-    >
-      {children}
-    </div>
-  );
-};
-
 export const App = observer(() => {
   const store = useStore();
   const socket = useSocket();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const leaveRoom = useCallback(() => {
     store.setSecret('');
@@ -58,56 +26,58 @@ export const App = observer(() => {
     store.setOnline([]);
     socket?.disconnect();
 
-    if (history) {
-      history.replace('/');
+    if (navigate) {
+      navigate('/', {
+        replace: true,
+      });
     }
-  }, [store, history, socket]);
+  }, [store, navigate, socket]);
 
   return (
     <Wrapper>
-      <Router>
-        <Notifications
-          notifications={store.notifications}
-          deleteNotification={store.deleteNotification}
-        />
-        <Header>
-          <Left>
-            <CustomLink to="/">
-              <img src={LogoPNG} />
-            </CustomLink>
-          </Left>
+      <Notifications
+        notifications={store.notifications}
+        deleteNotification={store.deleteNotification}
+      />
+      <Header>
+        <Left>
+          <CustomLink to="/">
+            <img src={LogoPNG} />
+          </CustomLink>
+        </Left>
 
-          <Menu>
-            <CustomLink className="menu-item" to="/">
-              Chat
-            </CustomLink>
-            <CustomLink className="menu-item" to="/settings">
-              <span>Settings</span>
-            </CustomLink>
+        <Menu>
+          <CustomLink className="menu-item" to="/">
+            Chat
+          </CustomLink>
+          <CustomLink className="menu-item" to="/settings">
+            <span>Settings</span>
+          </CustomLink>
 
-            {store.room &&
-              store.settings &&
-              store.status === ConnectionEnum.CONNECTED && (
-                <button className="menu-item logout" onClick={leaveRoom}>
-                  Logout
-                </button>
-              )}
-          </Menu>
-        </Header>
-        <Content>
-          <Switch>
-            <Route path="/user-list">
+          {store.room &&
+            store.settings &&
+            store.status === ConnectionEnum.CONNECTED && (
+              <button className="menu-item logout" onClick={leaveRoom}>
+                Logout
+              </button>
+            )}
+        </Menu>
+      </Header>
+      <Content>
+        <Routes>
+          <Route
+            path="/"
+            element={!store.room || !store.secret || store.status !== ConnectionEnum.CONNECTED ? <Login /> : <Chat />}
+          />
+          <Route
+            path="/user-list"
+            element={
               <UserListView users={store.online} socketId={socket?.id || ''} />
-            </Route>
-            <Route path="/settings">
-              <Settings />
-            </Route>
-            <Route path="/">
-              {!store.room || !store.secret ? <Login /> : <Chat />}
-            </Route>
-          </Switch>
-        </Content>
-      </Router>
+            }
+          />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </Content>
     </Wrapper>
   );
 });

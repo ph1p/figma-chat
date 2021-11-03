@@ -1,11 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Tooltip from '@fc/shared/components/Tooltip';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
-
 
 import { useStore } from '../store';
 
@@ -14,9 +13,9 @@ const MinimizedView: FunctionComponent = () => {
 
   return (
     <Minimized>
-      {!store.isMinimized && <Redirect to="/" />}
+      {!store.isMinimized && <Navigate to="/" />}
       {store.status === ConnectionEnum.ERROR && (
-        <Redirect to="/connection-error" />
+        <Navigate to="/connection-error" />
       )}
       <Users>
         {store.online.map((user) => (

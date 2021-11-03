@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 
 export const CustomLink = ({
   children,
@@ -7,10 +7,9 @@ export const CustomLink = ({
   style = {},
   className = '',
 }: any) => {
-  const history = useHistory();
-  const match = useRouteMatch({
+  const navigate = useNavigate();
+  const match = useMatch({
     path: to,
-    exact: true,
   });
 
   return (
@@ -21,7 +20,7 @@ export const CustomLink = ({
         alignItems: 'center',
         ...style,
       }}
-      onClick={() => history.push(to)}
+      onClick={() => navigate(to)}
       className={match ? `${className} active` : className}
     >
       {children}

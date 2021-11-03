@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   MemoryRouter as Router,
-  Redirect,
+  Navigate,
   Route,
-  Switch,
+  Routes,
 } from 'react-router-dom';
 import io, { Socket } from 'socket.io-client';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
@@ -191,24 +191,21 @@ const App = observer(() => {
               deleteNotification={store.deleteNotification}
             />
             {/* <Header minimized={store.isMinimized} /> */}
-            {store.isMinimized && <Redirect to="/minimized" />}
-            <Switch>
-              <Route exact path="/minimized">
-                <MinimizedView />
-              </Route>
-              <Route exact path="/user-list">
-                <UserListView
-                  users={store.online}
-                  socketId={socket?.id || ''}
-                />
-              </Route>
-              <Route exact path="/settings">
-                <SettingsView />
-              </Route>
-              <Route exact path="/">
-                <ChatView />
-              </Route>
-            </Switch>
+            {store.isMinimized && <Navigate replace to="/minimized" />}
+            <Routes>
+              <Route path="/minimized" element={<MinimizedView />} />
+              <Route
+                path="/user-list"
+                element={
+                  <UserListView
+                    users={store.online}
+                    socketId={socket?.id || ''}
+                  />
+                }
+              />
+              <Route path="/settings" element={<SettingsView />} />
+              <Route path="/" element={<ChatView />} />
+            </Routes>
           </Router>
         </SocketProvider>
       </AppWrapper>

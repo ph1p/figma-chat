@@ -3,7 +3,7 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, BrowserRouter } from 'react-router-dom';
 import io, { Socket } from 'socket.io-client';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
@@ -36,12 +36,11 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `;
-
 trunk.init().then(() => {
   const InitApp = observer(() => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const store = useStore();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const logout = () => {
       store.addNotification('Credentials not valid');
@@ -50,7 +49,9 @@ trunk.init().then(() => {
       store.setOnline([]);
       socket?.disconnect();
       if (history) {
-        history.replace('/');
+        navigate('/', {
+          replace: true,
+        });
       }
     };
 
@@ -134,7 +135,9 @@ trunk.init().then(() => {
   ReactDOM.render(
     <React.StrictMode>
       <StoreProvider>
-        <InitApp />
+        <BrowserRouter>
+          <InitApp />
+        </BrowserRouter>
       </StoreProvider>
     </React.StrictMode>,
     document.getElementById('root')

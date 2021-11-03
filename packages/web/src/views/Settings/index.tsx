@@ -1,6 +1,6 @@
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, FunctionComponent, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 import BackIcon from '@fc/shared/assets/icons/BackIcon';
@@ -21,7 +21,7 @@ export const Settings: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const settings = useLocalObservable(() => ({
     name: '',
     url: DEFAULT_SERVER_URL,
@@ -54,7 +54,7 @@ export const Settings: FunctionComponent = observer(() => {
     store.persistSettings(settings, socket);
 
     if (shouldClose) {
-      history.push('/');
+      navigate('/');
     }
   };
 
@@ -108,7 +108,7 @@ export const Settings: FunctionComponent = observer(() => {
 
       <Footer>
         <ShortcutTiles>
-          <Tile name="back" onClick={() => history.push('/')}>
+          <Tile name="back" onClick={() => navigate('/')}>
             <BackIcon />
           </Tile>
         </ShortcutTiles>

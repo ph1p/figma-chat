@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 import BackIcon from '@fc/shared/assets/icons/BackIcon';
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const UserList: FunctionComponent<Props> = (props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Wrapper>
@@ -45,7 +45,7 @@ const UserList: FunctionComponent<Props> = (props) => {
         })}
       </div>
       <ShortcutTiles>
-        <Tile name="back" onClick={() => history.push('/')}>
+        <Tile name="back" onClick={() => navigate('/')}>
           <BackIcon />
         </Tile>
       </ShortcutTiles>

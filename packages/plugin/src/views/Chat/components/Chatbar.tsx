@@ -1,7 +1,7 @@
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import EmojiIcon from '@fc/shared/assets/icons/EmojiIcon';
@@ -23,7 +23,7 @@ interface ChatProps {
 
 const ChatBar: FunctionComponent<ChatProps> = (props) => {
   const store = useStore();
-  const isSettings = useRouteMatch('/settings');
+  const isSettings = useMatch('/settings');
   const emojiPickerRef = useRef(null);
 
   const selectionRef = useRef(null);

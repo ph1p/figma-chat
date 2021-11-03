@@ -1,7 +1,7 @@
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import EmojiIcon from '@fc/shared/assets/icons/EmojiIcon';
@@ -18,7 +18,7 @@ export const ChatBar: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
 
-  const isSettings = useRouteMatch('/settings');
+  const isSettings = useMatch('/settings');
   const emojiPickerRef = useRef<React.ElementRef<typeof Tooltip>>(null);
   const chatTextInput = useRef<HTMLInputElement>(null);
   const [messageText, setMessageText] = useState('');
