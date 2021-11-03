@@ -8,6 +8,7 @@ import EmojiIcon from '@fc/shared/assets/icons/EmojiIcon';
 import GearIcon from '@fc/shared/assets/icons/GearIcon';
 import SendArrowIcon from '@fc/shared/assets/icons/SendArrowIcon';
 import { CustomLink } from '@fc/shared/components/CustomLink';
+import { GiphyGrid } from '@fc/shared/components/GiphyGrid';
 import Tooltip from '@fc/shared/components/Tooltip';
 import { useSocket } from '@fc/shared/utils/SocketProvider';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
@@ -65,88 +66,102 @@ export const ChatBar: FunctionComponent = observer(() => {
     }
   };
   return (
-    <ChatBarForm isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
-      <ChatInputWrapper>
-        <SettingsAndUsers>
-          <CustomLink to="/settings">
-            <div className={`gear ${store.settings.isDarkTheme ? 'dark' : ''}`}>
-              <GearIcon />
-            </div>
-          </CustomLink>
-          {store.status === ConnectionEnum.CONNECTED && (
-            <CustomLink to="/user-list">
-              <Users>
-                <UserChips>
-                  {store.online
-                    .filter((_, i) => i < 2)
-                    .map((user) => (
-                      <Chip
-                        key={user.id}
-                        style={{
-                          backgroundColor: user.color,
-                          backgroundImage: !user?.avatar
-                            ? `url(${user.photoUrl})`
-                            : undefined,
-                        }}
-                      >
-                        {user?.avatar || ''}
-                      </Chip>
-                    ))}
-                  {store.online.length > 2 && (
-                    <Chip>+{store.online.length - 2}</Chip>
-                  )}
-                </UserChips>
-              </Users>
+    <>
+      <GiphyGrid
+        store={store}
+        setTextMessage={(p) => {
+          setMessageText(p);
+          if (chatTextInput.current) {
+            chatTextInput.current.value = p;
+          }
+        }}
+        textMessage={messageText}
+      />
+      <ChatBarForm isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
+        <ChatInputWrapper>
+          <SettingsAndUsers>
+            <CustomLink to="/settings">
+              <div
+                className={`gear ${store.settings.isDarkTheme ? 'dark' : ''}`}
+              >
+                <GearIcon />
+              </div>
             </CustomLink>
-          )}
-        </SettingsAndUsers>
-
-        <ChatInput isConnected={isConnected}>
-          <input
-            ref={chatTextInput}
-            type="input"
-            onChange={({ target }: any) =>
-              setMessageText(target.value.substr(0, 1000))
-            }
-            placeholder="Write something ..."
-          />
-
-          <Tooltip
-            ref={emojiPickerRef}
-            style={{
-              paddingTop: 11,
-              paddingBottom: 11,
-              paddingLeft: 17,
-              paddingRight: 17,
-            }}
-            handler={React.forwardRef(
-              (p, ref: React.ForwardedRef<HTMLInputElement>) => (
-                <EmojiPickerStyled {...p} ref={ref}>
-                  <EmojiIcon />
-                </EmojiPickerStyled>
-              )
+            {store.status === ConnectionEnum.CONNECTED && (
+              <CustomLink to="/user-list">
+                <Users>
+                  <UserChips>
+                    {store.online
+                      .filter((_, i) => i < 2)
+                      .map((user) => (
+                        <Chip
+                          key={user.id}
+                          style={{
+                            backgroundColor: user.color,
+                            backgroundImage: !user?.avatar
+                              ? `url(${user.photoUrl})`
+                              : undefined,
+                          }}
+                        >
+                          {user?.avatar || ''}
+                        </Chip>
+                      ))}
+                    {store.online.length > 2 && (
+                      <Chip>+{store.online.length - 2}</Chip>
+                    )}
+                  </UserChips>
+                </Users>
+              </CustomLink>
             )}
-          >
-            <EmojiList>
-              {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩'].map((emoji) => (
-                <span
-                  key={emoji}
-                  data-emoji={emoji}
-                  onClick={(e) => {
-                    sendMessage(e, emoji);
-                    emojiPickerRef.current.hide();
-                  }}
-                />
-              ))}
-            </EmojiList>
-          </Tooltip>
+          </SettingsAndUsers>
 
-          <SendButton color={store.settings.color} onClick={sendMessage}>
-            <SendArrowIcon />
-          </SendButton>
-        </ChatInput>
-      </ChatInputWrapper>
-    </ChatBarForm>
+          <ChatInput isConnected={isConnected}>
+            <input
+              ref={chatTextInput}
+              type="input"
+              onChange={({ target }: any) =>
+                setMessageText(target.value.substr(0, 1000))
+              }
+              placeholder="Write something ..."
+            />
+
+            <Tooltip
+              ref={emojiPickerRef}
+              style={{
+                paddingTop: 11,
+                paddingBottom: 11,
+                paddingLeft: 17,
+                paddingRight: 17,
+              }}
+              handler={React.forwardRef(
+                (p, ref: React.ForwardedRef<HTMLInputElement>) => (
+                  <EmojiPickerStyled {...p} ref={ref}>
+                    <EmojiIcon />
+                  </EmojiPickerStyled>
+                )
+              )}
+            >
+              <EmojiList>
+                {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩'].map((emoji) => (
+                  <span
+                    key={emoji}
+                    data-emoji={emoji}
+                    onClick={(e) => {
+                      sendMessage(e, emoji);
+                      emojiPickerRef.current.hide();
+                    }}
+                  />
+                ))}
+              </EmojiList>
+            </Tooltip>
+
+            <SendButton color={store.settings.color} onClick={sendMessage}>
+              <SendArrowIcon />
+            </SendButton>
+          </ChatInput>
+        </ChatInputWrapper>
+      </ChatBarForm>
+    </>
   );
 });
 

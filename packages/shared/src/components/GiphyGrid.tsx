@@ -1,13 +1,14 @@
 import { GiphyFetch } from '@giphy/js-fetch-api';
 import { Grid } from '@giphy/react-components';
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 
 import { GiphyLogo } from '@fc/shared/assets/GiphyLogo';
 
 import { GiphyCloseIcon } from '../assets/icons/GiphyCloseIcon';
 import { useSocket } from '../utils/SocketProvider';
+import { useOnClickOutside } from '../utils/hooks/use-on-outside-click';
 
 const gf = new GiphyFetch('omj1iPoq5H5GTi2Xjz2E9NFCcVqGLuPZ');
 
@@ -20,6 +21,8 @@ interface GiphyGridProps {
 export const GiphyGrid: FunctionComponent<GiphyGridProps> = observer(
   (props) => {
     const socket = useSocket();
+    const ref = useRef(null);
+    useOnClickOutside(ref, () => props.setTextMessage(''));
 
     const searchTerm = useMemo(() => {
       if (props.textMessage.startsWith('/giphy')) {
@@ -34,7 +37,7 @@ export const GiphyGrid: FunctionComponent<GiphyGridProps> = observer(
     );
 
     return isGiphy ? (
-      <Giphy>
+      <Giphy ref={ref}>
         <GiphyHeader>
           <div className="logo">
             <GiphyLogo />
@@ -64,6 +67,7 @@ export const GiphyGrid: FunctionComponent<GiphyGridProps> = observer(
                   const data = {
                     giphy: gif.id,
                     date: new Date(),
+                    external: !props.store.addMessage,
                   };
                   const message = props.store.encryptor.encrypt(
                     JSON.stringify(data)
@@ -71,11 +75,15 @@ export const GiphyGrid: FunctionComponent<GiphyGridProps> = observer(
 
                   if (socket) {
                     socket.emit('chat message', {
-                      roomName: props.store.roomName,
+                      roomName: props.store.roomName || props.store.room,
                       message,
                     });
 
-                    props.store.addMessage(message);
+                    if (props.store.addMessage) {
+                      props.store.addMessage(message);
+                    } else {
+                      props.store.addLocalMessage(message);
+                    }
                   }
 
                   props.setTextMessage('');
@@ -125,8 +133,10 @@ const GiphyHeader = styled.div`
 
 const Giphy = styled.div`
   position: absolute;
+  z-index: 15;
   bottom: 54px;
-  left: 9px;
+  transform: translateX(-50%);
+  left: 50%;
   color: #fff;
   display: grid;
   grid-template-rows: 36px 1fr;

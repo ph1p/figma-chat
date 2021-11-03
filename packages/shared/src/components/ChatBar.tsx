@@ -11,6 +11,8 @@ import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
 import { useStore } from '../../../store/RootStore';
 
+import { GiphyGrid } from './GiphyGrid';
+
 export const ChatBar: FunctionComponent = observer(() => {
   const store = useStore();
   const socket = useSocket();
@@ -61,58 +63,70 @@ export const ChatBar: FunctionComponent = observer(() => {
   };
 
   return (
-    <ChatBarForm onSubmit={sendMessage}>
-      <ConnectionInfo connected={connected}>
-        {isFailed ? 'connection failed 🙈' : 'connecting...'}
-      </ConnectionInfo>
+    <>
+      <GiphyGrid
+        store={store}
+        setTextMessage={(p) => {
+          props.setTextMessage(p);
+          chatTextInput.current.value = '';
+        }}
+        textMessage={props.textMessage}
+      />
+      <ChatBarForm onSubmit={sendMessage}>
+        <ConnectionInfo connected={connected}>
+          {isFailed ? 'connection failed 🙈' : 'connecting...'}
+        </ConnectionInfo>
 
-      <ChatInputWrapper connected={connected}>
-        <ChatInput>
-          <input
-            ref={chatTextInput}
-            type="input"
-            onChange={({ target }: any) =>
-              setMessageText(target.value.substr(0, 1000))
-            }
-            placeholder="Write something ..."
-          />
+        <ChatInputWrapper connected={connected}>
+          <ChatInput>
+            <input
+              ref={chatTextInput}
+              type="input"
+              onChange={({ target }: any) =>
+                setMessageText(target.value.substr(0, 1000))
+              }
+              placeholder="Write something ..."
+            />
 
-          <Tooltip
-            ref={emojiPickerRef}
-            style={{
-              paddingTop: 11,
-              paddingBottom: 11,
-              paddingLeft: 17,
-              paddingRight: 17,
-            }}
-            handler={React.forwardRef(
-              (p, ref: React.ForwardedRef<HTMLInputElement>) => (
-                <EmojiPickerStyled {...p} ref={ref}>
-                  <EmojiIcon />
-                </EmojiPickerStyled>
-              )
-            )}
-          >
-            <EmojiList>
-              {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩', '🚀'].map((emoji) => (
-                <span
-                  key={emoji}
-                  data-emoji={emoji}
-                  onClick={(e) => {
-                    sendMessage(e, emoji);
-                    emojiPickerRef.current.hide();
-                  }}
-                />
-              ))}
-            </EmojiList>
-          </Tooltip>
+            <Tooltip
+              ref={emojiPickerRef}
+              style={{
+                paddingTop: 11,
+                paddingBottom: 11,
+                paddingLeft: 17,
+                paddingRight: 17,
+              }}
+              handler={React.forwardRef(
+                (p, ref: React.ForwardedRef<HTMLInputElement>) => (
+                  <EmojiPickerStyled {...p} ref={ref}>
+                    <EmojiIcon />
+                  </EmojiPickerStyled>
+                )
+              )}
+            >
+              <EmojiList>
+                {['😂', '😊', '👍', '🙈', '🔥', '🤔', '💩', '🚀'].map(
+                  (emoji) => (
+                    <span
+                      key={emoji}
+                      data-emoji={emoji}
+                      onClick={(e) => {
+                        sendMessage(e, emoji);
+                        emojiPickerRef.current.hide();
+                      }}
+                    />
+                  )
+                )}
+              </EmojiList>
+            </Tooltip>
 
-          <SendButton color={store.settings.color} onClick={sendMessage}>
-            <SendArrowIcon />
-          </SendButton>
-        </ChatInput>
-      </ChatInputWrapper>
-    </ChatBarForm>
+            <SendButton color={store.settings.color} onClick={sendMessage}>
+              <SendArrowIcon />
+            </SendButton>
+          </ChatInput>
+        </ChatInputWrapper>
+      </ChatBarForm>
+    </>
   );
 });
 
