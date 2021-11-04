@@ -3,6 +3,7 @@ import { Gif } from '@giphy/react-components';
 import Linkify from 'linkify-react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { rgba } from 'polished';
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import TimeAgo from 'react-timeago';
@@ -13,6 +14,7 @@ import nowStrings from 'react-timeago/lib/language-strings/en-short';
 import styled, { css } from 'styled-components';
 
 import HashIcon from '../assets/icons/HashIcon';
+import TrashIcon from '../assets/icons/TrashIcon';
 import { EColors } from '../utils/constants';
 import { isOnlyEmoji } from '../utils/helpers';
 import { MessageData } from '../utils/interfaces';
@@ -65,6 +67,10 @@ const Message: FunctionComponent<Props> = observer(
     const styles = useSpring({
       opacity: mounted ? 1 : 0,
     });
+
+    const removeMessage = () => {
+      console.log(data);
+    };
 
     return (
       <animated.div style={styles}>
@@ -131,9 +137,14 @@ const Message: FunctionComponent<Props> = observer(
                 </Linkify>
               )}
             </MessageContainer>
-            <MessageDate>
-              {date && <TimeAgo date={date} formatter={formatter} />}
-            </MessageDate>
+            <MessageOptions isLocalMessage={isLocalMessage}>
+              {isLocalMessage && (
+                <MessageTrash onClick={removeMessage}>delete</MessageTrash>
+              )}
+              <MessageDate className={`${isLocalMessage ? 'me' : colorClass}`}>
+                {date && <TimeAgo date={date} formatter={formatter} />}
+              </MessageDate>
+            </MessageOptions>
           </div>
         </MessageFlex>
       </animated.div>
@@ -165,8 +176,70 @@ const MessageHeader = styled.header`
 const MessageDate = styled.div`
   font-weight: normal;
   color: ${(p) => p.theme.secondaryFontColor};
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
+`;
+
+const MessageOptions = styled.div<{ isLocalMessage: boolean }>`
+  display: flex;
+  flex-direction: row;
+  opacity: 0;
+  transition: all 0.3s;
+  transform: translateX(${({ isLocalMessage }) => (isLocalMessage ? 6 : -6)}px);
+  padding: 1px;
+  /* margin: ${({ isLocalMessage }) =>
+    isLocalMessage ? '0 6px 0 0' : '0 0 0 6px'}; */
+  align-items: start;
+  /* align-items: ${({ isLocalMessage }) =>
+    isLocalMessage ? 'end' : 'start'}; */
+  ${MessageDate} {
+    font-size: 9px;
+    color: #fff;
+    background-color: ${(p) => p.theme.secondaryFontColor};
+    padding: 2px 7px;
+    border-radius: 22px;
+    text-align: ${({ isLocalMessage }) => (isLocalMessage ? 'right' : 'left')};
+    margin: ${({ isLocalMessage }) =>
+      isLocalMessage ? '0 6px 0 0' : '0 0 0 6px'};
+    ${Object.keys(EColors).map(
+      (color) => css`
+        &.${String(EColors[color as keyof typeof EColors])} {
+          color: #fff;
+          background-color: ${rgba(color, 0.4)};
+          header,
+          a {
+            color: #fff;
+          }
+          .selection {
+            border-color: #fff;
+            color: #fff;
+          }
+        }
+      `
+    )}
+  }
+`;
+
+const MessageTrash = styled.div`
+  /* width: 24px;
+  height: 24px; */
+  border-radius: 22px;
+  color: #fff;
+  font-size: 9px;
+  background-color: #fd5959;
+  padding: 2px 7px;
+  margin-right: 6px;
+  cursor: pointer;
+  svg {
+    transform: scale(0.8);
+    path {
+      fill: #fff;
+      stroke: #fff;
+      &:last-child {
+        stroke: #fd5959;
+      }
+    }
+  }
 `;
 
 const MessageFlex = styled.div<{ isLocalMessage: boolean }>`
@@ -174,13 +247,20 @@ const MessageFlex = styled.div<{ isLocalMessage: boolean }>`
   justify-content: flex-end;
   flex-direction: ${({ isLocalMessage }) =>
     isLocalMessage ? 'row' : 'row-reverse'};
+  &:hover {
+    .message {
+      ${MessageOptions} {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
   .message {
     margin: 0 0 10px 0;
     text-align: ${({ isLocalMessage }) => (isLocalMessage ? 'right' : 'left')};
-    ${MessageDate} {
-      text-align: ${({ isLocalMessage }) =>
-        isLocalMessage ? 'right' : 'left'};
-    }
+    display: flex;
+    flex-direction: ${({ isLocalMessage }) =>
+      isLocalMessage ? 'row-reverse' : 'row'};
   }
 `;
 
@@ -232,7 +312,6 @@ const MessageContainer = styled.div<{ isGiphy: boolean }>`
   text-align: left;
   overflow: ${(p) => (p.isGiphy ? 'hidden' : 'initial')};
   padding: ${(p) => (p.isGiphy ? 0 : '6px 10px')};
-
   ${(p) =>
     p.isGiphy
       ? css`
