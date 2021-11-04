@@ -75,6 +75,14 @@ trunk.init().then(() => {
     }, [store.settings.url]);
 
     useEffect(() => {
+      if (!store.currentUser.id) {
+        store.setCurrentUser({
+          id: (new Date().getTime() * Math.random() * 10000)
+            .toString(32)
+            .substr(2),
+        });
+      }
+
       if (socket) {
         const connect = () => {
           store.setStatus(ConnectionEnum.CONNECTED);
@@ -82,7 +90,7 @@ trunk.init().then(() => {
           if (store.room && store.secret) {
             socket.emit('login', {
               room: store.room,
-              settings: toJS(store.settings),
+              user: toJS(store.currentUser),
             });
 
             socket.once('login failed', logout);

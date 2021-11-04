@@ -10,7 +10,6 @@ import MessageIcon from '@fc/shared/assets/icons/MessageIcon';
 import ThemeIcon from '@fc/shared/assets/icons/ThemeIcon';
 import TrashIcon from '@fc/shared/assets/icons/TrashIcon';
 import Tooltip from '@fc/shared/components/Tooltip';
-import { useSocket } from '@fc/shared/utils/SocketProvider';
 import { DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 
 import { useStore } from '../../store';
@@ -19,11 +18,9 @@ import AvatarColorPicker from './components/AvatarColorPicker';
 
 const SettingsView: FunctionComponent = observer(() => {
   const store = useStore();
-  const socket = useSocket();
 
   const navigate = useNavigate();
   const settings = useLocalObservable(() => ({
-    name: '',
     url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     setUrl(url) {
@@ -48,7 +45,7 @@ const SettingsView: FunctionComponent = observer(() => {
   }, [store.settings]);
 
   const saveSettings = (shouldClose = true) => {
-    store.persistSettings(settings, socket);
+    store.persistSettings(settings);
 
     if (shouldClose) {
       navigate('/');
@@ -66,7 +63,7 @@ const SettingsView: FunctionComponent = observer(() => {
           <label>
             Auth-String -{' '}
             <a href="https://figma-chat.vercel.app/" target="_blank">
-              Open external Chat
+              Open external Chat ->
             </a>
           </label>
           <input
@@ -86,6 +83,7 @@ const SettingsView: FunctionComponent = observer(() => {
           <label htmlFor="server-url">
             Server-URL
             <span
+            className="link"
               onClick={() => {
                 settings.setUrl(DEFAULT_SERVER_URL);
                 saveSettings(settings.url !== store.settings.url);
@@ -355,7 +353,7 @@ const Settings = styled.div`
     display: block;
   }
   input[type='text'] {
-    font-size: 14px;
+    font-size: 13px;
     width: 100%;
     border-width: 0 0 1px;
     border-color: ${(p) => p.theme.secondaryBackgroundColor};
@@ -364,7 +362,7 @@ const Settings = styled.div`
     color: ${(p) => p.theme.inputColor};
     padding: 8px 0 9px;
     outline: none;
-    font-weight: bold;
+    font-weight: 600;
     &::placeholder {
       color: #999;
     }

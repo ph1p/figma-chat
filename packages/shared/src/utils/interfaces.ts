@@ -8,11 +8,12 @@ export enum ConnectionEnum {
 }
 
 export interface CurrentUser {
-  color: string;
+  color?: string;
   id: string;
-  name: string;
-  photoUrl: string;
-  sessionId: string;
+  name?: string;
+  photoUrl?: string;
+  avatar?: string;
+  sessionId?: string;
 }
 
 export interface NotificationParams {
@@ -22,7 +23,6 @@ export interface NotificationParams {
 }
 
 export interface MessageData {
-  id: string;
   message: {
     date: string;
     text: string;
@@ -38,7 +38,7 @@ export interface MessageData {
   user: {
     name?: string;
     avatar?: string;
-    id?: string;
+    id: string;
     color: keyof typeof EColors;
     room?: string;
     photoUrl?: string;
@@ -46,9 +46,6 @@ export interface MessageData {
 }
 
 export interface StoreSettings {
-  name: string;
-  avatar: string;
-  color: string;
   url: string;
   enableNotificationTooltip: boolean;
   enableNotificationSound: boolean;

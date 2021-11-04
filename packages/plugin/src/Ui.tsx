@@ -93,19 +93,13 @@ const App = observer(() => {
               nodes: [],
             },
             currentUser,
-            instanceId = '',
           } = rootData;
 
           store.setCurrentUser(currentUser);
           store.setSecret(dataSecret);
           store.setRoomName(dataRoomName);
           store.setMessages(messages);
-          store.setInstanceId(instanceId);
           store.setSelection(selection);
-
-          // console.log(settings);
-
-          // store.persistSettings({ ...settings, ...currentUser }, socket, true);
 
           // socket listener
           socket.io.on('error', () => store.setStatus(ConnectionEnum.ERROR));
@@ -114,9 +108,7 @@ const App = observer(() => {
             store.setStatus(ConnectionEnum.ERROR)
           );
 
-          socket.on('chat message', (data) => {
-            store.addMessage(data);
-          });
+          socket.on('chat message', (data) => store.addMessage(data));
 
           socket.on('join leave message', (data) => {
             const username = data.user.name || 'Anon';
@@ -134,16 +126,9 @@ const App = observer(() => {
 
           store.setStatus(ConnectionEnum.CONNECTED);
 
-          const settings = {
-            ...toJS(store.settings),
-            figmaId: currentUser.id,
-            name: currentUser.name,
-            photoUrl: currentUser.photoUrl,
-          };
-
-          socket.emit('set user', settings);
+          socket.emit('set user', toJS(store.currentUser));
           socket.emit('join room', {
-            settings,
+            settings: toJS(store.currentUser),
             room: dataRoomName,
           });
 
@@ -197,10 +182,7 @@ const App = observer(() => {
               <Route
                 path="/user-list"
                 element={
-                  <UserListView
-                    users={store.online}
-                    socketId={socket?.id || ''}
-                  />
+                  <UserListView users={store.online} user={store.currentUser} />
                 }
               />
               <Route path="/settings" element={<SettingsView />} />

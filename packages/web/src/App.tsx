@@ -67,12 +67,20 @@ export const App = observer(() => {
         <Routes>
           <Route
             path="/"
-            element={!store.room || !store.secret || store.status !== ConnectionEnum.CONNECTED ? <Login /> : <Chat />}
+            element={
+              !store.room ||
+              !store.secret ||
+              store.status !== ConnectionEnum.CONNECTED ? (
+                <Login />
+              ) : (
+                <Chat />
+              )
+            }
           />
           <Route
             path="/user-list"
             element={
-              <UserListView users={store.online} socketId={socket?.id || ''} />
+              <UserListView users={store.online} user={store.currentUser} />
             }
           />
           <Route path="/settings" element={<Settings />} />

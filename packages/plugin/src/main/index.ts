@@ -10,6 +10,12 @@ let triggerSelectionEvent = true;
 
 const isRelaunch = figma.command === 'relaunch';
 
+const currentUser = {
+  ...figma.currentUser,
+};
+
+delete currentUser.sessionId;
+
 figma.showUI(__html__, {
   width: 333,
   height: 490,
@@ -24,7 +30,6 @@ const main = async () => {
   const timestamp = +new Date();
 
   // random user id for current user
-  let instanceId = await figma.clientStorage.getAsync('id');
   let history = figma.root.getPluginData('history');
   let roomName = figma.root.getPluginData('roomName');
   let secret = figma.root.getPluginData('secret');
@@ -34,15 +39,6 @@ const main = async () => {
     JSON.parse(history);
   } catch {
     history = '';
-  }
-
-  if (!instanceId) {
-    instanceId = 'user-' + timestamp + '-' + generateString(15);
-    await figma.clientStorage.setAsync('id', instanceId);
-  }
-
-  if (!roomName && !secret) {
-    figma.root.setPluginData('ownerId', instanceId);
   }
 
   if (!roomName) {
@@ -70,7 +66,6 @@ const main = async () => {
     roomName,
     secret,
     history,
-    instanceId,
   };
 };
 
@@ -147,17 +142,16 @@ EventEmitter.on('notification', (payload) => {
   }
 });
 
-EventEmitter.answer('current-user', async () => figma.currentUser);
+EventEmitter.answer('current-user', async () => currentUser);
 
 EventEmitter.answer('root-data', async () => {
-  const { roomName, secret, history, instanceId } = await main();
+  const { roomName, secret, history } = await main();
 
   return {
     roomName,
     secret,
     history,
-    instanceId,
-    currentUser: figma.currentUser,
+    currentUser,
     selection: getSelectionIds(),
   };
 });

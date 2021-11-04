@@ -46,6 +46,10 @@ export const ChatBar: FunctionComponent = observer(() => {
     const text = msg || messageText;
 
     if (socket && chatTextInput.current && text) {
+      if (text.startsWith('/giphy')) {
+        return;
+      }
+
       const message = store.encryptor.encrypt(
         JSON.stringify({
           text,
@@ -155,7 +159,7 @@ export const ChatBar: FunctionComponent = observer(() => {
               </EmojiList>
             </Tooltip>
 
-            <SendButton color={store.settings.color} onClick={sendMessage}>
+            <SendButton color={store.currentUser.color} onClick={sendMessage}>
               <SendArrowIcon />
             </SendButton>
           </ChatInput>
@@ -218,10 +222,9 @@ const SettingsAndUsers = styled.div`
     align-items: center;
     background-color: ${(p) => p.theme.chatbarSecondaryBackground};
     border-radius: 100%;
-    &.dark {
-      svg path {
-        fill: ${({ theme }) => theme.thirdFontColor};
-      }
+
+    svg path {
+      fill: ${({ theme }) => theme.thirdFontColor};
     }
   }
 `;

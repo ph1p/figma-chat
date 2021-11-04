@@ -99,6 +99,7 @@ export const GiphyGrid: FunctionComponent<GiphyGridProps> = observer(
 
 const GridWrapper = styled.div`
   overflow: auto;
+  padding-bottom: 9px;
 `;
 
 const Empty = styled.div`
@@ -144,7 +145,7 @@ const Giphy = styled.div`
   height: 250px;
   background-color: #000;
   border-radius: 14px;
-  padding: 9px;
+  padding: 9px 9px 0;
   .overlay {
     position: absolute;
     left: 0;

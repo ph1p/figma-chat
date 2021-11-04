@@ -4,9 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 import BackIcon from '@fc/shared/assets/icons/BackIcon';
-import BellIcon from '@fc/shared/assets/icons/BellIcon';
-import ChainIcon from '@fc/shared/assets/icons/ChainIcon';
-import MessageIcon from '@fc/shared/assets/icons/MessageIcon';
 import ThemeIcon from '@fc/shared/assets/icons/ThemeIcon';
 import TrashIcon from '@fc/shared/assets/icons/TrashIcon';
 import Tooltip from '@fc/shared/components/Tooltip';
@@ -23,35 +20,48 @@ export const Settings: FunctionComponent = observer(() => {
 
   const navigate = useNavigate();
   const settings = useLocalObservable(() => ({
-    name: '',
     url: DEFAULT_SERVER_URL,
     setUrl(url: string) {
       this.url = url;
     },
-    setName(name: string) {
-      this.name = name;
+  }));
+
+  const currentUser = useLocalObservable(() => ({
+    name: '',
+    setName(name?: string) {
+      if (name) {
+        this.name = name;
+      }
     },
   }));
 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!store.settings.name && nameInputRef.current) {
+    if (!store.currentUser.name && nameInputRef.current) {
       nameInputRef.current.focus();
     }
   }, []);
 
   useEffect(() => {
-    settings.setName(store.settings.name);
+    currentUser.setName(store.currentUser.name);
     settings.setUrl(store.settings.url);
   }, [store.settings]);
 
   const saveSettings = (shouldClose = true) => {
-    if (store.settings.name !== settings.name) {
+    store.persistSettings(settings);
+
+    if (shouldClose) {
+      navigate('/');
+    }
+  };
+
+  const saveCurrentUser = (shouldClose = true) => {
+    if (store.currentUser.name !== currentUser.name) {
       store.addNotification(`Name successfully updated`);
     }
 
-    store.persistSettings(settings, socket);
+    store.persistCurrentUser(currentUser, socket);
 
     if (shouldClose) {
       navigate('/');
@@ -71,10 +81,10 @@ export const Settings: FunctionComponent = observer(() => {
             id="name"
             type="text"
             ref={nameInputRef}
-            value={settings.name}
-            onBlur={({ target }: any) => saveSettings(false)}
+            value={currentUser.name}
+            onBlur={({ target }: any) => saveCurrentUser(false)}
             onChange={({ target }: any) =>
-              settings.setName(target.value.substr(0, 20))
+              currentUser.setName(target.value.substr(0, 20))
             }
             onKeyDown={(e: any) => e.keyCode === 13 && e.target.blur()}
           />

@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 import BackIcon from '@fc/shared/assets/icons/BackIcon';
 
+import { CurrentUser } from '../utils/interfaces';
+
 interface Props {
   users: {
     id: string;
@@ -12,7 +14,7 @@ interface Props {
     color: string;
     photoUrl: string;
   }[];
-  socketId: string;
+  user: CurrentUser;
 }
 
 const UserList: FunctionComponent<Props> = (props) => {
@@ -38,7 +40,7 @@ const UserList: FunctionComponent<Props> = (props) => {
               </div>
               <div className={`name ${!user.name ? 'empty' : ''}`}>
                 {user.name || 'Anon'}
-                {user.id === props.socketId && <p>you</p>}
+                {user.id === props.user.id && <p>you</p>}
               </div>
             </div>
           );

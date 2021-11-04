@@ -100,11 +100,11 @@ io.on('connection', (socket) => {
     sendOnline(room);
   };
 
-  socket.on('login', ({ room, settings }) => {
+  socket.on('login', ({ room, user }) => {
     if (io.sockets.adapter.rooms.has(room)) {
       joinRoom({
         room,
-        settings,
+        settings: user,
       });
 
       sock.emit('login succeeded');

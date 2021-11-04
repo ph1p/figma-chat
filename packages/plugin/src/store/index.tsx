@@ -27,19 +27,21 @@ export class RootStore {
 
   @ignore
   status = ConnectionEnum.NONE;
+
   @ignore
   online = [];
+
   @ignore
   messages = [];
+
   @ignore
   messagesRef = createRef<HTMLDivElement>();
 
   @ignore
   secret = '';
+
   @ignore
   roomName = '';
-  @ignore
-  instanceId = '';
 
   @ignore
   autoScrollDisabled = false;
@@ -52,8 +54,9 @@ export class RootStore {
     id: '',
     name: '',
     sessionId: '',
-    color: '',
+    avatar: '',
     photoUrl: '',
+    color: '#4F4F4F',
   };
 
   setStatus(status) {
@@ -69,9 +72,6 @@ export class RootStore {
   }
   setRoomName(roomName) {
     this.roomName = roomName;
-  }
-  setInstanceId(instanceId) {
-    this.instanceId = instanceId;
   }
   setOnline(online) {
     this.online = online;
@@ -127,8 +127,6 @@ export class RootStore {
 
   @observable.deep
   settings: Omit<StoreSettings, 'name'> = {
-    avatar: '',
-    color: '#4F4F4F',
     url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     enableNotificationSound: true,
@@ -191,28 +189,26 @@ export class RootStore {
     }
   }
 
-  persistSettings(settings, socket?, isInit = false) {
+  persistSettings(settings, isInit = false) {
     const oldUrl = this.settings.url;
 
     this.settings = {
       ...this.settings,
       ...settings,
-      figmaId: this.currentUser.id,
-      name: this.currentUser.name,
-      photoUrl: this.currentUser.photoUrl,
     };
-
-    // save user settings in main
-    // EventEmitter.emit('save-user-settings', { ...toJS(this.settings) });
 
     // set server URL
     if (!isInit && settings.url && settings.url !== oldUrl) {
       this.addNotification('Updated server-URL');
     }
+  }
+
+  persistCurrentUser(currentUser, socket?) {
+    this.setCurrentUser(currentUser);
 
     if (socket && socket.connected) {
       // set user data on server
-      socket.emit('set user', this.settings);
+      socket.emit('set user', toJS(this.currentUser));
     }
   }
 
@@ -226,6 +222,7 @@ export class RootStore {
     // silent on error
     try {
       const data = JSON.parse(decryptedMessage);
+
       let newMessage: Record<string, unknown> = {
         message: {
           ...data,
@@ -235,12 +232,7 @@ export class RootStore {
       // is local sender
       if (isLocal) {
         newMessage = {
-          id: this.instanceId,
-          user: {
-            ...this.currentUser,
-            avatar: this.settings.avatar,
-            color: this.settings.color,
-          },
+          user: toJS(this.currentUser),
           message: {
             ...data,
           },
@@ -249,7 +241,6 @@ export class RootStore {
         EventEmitter.emit('add-message-to-history', newMessage);
       } else {
         newMessage = {
-          id: messageData.id,
           user: messageData.user,
           message: {
             ...data,
@@ -264,6 +255,7 @@ export class RootStore {
           const audio = new Audio(MessageSound);
           audio.play();
         }
+
         if (this.settings.enableNotificationTooltip) {
           let text = '';
           if (data.text) {

@@ -23,19 +23,18 @@ const gf = new GiphyFetch('omj1iPoq5H5GTi2Xjz2E9NFCcVqGLuPZ');
 
 interface Props {
   data: MessageData;
-  instanceId: string;
   onClickSelection?: (selection: any) => void;
   store: any;
 }
 
 const Message: FunctionComponent<Props> = observer(
-  ({ data, instanceId, onClickSelection, store }) => {
+  ({ data, onClickSelection, store }) => {
     const username = data.user.name || '';
     const avatar = data.user.avatar || '';
     const photoUrl = data.user.photoUrl || '';
     const colorClass = EColors[data.user.color] || 'blue';
     const selection = toJS(data?.message?.selection);
-    const isLocalMessage = data.id === instanceId;
+    const isLocalMessage = data.user.id === store.currentUser.id;
     const pageName = selection?.page?.name || '';
 
     const selectionCount = (selection?.nodes && selection?.nodes?.length) || 0;
@@ -232,7 +231,7 @@ const MessageContainer = styled.div<{ isGiphy: boolean }>`
   max-width: 240px;
   text-align: left;
   overflow: ${(p) => (p.isGiphy ? 'hidden' : 'initial')};
-  padding: ${(p) => (p.isGiphy ? 0 : 10)}px;
+  padding: ${(p) => (p.isGiphy ? 0 : '6px 10px')};
 
   ${(p) =>
     p.isGiphy

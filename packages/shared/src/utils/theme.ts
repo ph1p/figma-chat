@@ -20,7 +20,7 @@ export const darkTheme = {
 export const lightTheme = {
   fontColor: '#000',
   secondaryFontColor: '#cecece',
-  thirdFontColor: '#A2ADC0',
+  thirdFontColor: '#717D92',
   fontColorInverse: '#fff',
   backgroundColor: '#fff',
   secondaryBackgroundColor: '#eceff4',

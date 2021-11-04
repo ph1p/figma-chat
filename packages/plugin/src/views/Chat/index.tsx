@@ -1,3 +1,4 @@
+import { toJS } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import React, { useEffect, FunctionComponent } from 'react';
 import styled from 'styled-components';
@@ -104,7 +105,9 @@ const Chat: FunctionComponent = observer(() => {
     };
   }, []);
 
-  useEffect(() => store.scrollToBottom(), [store.messages]);
+  useEffect(() => {
+    store.scrollToBottom();
+  }, [store.messages]);
 
   const onClickSelection = (selection) => {
     let selectionData = null;

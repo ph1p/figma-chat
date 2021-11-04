@@ -7,6 +7,7 @@ import { DefaultTheme } from 'styled-components';
 import { EColors, DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 import {
   ConnectionEnum,
+  CurrentUser,
   MessageData,
   NotificationParams,
   StoreSettings,
@@ -15,21 +16,23 @@ import { darkTheme, lightTheme } from '@fc/shared/utils/theme';
 
 class RootStore {
   settings: StoreSettings = {
-    name: 'Test',
-    avatar: '',
-    color: '#4F4F4F',
     url: DEFAULT_SERVER_URL,
     enableNotificationTooltip: true,
     enableNotificationSound: true,
     isDarkTheme: false,
   };
+
   messages: any[] = [];
 
   room = '';
   secret = '';
 
-  @ignore
-  instanceId = '';
+  currentUser: CurrentUser = {
+    id: '',
+    name: '',
+    avatar: '🦊',
+    color: '#4F4F4F',
+  };
 
   @ignore
   status = ConnectionEnum.NONE;
@@ -78,8 +81,11 @@ class RootStore {
     this.status = status;
   }
 
-  setInstanceId(instanceId: string) {
-    this.instanceId = instanceId;
+  setCurrentUser(currentUser: Partial<CurrentUser>) {
+    this.currentUser = {
+      ...this.currentUser,
+      ...currentUser,
+    };
   }
 
   setMessagesRef(messagesRef: HTMLDivElement) {
@@ -111,7 +117,7 @@ class RootStore {
     };
   }
 
-  persistSettings(settings: any, socket?: any, isInit = false) {
+  persistSettings(settings: any, isInit = false) {
     const oldUrl = this.settings.url;
 
     this.settings = {
@@ -123,10 +129,14 @@ class RootStore {
     if (!isInit && settings.url && settings.url !== oldUrl) {
       this.addNotification('Updated server-URL');
     }
+  }
+
+  persistCurrentUser(currentUser: Partial<CurrentUser>, socket?: any) {
+    this.setCurrentUser(currentUser);
 
     if (socket && socket.connected) {
       // set user data on server
-      socket.emit('set user', this.settings);
+      socket.emit('set user', toJS(this.currentUser));
     }
   }
 
@@ -136,12 +146,7 @@ class RootStore {
     try {
       const data = JSON.parse(decryptedMessage);
       const newMessage: MessageData = {
-        id: this.instanceId,
-        user: {
-          avatar: this.settings.avatar,
-          color: this.settings.color as keyof typeof EColors,
-          name: this.settings.name,
-        },
+        user: toJS(this.currentUser as any),
         message: {
           ...data,
         },
@@ -164,7 +169,6 @@ class RootStore {
     try {
       const data = JSON.parse(decryptedMessage);
       const newMessage: MessageData = {
-        id: messageData.id,
         user: messageData.user,
         message: {
           ...data,

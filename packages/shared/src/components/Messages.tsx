@@ -80,7 +80,6 @@ export const Messages: FunctionComponent<Props> = observer((props) => {
               <Message
                 data={data}
                 store={props.store}
-                instanceId={props.store.instanceId}
                 onClickSelection={props.onClickSelection}
               />
             </React.Fragment>

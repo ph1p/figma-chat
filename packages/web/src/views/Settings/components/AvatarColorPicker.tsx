@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { darken, lighten, rgba } from 'polished';
-import React, { useRef, FunctionComponent } from 'react';
+import React, { useRef, useCallback, FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 import Tooltip from '@fc/shared/components/Tooltip';
@@ -15,6 +15,14 @@ const AvatarColorPicker: FunctionComponent = observer(() => {
 
   const pickerRef = useRef<any>(null);
 
+  const persistCurrentUser = useCallback(
+    (data) => {
+      pickerRef.current.hide();
+      store.persistCurrentUser(data, socket);
+    },
+    [socket]
+  );
+
   return (
     <Tooltip
       shadow
@@ -23,11 +31,11 @@ const AvatarColorPicker: FunctionComponent = observer(() => {
       handler={observer(
         (p: any, ref: any) => (
           <AvatarColorPickerAction
-            color={store.settings.color}
+            color={store.currentUser.color}
             {...p}
             ref={ref}
           >
-            {store.settings.avatar || ''}
+            {store.currentUser.avatar || ''}
           </AvatarColorPickerAction>
         ),
         {
@@ -38,7 +46,6 @@ const AvatarColorPicker: FunctionComponent = observer(() => {
       <Wrapper>
         <ItemWrapper>
           {[
-            '',
             '🐵',
             '🐮',
             '🐷',
@@ -53,18 +60,18 @@ const AvatarColorPicker: FunctionComponent = observer(() => {
             '🐧',
             '🐦',
             '🐺',
+            '🦋',
+            '🐥',
+            '🐝',
+            '🦁',
           ].map((emoji) => (
             <Item
               key={emoji}
-              className={emoji === store.settings.avatar ? 'active' : ''}
+              className={emoji === store.currentUser.avatar ? 'active' : ''}
               onClick={() => {
-                pickerRef.current.hide();
-                store.persistSettings(
-                  {
-                    avatar: emoji,
-                  },
-                  socket
-                );
+                persistCurrentUser({
+                  avatar: emoji,
+                });
               }}
             >
               {emoji || ''}
@@ -76,16 +83,14 @@ const AvatarColorPicker: FunctionComponent = observer(() => {
           {Object.keys(EColors).map((color) => (
             <Item
               key={color}
-              onClick={() => {
-                pickerRef.current.hide();
-                store.persistSettings(
-                  {
-                    color,
-                  },
-                  socket
-                );
-              }}
-              className={`color ${store.settings.color === color && ' active'}`}
+              onClick={() =>
+                persistCurrentUser({
+                  color,
+                })
+              }
+              className={`color ${
+                store.currentUser.color === color && ' active'
+              }`}
               style={{ backgroundColor: color }}
             />
           ))}

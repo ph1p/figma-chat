@@ -81,9 +81,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
           </RefTooltip>
           <SettingsAndUsers>
             <CustomLink to="/settings">
-              <div
-                className={`gear ${store.settings.isDarkTheme ? 'dark' : ''}`}
-              >
+              <div className="gear">
                 <GearIcon />
               </div>
             </CustomLink>
@@ -272,10 +270,9 @@ const SettingsAndUsers = styled.div`
     align-items: center;
     background-color: ${(p) => p.theme.chatbarSecondaryBackground};
     border-radius: 100%;
-    &.dark {
-      svg path {
-        fill: ${({ theme }) => theme.thirdFontColor};
-      }
+
+    svg path {
+      fill: ${({ theme }) => theme.thirdFontColor};
     }
   }
 `;
