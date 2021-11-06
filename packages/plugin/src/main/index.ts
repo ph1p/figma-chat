@@ -18,6 +18,13 @@ const currentUser = {
 delete currentUser.sessionId;
 
 if (isReset) {
+  figma.root.setPluginData('history', '[]');
+  figma.clientStorage.setAsync('figma-chat', '{}');
+  figma.root.setPluginData('roomName', generateString(20));
+  figma.root.setPluginData('secret', generateString(20));
+
+  figma.notify('Figma Chat successfully reset!');
+  figma.closePlugin();
 } else {
   figma.showUI(__html__, {
     width: 333,
@@ -30,13 +37,10 @@ if (isReset) {
   });
 
   const main = async () => {
-    const timestamp = +new Date();
-
     // random user id for current user
     let history = figma.root.getPluginData('history');
     let roomName = figma.root.getPluginData('roomName');
     let secret = figma.root.getPluginData('secret');
-    // const ownerId = figma.root.getPluginData('ownerId');
 
     if (!history) {
       history = '[]';
@@ -51,7 +55,7 @@ if (isReset) {
     }
 
     if (!roomName) {
-      const randomRoomName = timestamp + '-' + generateString(15);
+      const randomRoomName = generateString(20);
       figma.root.setPluginData('roomName', randomRoomName);
       roomName = randomRoomName;
     }
