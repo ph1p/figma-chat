@@ -40,16 +40,15 @@ const Chat: FunctionComponent = observer(() => {
     }
 
     if (store.roomName) {
-      let data = {
+      let message = {
         text: chatState.textMessage,
-        date: new Date(),
       };
 
       if (store.selectionCount > 0 && chatState.selectionIsChecked) {
-        data = {
-          ...data,
+        message = {
+          ...message,
           ...{
-            selection: store.selection,
+            selection: toJS(store.selection),
           },
         };
       }
@@ -60,14 +59,12 @@ const Chat: FunctionComponent = observer(() => {
           'error'
         );
       } else {
-        const message = store.encryptor.encrypt(JSON.stringify(data));
-
-        socket.emit('chat message', {
-          roomName: store.roomName,
-          message,
-        });
-
-        store.addMessage(message);
+        store.addMessage(
+          {
+            message,
+          },
+          socket
+        );
 
         chatState.setTextMessage('');
         chatState.setSelectionIsChecked(false);
@@ -126,9 +123,20 @@ const Chat: FunctionComponent = observer(() => {
     EventEmitter.emit('focus-nodes', selectionData);
   };
 
+  const removeMessage = (messageId) => {
+    if (socket && messageId) {
+      store.removeMessage(messageId);
+      socket.emit('remove message', {
+        roomName: store.roomName,
+        messageId,
+      });
+    }
+  };
+
   return (
     <Wrapper hasSelection={store.selectionCount > 0}>
       <Messages
+        removeMessage={removeMessage}
         chatState={chatState}
         store={store}
         onClickSelection={onClickSelection}

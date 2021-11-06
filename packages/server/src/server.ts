@@ -70,6 +70,10 @@ io.on('connection', (socket) => {
       });
   };
 
+  socket.on('remove message', ({ roomName, messageId }) => {
+    sock.broadcast.to(roomName).emit('remove message', messageId);
+  });
+
   socket.on('chat message', ({ roomName, message }) => {
     if (roomName) {
       if (!sock.user.room) {
@@ -79,20 +83,16 @@ io.on('connection', (socket) => {
       }
 
       // send to all in room except sender
-      sock.broadcast.to(roomName).emit('chat message', {
-        id: sock.id,
-        user: sock.user,
-        message,
-      });
+      sock.broadcast.to(roomName).emit('chat message', message);
     }
   });
 
-  const joinRoom = ({ room, settings }: any) => {
+  const joinRoom = ({ room, user }: any) => {
     sock.join(room);
 
     sock.user = {
       ...sock.user,
-      ...settings,
+      ...user,
       room,
     };
 
@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
     if (io.sockets.adapter.rooms.has(room)) {
       joinRoom({
         room,
-        settings: user,
+        user,
       });
 
       sock.emit('login succeeded');

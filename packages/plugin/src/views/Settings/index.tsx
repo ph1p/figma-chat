@@ -63,7 +63,7 @@ const SettingsView: FunctionComponent = observer(() => {
           <label>
             Auth-String -{' '}
             <a href="https://figma-chat.vercel.app/" target="_blank">
-              Open external Chat ->
+              Open external Chat {'->'}
             </a>
           </label>
           <input
@@ -83,7 +83,7 @@ const SettingsView: FunctionComponent = observer(() => {
           <label htmlFor="server-url">
             Server-URL
             <span
-            className="link"
+              className="link"
               onClick={() => {
                 settings.setUrl(DEFAULT_SERVER_URL);
                 saveSettings(settings.url !== store.settings.url);

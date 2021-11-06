@@ -9,6 +9,7 @@ import { DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 import {
   ConnectionEnum,
   CurrentUser,
+  MessageData,
   StoreSettings,
 } from '@fc/shared/utils/interfaces';
 import { darkTheme, lightTheme } from '@fc/shared/utils/theme';
@@ -31,8 +32,7 @@ export class RootStore {
   @ignore
   online = [];
 
-  @ignore
-  messages = [];
+  messages: MessageData[] = [];
 
   @ignore
   messagesRef = createRef<HTMLDivElement>();
@@ -64,7 +64,10 @@ export class RootStore {
   }
 
   setCurrentUser(currentUser) {
-    this.currentUser = currentUser;
+    this.currentUser = {
+      ...this.currentUser,
+      ...currentUser,
+    };
   }
 
   setSecret(secret) {
@@ -181,9 +184,8 @@ export class RootStore {
         'Do you really want to delete the complete chat history? (This cannot be undone)'
       )
     ) {
-      EventEmitter.emit('clear-chat-history');
-
       this.messages = [];
+      EventEmitter.emit('clear-chat-history');
       cb();
       this.addNotification('Chat history successfully deleted');
     }
@@ -212,43 +214,48 @@ export class RootStore {
     }
   }
 
-  addMessage(messageData) {
-    const isLocal = !messageData.user;
-
-    const decryptedMessage = this.encryptor.decrypt(
-      isLocal ? messageData : messageData.message
+  removeMessage(messageId) {
+    this.messages = this.messages.filter((message) =>
+      message?.id ? message?.id !== messageId : true
     );
+    EventEmitter.emit('remove message', messageId);
+  }
 
+  addMessage(messageData: Partial<MessageData>, socket, isLocal = true) {
     // silent on error
     try {
-      const data = JSON.parse(decryptedMessage);
-
-      let newMessage: Record<string, unknown> = {
-        message: {
-          ...data,
-        },
-      };
+      let newMessage: Partial<MessageData>;
 
       // is local sender
       if (isLocal) {
+        // generate messageId
+        const messageId = (
+          new Date().getTime() *
+          Math.random() *
+          10000
+        ).toString(32);
+
+        messageData.message.date = new Date().toString();
+
         newMessage = {
+          ...messageData,
+          id: messageId,
           user: toJS(this.currentUser),
-          message: {
-            ...data,
-          },
         };
 
-        EventEmitter.emit('add-message-to-history', newMessage);
+        socket.emit('chat message', {
+          roomName: this.roomName,
+          message: this.encryptor.encrypt(JSON.stringify(newMessage)),
+        });
+
+        EventEmitter.emit('add-message-to-history', newMessage as any);
       } else {
-        newMessage = {
-          user: messageData.user,
-          message: {
-            ...data,
-          },
-        };
+        const decryptedMessage = this.encryptor.decrypt(messageData as string);
 
-        if (data.external) {
-          EventEmitter.emit('add-message-to-history', newMessage);
+        newMessage = JSON.parse(decryptedMessage);
+
+        if (newMessage.message?.external) {
+          EventEmitter.emit('add-message-to-history', newMessage as any);
         }
 
         if (this.settings.enableNotificationSound) {
@@ -258,11 +265,11 @@ export class RootStore {
 
         if (this.settings.enableNotificationTooltip) {
           let text = '';
-          if (data.text) {
+          if (newMessage.message.text) {
             text =
-              data.text.length > 25
-                ? data.text.substr(0, 25 - 1) + '...'
-                : data.text;
+              newMessage.message.text.length > 25
+                ? newMessage.message.text.substr(0, 25 - 1) + '...'
+                : newMessage.message.text;
           }
 
           EventEmitter.emit(
@@ -274,7 +281,7 @@ export class RootStore {
         }
       }
 
-      this.messages.push(newMessage);
+      this.messages.push(newMessage as MessageData);
 
       setTimeout(() => this.scrollToBottom(), 0);
     } catch (e) {

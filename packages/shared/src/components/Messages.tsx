@@ -12,6 +12,7 @@ interface Props {
   onClickSelection?: (selection: any) => void;
   isWeb?: boolean;
   store: any;
+  removeMessage: (messageId: string) => void;
 }
 
 export const Messages: FunctionComponent<Props> = observer((props) => {
@@ -71,13 +72,14 @@ export const Messages: FunctionComponent<Props> = observer((props) => {
       <ScrollWrapper>
         {props.chatState.filteredMessages.map(
           (data: MessageData, i: number) => (
-            <React.Fragment key={data.message?.date}>
+            <React.Fragment key={i}>
               {showMessageSeperator(i) && (
                 <MessageSeperator>
                   <span>older messages</span>
                 </MessageSeperator>
               )}
               <Message
+                removeMessage={props.removeMessage}
                 data={data}
                 store={props.store}
                 onClickSelection={props.onClickSelection}

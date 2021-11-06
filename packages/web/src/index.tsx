@@ -60,6 +60,7 @@ trunk.init().then(() => {
         socket.io.off('error');
         socket.io.off('reconnect_error');
         socket.off('chat message');
+        socket.off('remove message');
         socket.off('join leave message');
         socket.off('online');
         socket.disconnect();
@@ -116,6 +117,9 @@ trunk.init().then(() => {
         socket.on('chat message', chatMessage);
         socket.on('join leave message', joinLeave);
         socket.on('online', online);
+        socket.on('remove message', (messageId) =>
+          store.removeMessage(messageId)
+        );
       }
 
       return () => {
@@ -124,6 +128,7 @@ trunk.init().then(() => {
           socket.io.off('error');
           socket.io.off('reconnect_error');
           socket.off('chat message');
+          socket.off('remove message');
           socket.off('join leave message');
           socket.off('online');
         }

@@ -4,7 +4,7 @@ import Linkify from 'linkify-react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { rgba } from 'polished';
-import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import TimeAgo from 'react-timeago';
 // @ts-ignore
@@ -14,7 +14,6 @@ import nowStrings from 'react-timeago/lib/language-strings/en-short';
 import styled, { css } from 'styled-components';
 
 import HashIcon from '../assets/icons/HashIcon';
-import TrashIcon from '../assets/icons/TrashIcon';
 import { EColors } from '../utils/constants';
 import { isOnlyEmoji } from '../utils/helpers';
 import { MessageData } from '../utils/interfaces';
@@ -25,12 +24,14 @@ const gf = new GiphyFetch('omj1iPoq5H5GTi2Xjz2E9NFCcVqGLuPZ');
 
 interface Props {
   data: MessageData;
+  removeMessage: (messageId: string) => void;
   onClickSelection?: (selection: any) => void;
   store: any;
 }
 
 const Message: FunctionComponent<Props> = observer(
-  ({ data, onClickSelection, store }) => {
+  ({ data, onClickSelection, store, removeMessage }) => {
+    const messageId = data.id || null;
     const username = data.user.name || '';
     const avatar = data.user.avatar || '';
     const photoUrl = data.user.photoUrl || '';
@@ -67,10 +68,6 @@ const Message: FunctionComponent<Props> = observer(
     const styles = useSpring({
       opacity: mounted ? 1 : 0,
     });
-
-    const removeMessage = () => {
-      console.log(data);
-    };
 
     return (
       <animated.div style={styles}>
@@ -138,9 +135,11 @@ const Message: FunctionComponent<Props> = observer(
               )}
             </MessageContainer>
             <MessageOptions isLocalMessage={isLocalMessage}>
-              {isLocalMessage && (
-                <MessageTrash onClick={removeMessage}>delete</MessageTrash>
-              )}
+              {isLocalMessage && messageId ? (
+                <MessageTrash onClick={() => removeMessage(messageId)}>
+                  delete
+                </MessageTrash>
+              ) : null}
               <MessageDate className={`${isLocalMessage ? 'me' : colorClass}`}>
                 {date && <TimeAgo date={date} formatter={formatter} />}
               </MessageDate>

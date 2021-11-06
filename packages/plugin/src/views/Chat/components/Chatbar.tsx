@@ -91,9 +91,9 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
                   <UserChips>
                     {store.online
                       .filter((_, i) => i < 2)
-                      .map((user) => (
+                      .map((user, i) => (
                         <Chip
-                          key={user.id}
+                          key={i}
                           style={{
                             backgroundColor: user.color,
                             backgroundImage: !user?.avatar
@@ -156,7 +156,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
 
             <SelectionCheckbox
               ref={selectionRef}
-              color={store.settings.color}
+              color={store.currentUser.color}
               checked={props.selectionIsChecked}
               hasSelection={hasSelection}
               onMouseEnter={() => selectionTooltipRef.current.show()}
@@ -169,7 +169,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
               <div>{store.selectionCount < 10 && store.selectionCount}</div>
             </SelectionCheckbox>
 
-            <SendButton color={store.settings.color} onClick={sendMessage}>
+            <SendButton color={store.currentUser.color} onClick={sendMessage}>
               <SendArrowIcon />
             </SendButton>
           </ChatInput>

@@ -1,4 +1,4 @@
-import { autorun } from 'mobx';
+import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useMatch } from 'react-router-dom';
@@ -50,20 +50,15 @@ export const ChatBar: FunctionComponent = observer(() => {
         return;
       }
 
-      const message = store.encryptor.encrypt(
-        JSON.stringify({
-          text,
-          date: new Date(),
-          external: true,
-        })
+      store.addLocalMessage(
+        {
+          message: {
+            text,
+            external: true,
+          },
+        },
+        socket
       );
-
-      socket.emit('chat message', {
-        roomName: store.room,
-        message,
-      });
-
-      store.addLocalMessage(message);
 
       chatTextInput.current.value = '';
       setMessageText('');
@@ -97,9 +92,9 @@ export const ChatBar: FunctionComponent = observer(() => {
                   <UserChips>
                     {store.online
                       .filter((_, i) => i < 2)
-                      .map((user) => (
+                      .map((user, i) => (
                         <Chip
-                          key={user.id}
+                          key={i}
                           style={{
                             backgroundColor: user.color,
                             backgroundImage: !user?.avatar

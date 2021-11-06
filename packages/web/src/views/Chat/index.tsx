@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Messages } from '@fc/shared/components/Messages';
+import { useSocket } from '@fc/shared/utils/SocketProvider';
 import { MAX_MESSAGES } from '@fc/shared/utils/constants';
 
 import { useStore } from '../../store/RootStore';
@@ -11,6 +12,7 @@ import { ChatBar } from './components/ChatBar';
 
 export const Chat = observer(() => {
   const store = useStore();
+  const socket = useSocket();
 
   const chatState = useLocalObservable(() => ({
     textMessage: '',
@@ -28,7 +30,20 @@ export const Chat = observer(() => {
 
   return (
     <Wrapper>
-      <Messages chatState={chatState} isWeb store={store} />
+      <Messages
+        removeMessage={(messageId) => {
+          if (socket && messageId) {
+            store.removeMessage(messageId);
+            socket.emit('remove message', {
+              roomName: store.room,
+              messageId,
+            });
+          }
+        }}
+        chatState={chatState}
+        isWeb
+        store={store}
+      />
       <ChatBar />
     </Wrapper>
   );

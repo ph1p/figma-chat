@@ -108,7 +108,9 @@ const App = observer(() => {
             store.setStatus(ConnectionEnum.ERROR)
           );
 
-          socket.on('chat message', (data) => store.addMessage(data));
+          socket.on('chat message', (data) =>
+            store.addMessage(data, socket, false)
+          );
 
           socket.on('join leave message', (data) => {
             const username = data.user.name || 'Anon';
@@ -123,6 +125,10 @@ const App = observer(() => {
           socket.on('online', (data) => {
             store.setOnline(data);
           });
+
+          socket.on('remove message', (messageId) =>
+            store.removeMessage(messageId)
+          );
 
           store.setStatus(ConnectionEnum.CONNECTED);
 
@@ -143,6 +149,7 @@ const App = observer(() => {
         socket.io.off('error');
         socket.io.off('reconnect_error');
         socket.off('chat message');
+        socket.off('remove message');
         socket.off('join leave message');
         socket.off('online');
         socket.disconnect();

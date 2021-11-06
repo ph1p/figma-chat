@@ -64,25 +64,16 @@ export const GiphyGrid: FunctionComponent<GiphyGridProps> = observer(
               <div
                 className="overlay"
                 onClick={() => {
-                  const data = {
+                  const message = {
                     giphy: gif.id,
-                    date: new Date(),
                     external: !props.store.addMessage,
                   };
-                  const message = props.store.encryptor.encrypt(
-                    JSON.stringify(data)
-                  );
 
                   if (socket) {
-                    socket.emit('chat message', {
-                      roomName: props.store.roomName || props.store.room,
-                      message,
-                    });
-
                     if (props.store.addMessage) {
-                      props.store.addMessage(message);
+                      props.store.addMessage({ message }, socket);
                     } else {
-                      props.store.addLocalMessage(message);
+                      props.store.addLocalMessage({ message }, socket);
                     }
                   }
 

@@ -8,7 +8,7 @@ export enum ConnectionEnum {
 }
 
 export interface CurrentUser {
-  color?: string;
+  color: keyof typeof EColors;
   id: string;
   name?: string;
   photoUrl?: string;
@@ -23,8 +23,9 @@ export interface NotificationParams {
 }
 
 export interface MessageData {
+  id: string;
   message: {
-    date: string;
+    date?: string | Date;
     text: string;
     giphy?: string;
     external?: any;
@@ -35,14 +36,7 @@ export interface MessageData {
       };
     };
   };
-  user: {
-    name?: string;
-    avatar?: string;
-    id: string;
-    color: keyof typeof EColors;
-    room?: string;
-    photoUrl?: string;
-  };
+  user: CurrentUser;
 }
 
 export interface StoreSettings {

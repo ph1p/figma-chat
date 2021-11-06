@@ -2,9 +2,10 @@ import { makeAutoObservable, toJS } from 'mobx';
 import { AsyncTrunk, ignore } from 'mobx-sync';
 import React, { FunctionComponent, createRef } from 'react';
 import { createEncryptor } from 'simple-encryptor';
+import { Socket } from 'socket.io-client';
 import { DefaultTheme } from 'styled-components';
 
-import { EColors, DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
+import { DEFAULT_SERVER_URL } from '@fc/shared/utils/constants';
 import {
   ConnectionEnum,
   CurrentUser,
@@ -140,17 +141,33 @@ class RootStore {
     }
   }
 
-  addLocalMessage(messageData: string) {
-    const decryptedMessage = this.encryptor.decrypt(messageData);
+  removeMessage(messageId: string) {
+    this.messages = this.messages.filter((message) =>
+      message?.id ? message?.id !== messageId : true
+    );
+  }
+
+  addLocalMessage(messageData: Partial<MessageData>, socket: Socket) {
+    if (!messageData) return;
 
     try {
-      const data = JSON.parse(decryptedMessage);
-      const newMessage: MessageData = {
-        user: toJS(this.currentUser as any),
-        message: {
-          ...data,
-        },
+      // generate messageId
+      messageData.id = (new Date().getTime() * Math.random() * 10000).toString(
+        32
+      );
+      if (messageData.message) {
+        messageData.message.date = new Date().toString();
+      }
+
+      const newMessage: Partial<MessageData> = {
+        ...messageData,
+        user: toJS(this.currentUser),
       };
+
+      socket.emit('chat message', {
+        roomName: this.room,
+        message: this.encryptor.encrypt(JSON.stringify(newMessage)),
+      });
 
       this.messages.push(newMessage);
 
@@ -160,22 +177,13 @@ class RootStore {
     }
   }
 
-  addReceivedMessage(messageData: MessageData) {
-    const decryptedMessage = this.encryptor.decrypt(
-      messageData.message as unknown as string
-    );
-
+  addReceivedMessage(messageData: Partial<MessageData>) {
     // silent on error
     try {
+      const decryptedMessage = this.encryptor.decrypt(messageData as string);
       const data = JSON.parse(decryptedMessage);
-      const newMessage: MessageData = {
-        user: messageData.user,
-        message: {
-          ...data,
-        },
-      };
 
-      this.messages.push(newMessage);
+      this.messages.push(data);
 
       setTimeout(() => this.scrollToBottom(), 0);
     } catch (e) {

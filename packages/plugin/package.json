@@ -86,6 +86,19 @@
     "permissions": [
       "currentuser"
     ],
+    "menu": [
+      {
+        "name": "Open Chat",
+        "command": "open"
+      },
+      {
+        "separator": true
+      },
+      {
+        "name": "Reset Chat",
+        "command": "reset"
+      }
+    ],
     "relaunchButtons": [
       {
         "command": "open",

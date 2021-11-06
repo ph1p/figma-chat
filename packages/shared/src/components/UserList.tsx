@@ -24,9 +24,9 @@ const UserList: FunctionComponent<Props> = (props) => {
     <Wrapper>
       <h5>Active Users</h5>
       <div className="users">
-        {props.users.map((user) => {
+        {props.users.map((user, i) => {
           return (
-            <div key={user.id} className="user">
+            <div key={i} className="user">
               <div
                 className="color"
                 style={{
