@@ -1,81 +1,27 @@
-# figma-chat ![](https://github.com/ph1p/figma-chat/workflows/Build%20Figma-Chat/badge.svg)
+# Figma Chat ![](https://github.com/ph1p/figma-chat/workflows/Build%20Figma-Chat/badge.svg)
 
-![](./assets/header.png)
+<img width="960" alt="header" src="https://user-images.githubusercontent.com/15351728/140660717-f48e4a08-9c9d-49d0-a753-13094f5cfd1b.png">
 
-A plugin to chat in figma files. Fully **encrypted**! (https://github.com/sehrope/node-simple-encryptor)
+## Monorepo
 
-### Installation
+- [Plugin](./packages/plugin/README.md)
+- [Web-Client](./packages/web/README.md)
+- [Server](./packages/server/README.md)
 
-There is no special installation process. Just install the plugin in figma.
-You can find it [**here**](https://www.figma.com/c/plugin/742073255743594050/Figma-Chat)
+## Development
 
-### What does it look like?
-
-![presentation](https://user-images.githubusercontent.com/15351728/110795249-ea161680-8276-11eb-8820-0f96ef4bf445.gif)
-(And yes, I have chatted with myself)
-
-### Encrypted? No login?
-
-Yes. When opening the plugin a **room** name and a **secret key** are randomly generated once
-and stored inside the `figma.root`. All editors within the file can access this attribute.
-
-```javascript
-figma.root.setPluginData('roomName', '');
-```
-
-All messages are en- and decrypted with the stored secret key and send to the server.
-
-### Server
-
-This plugins needs a server ([https://github.com/ph1p/figma-chat-server](https://github.com/ph1p/figma-chat-server)).
-This is a simple websocket server. **Messages are only forwarded and not stored!**
-
----
-
-At first I thought about saving the messages in one element inside the figma-file,
-but the plugin can't be notified when a new message arrives.
-The plugin must set an interval that asks for new updates every n milliseconds.
-
-### Todolist/Featurelist
-
-- [x] set custom server URL ([https://github.com/ph1p/figma-chat-server](https://github.com/ph1p/figma-chat-server))
-- [x] add leave and join message
-- [ ] add typing info
-- [x] notifications (first version)
-- [x] save local history
-- [x] create a shared history
-- [ ] users/instances can delete messages
-- [ ] regenerate new room name and secret key
-- [ ] create a random unique user name to detect returning users on server and inside a figma file
-- [x] remove all messages
-- [ ] add max message count to prevent a to large object inside the figma file
-- [x] pagination
-
-Feel free to open a feature request: https://github.com/ph1p/figma-chat/issues
-
-### Development
+You can simple start or build all packages
 
 ```bash
-git clone git@github.com:ph1p/figma-chat.git
-cd figma-chat
-npm install
+# start
+yarn start:server && yarn start:plugin && yarn start:web
+# build
+yarn build:server && yarn build:plugin && yarn build:web
 ```
 
-```bash
-npm run build
-```
+## Description
 
-or
-
-```bash
-npm run dev
-```
-
-- Open figma
-- Go to **Plugins**
-- Click the "+" next to **Development**
-- Choose the manifest.json inside `figma-chat/Figma Chat`
-- Ready to develop
+This is the monorepo of Figma-Chat. Inside the `packages` folder you will find all projects.
 
 ### Sound
 

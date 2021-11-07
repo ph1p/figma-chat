@@ -13,11 +13,11 @@ jobs:
         with:
           node-version: 12
 
-      - name: npm install
-        run: npm install
+      - name: yarn install
+        run: yarn install
 
-      - name: npm run lint
-        run: npm run lint
+      - name: yarn lint
+        run: yarn lint
 
-      - name: npm run build
-        run: npm run build
+      - name: yarn build
+        run: yarn build:plugin && yarn build:server && yarn build:web

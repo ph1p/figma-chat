@@ -1,3 +1,7 @@
 Figma Chat/
 node_modules
 *.zip
+dist
+build
+release
+.DS_Store
