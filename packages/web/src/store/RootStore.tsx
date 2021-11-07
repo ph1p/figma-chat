@@ -30,7 +30,7 @@ class RootStore {
 
   currentUser: CurrentUser = {
     id: '',
-    name: '',
+    name: 'Anon',
     avatar: '🦊',
     color: '#4F4F4F',
   };
