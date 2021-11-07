@@ -26,6 +26,7 @@ const AvatarColorPicker: FunctionComponent = observer(() => {
   return (
     <Tooltip
       shadow
+      offsetHorizontal={-10}
       ref={pickerRef}
       placement="bottom"
       handler={observer(

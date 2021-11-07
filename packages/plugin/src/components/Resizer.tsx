@@ -86,7 +86,7 @@ const ResizerElement = styled.div`
     left: 2px;
     width: 10px;
     height: 1px;
-    background-color: rgb(165 165 165);
-    box-shadow: 0px 3px 0px 0px rgb(165 165 165);
+    background-color: rgb(205, 205, 205);
+    box-shadow: 0px 3px 0px 0px rgb(205, 205, 205);
   }
 `;
