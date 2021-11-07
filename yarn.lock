@@ -1851,9 +1851,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@eslint/eslintrc@npm:1.0.3"
+"@eslint/eslintrc@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@eslint/eslintrc@npm:1.0.4"
   dependencies:
     ajv: ^6.12.4
     debug: ^4.3.2
@@ -1861,10 +1861,10 @@ __metadata:
     globals: ^13.9.0
     ignore: ^4.0.6
     import-fresh: ^3.2.1
-    js-yaml: ^3.13.1
+    js-yaml: ^4.1.0
     minimatch: ^3.0.4
     strip-json-comments: ^3.1.1
-  checksum: a39f74d764b1b8ba8b05e942ab8dc3684648468180ce453e0ce5669af3d95b9dc18577ff55cc3b58cfed5a5f1bf6182191a740da07572606268eeb2b6fd0402d
+  checksum: 570f87e216944830b3761889f14cdf1e9bc7dcc2211e941585cfc2768575954e26852605eb441e21c9581472f89ea0e9cfdb8309523e9fe0a57fe9342bda4fe0
   languageName: node
   linkType: hard
 
@@ -1880,10 +1880,10 @@ __metadata:
   languageName: node
   linkType: soft
 
-"@figma/plugin-typings@npm:^1.37.0":
-  version: 1.37.0
-  resolution: "@figma/plugin-typings@npm:1.37.0"
-  checksum: 28c3742b9c11fcf454bd0d10033ebe39d4572969773ef5c9139928205369f98ffc8df255cd483852b949642f1711c16ffbdf11c6987a299c9365e34122b48add
+"@figma/plugin-typings@npm:^1.38.0":
+  version: 1.38.0
+  resolution: "@figma/plugin-typings@npm:1.38.0"
+  checksum: 97215997aaa51f013c6f965612b1160d201dad13543dc189ad6920cb5b8d2652dee212b65362ba6c750605d9fd72c146ba5c04a71522e5cf87869d45cb24991f
   languageName: node
   linkType: hard
 
@@ -8228,11 +8228,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.1.0, eslint@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "eslint@npm:8.1.0"
+"eslint@npm:8.2.0, eslint@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "eslint@npm:8.2.0"
   dependencies:
-    "@eslint/eslintrc": ^1.0.3
+    "@eslint/eslintrc": ^1.0.4
     "@humanwhocodes/config-array": ^0.6.0
     ajv: ^6.10.0
     chalk: ^4.0.0
@@ -8266,13 +8266,13 @@ __metadata:
     progress: ^2.0.0
     regexpp: ^3.2.0
     semver: ^7.2.1
-    strip-ansi: ^6.0.0
+    strip-ansi: ^6.0.1
     strip-json-comments: ^3.1.0
     text-table: ^0.2.0
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: e0b0c4bddd8673f376730b5bc72876fd0298e0ed9e52fa0707e48854ab0cea6a6a1945dbe2a059db1c867aafba7979b9d770060696e3f0ffc9d4b635ca4bce49
+  checksum: 19f2f4e23bdd1d0f1c99759adb88c0bf01908ce5bd480913ca7b5d3183f4c42d93142ada699b196e228295c074254ad90a3475126784673bd1afeb22e91ceea8
   languageName: node
   linkType: hard
 
@@ -9528,7 +9528,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"history@npm:^5.0.3":
+"history@npm:^5.1.0":
   version: 5.1.0
   resolution: "history@npm:5.1.0"
   dependencies:
@@ -13522,7 +13522,7 @@ fsevents@^1.2.7:
   resolution: "plugin@workspace:packages/plugin"
   dependencies:
     "@fc/shared": "link:../shared/src"
-    "@figma/plugin-typings": ^1.37.0
+    "@figma/plugin-typings": ^1.38.0
     "@giphy/js-fetch-api": ^4.1.2
     "@giphy/react-components": ^5.4.0
     "@types/node": ^16.11.6
@@ -13536,7 +13536,7 @@ fsevents@^1.2.7:
     crypto-browserify: ^3.12.0
     css-loader: ^6.5.1
     esbuild-loader: ^2.16.0
-    eslint: ^8.1.0
+    eslint: ^8.2.0
     eslint-config-prettier: ^8.3.0
     eslint-import-resolver-node: ^0.3.6
     eslint-plugin-import: ^2.25.2
@@ -13554,7 +13554,7 @@ fsevents@^1.2.7:
     prettier: ^2.4.1
     react: ^17.0.2
     react-dom: ^17.0.2
-    react-router-dom: ^6.0.0
+    react-router-dom: ^6.0.1
     simple-encryptor: ^4.0.0
     socket.io-client: ^4.3.2
     stream-browserify: ^3.0.0
@@ -13565,7 +13565,7 @@ fsevents@^1.2.7:
     typescript: ^4.4.4
     uniqid: ^5.4.0
     url-loader: ^4.1.1
-    webpack: ^5.61.0
+    webpack: ^5.62.1
     webpack-bundle-analyzer: ^4.5.0
     webpack-cli: ^4.9.1
   languageName: unknown
@@ -15000,26 +15000,27 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "react-router-dom@npm:6.0.0"
+"react-router-dom@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "react-router-dom@npm:6.0.1"
   dependencies:
-    react-router: 6.0.0
+    history: ^5.1.0
+    react-router: 6.0.1
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: d411dbdb139b27535f80326a8c6dc0dbf600a5fadda8db27460caeade87c252543cc75a8338f032ecf3fcb3d0c9856b10e3e071f8e0c9ccf73f93453fc453884
+  checksum: cc2d80536f4a02b8fcef826185ad0acb5d66245e9fb89345d54ec0eaea73eb4ff809cbf68ebb1ac8c3de15cbe45f539d7879cc2d3ed4a76c8c42a602dece71b0
   languageName: node
   linkType: hard
 
-"react-router@npm:6.0.0":
-  version: 6.0.0
-  resolution: "react-router@npm:6.0.0"
+"react-router@npm:6.0.1":
+  version: 6.0.1
+  resolution: "react-router@npm:6.0.1"
   dependencies:
-    history: ^5.0.3
+    history: ^5.1.0
   peerDependencies:
     react: ">=16.8"
-  checksum: c6ddc02366009e6ea2db28631d676026c1da3b51c0c179b1a1a92e5602f66cbf379e1d56418c7612009f8b049c159c40b4fd1eb8b261c991bf11206417930175
+  checksum: 66bbaaa98637a0bf4e4c3e4392f8929388e2d07438759129e14709809add974bfa3307d508055c259986439b2f5f9c5558410771355e547c06005ed4feef7c7f
   languageName: node
   linkType: hard
 
@@ -16108,7 +16109,7 @@ resolve@^2.0.0-next.3:
     "@types/express": ^4.17.13
     "@typescript-eslint/eslint-plugin": ^5.3.0
     "@typescript-eslint/parser": ^5.3.0
-    eslint: ^8.1.0
+    eslint: ^8.2.0
     eslint-config-prettier: ^8.3.0
     eslint-import-resolver-node: ^0.3.6
     eslint-plugin-import: ^2.25.2
@@ -16212,7 +16213,7 @@ resolve@^2.0.0-next.3:
     "@types/styled-components": ^5.1.15
     "@typescript-eslint/eslint-plugin": ^5.3.0
     "@typescript-eslint/parser": ^5.3.0
-    eslint: ^8.1.0
+    eslint: ^8.2.0
     eslint-config-prettier: ^8.3.0
     eslint-import-resolver-node: ^0.3.6
     eslint-plugin-import: ^2.25.2
@@ -18327,7 +18328,7 @@ typescript@^4.4.4:
     react: ^17.0.2
     react-app-rewired: ^2.1.8
     react-dom: ^17.0.2
-    react-router-dom: ^6.0.0
+    react-router-dom: ^6.0.1
     react-scripts: 4.0.3
     simple-encryptor: ^4.0.0
     socket.io-client: ^4.3.2
@@ -18567,9 +18568,9 @@ typescript@^4.4.4:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.61.0":
-  version: 5.61.0
-  resolution: "webpack@npm:5.61.0"
+"webpack@npm:^5.62.1":
+  version: 5.62.1
+  resolution: "webpack@npm:5.62.1"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.50
@@ -18600,7 +18601,7 @@ typescript@^4.4.4:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 442958ec48645c9e612a2628a815c411cbc18289b5cc7b3d1b5d0f8e5b41606ed225decf4f3684edc365e6390867bded244d20387c70fbb630c0ac08443c34c8
+  checksum: 85d9bc7e9b4a0d59420831b1cffaed771818a7abbff3e25215246df6c5abe7806eeee8ca28b15f2dd3b34f64b05586dc138a3b181ce99d1887370301c4ce7e2e
   languageName: node
   linkType: hard
 
