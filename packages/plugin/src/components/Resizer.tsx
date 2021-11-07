@@ -86,7 +86,7 @@ const ResizerElement = styled.div`
     left: 2px;
     width: 10px;
     height: 1px;
-    background-color: rgb(205, 205, 205);
-    box-shadow: 0px 3px 0px 0px rgb(205, 205, 205);
+    background-color: ${(p) => p.theme.secondaryFontColor};
+    box-shadow: 0px 3px 0px 0px ${(p) => p.theme.secondaryFontColor};
   }
 `;

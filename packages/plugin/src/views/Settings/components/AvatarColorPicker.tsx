@@ -116,8 +116,8 @@ const AvatarColorPickerAction = styled.div<{ color: string }>`
   align-self: center;
   font-size: 39px;
   line-height: 75px;
-  box-shadow: 0 0 0 15px ${(p) => rgba(p.color, 0.1)},
-    0 0 0 35px ${(p) => rgba(p.color, 0.08)};
+  box-shadow: 0 0 0 12px ${(p) => rgba(p.color, 0.2)},
+    0 0 0 30px ${(p) => rgba(p.color, 0.1)};
 `;
 
 const ItemWrapper = styled.div`

@@ -83,7 +83,7 @@ const SettingsView: FunctionComponent = observer(() => {
                 saveSettings(settings.url !== store.settings.url);
               }}
             >
-              <strong>(reset)</strong>
+              <strong>reset</strong>
             </span>
           </label>
           <input
@@ -335,9 +335,10 @@ const Settings = styled.div`
     font-size: 10px;
     cursor: pointer;
   }
-  a {
+  a, .link {
     color: ${(p) => p.theme.inputColor};
     font-weight: bold;
+    text-decoration: underline;
   }
   label {
     margin: 0 0 5px;
