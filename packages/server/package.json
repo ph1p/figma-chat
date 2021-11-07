@@ -4,6 +4,7 @@
   "main": "../../release/server/server.js",
   "scripts": {
     "start": "NODE_ENV=production node ../../release/server/server.js",
+    "start:docker": "NODE_ENV=production node ./dist/server.js",
     "build": "tsc",
     "dev": "NODE_ENV=development nodemon -e ts  --exec \"tsc && node ../../release/server/server.js\"",
     "lint": "echo \"not implemented\""

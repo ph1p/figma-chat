@@ -7,8 +7,8 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install --only-prod
+RUN yarn install --production
 
 COPY ./dist/server.js ./dist/
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start:docker" ]

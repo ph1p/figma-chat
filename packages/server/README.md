@@ -28,7 +28,7 @@ If you want to set another port, you can set the `PORT` environment variable.
 ### Docker (run inside this folder)
 
 ```bash
-docker build . --tag figma-chat-server --build-arg VERSION=$(node -p -e "require('./package.json').version") && docker run -p 127.0.0.1:80:3000/tcp figma-chat-server
+tsc --outDir dist && docker build . --tag figma-chat-server --build-arg VERSION=$(node -p -e "require('./package.json').version") && docker run -p 127.0.0.1:80:3000/tcp figma-chat-server
 ```
 
 ### Traefik

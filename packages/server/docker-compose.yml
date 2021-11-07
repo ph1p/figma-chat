@@ -1,16 +1,17 @@
 version: '3'
 
 services:
-  web:
+  figmachat:
     build: .
-    environment:
-      - VERSION=1.1.0
     labels:
-      - traefik.enable=true
-      - traefik.port=3000
-      - traefik.docker.network=proxy
-      - traefik.frontend.rule=Host:figma-chat.ph1p.dev
-
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.figmachat.tls'
+      - 'traefik.http.routers.figmachat.tls.certresolver=letsencryptresolver'
+      - 'traefik.http.services.figmachat.loadbalancer.server.port=80'
+      - 'traefik.http.routers.figmachat.rule=Host(`figma-chat.ph1p.dev`)'
+      - 'traefik.http.routers.figmachat.middlewares=sslheader@docker'
+    environment:
+      - PORT=80
     networks:
       - default
       - proxy
