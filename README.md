@@ -1,6 +1,6 @@
 # Figma Chat ![](https://github.com/ph1p/figma-chat/workflows/Build%20Figma-Chat/badge.svg)
 
-<img width="960" alt="header" src="https://user-images.githubusercontent.com/15351728/140192961-8155d6f9-e9ab-4be3-bbb4-7e41df666d56.png">
+<img width="960" alt="header" src="https://user-images.githubusercontent.com/15351728/140659155-a0bf2d15-4f98-4085-9d56-9505c32862f5.png">
 
 ## Monorepo
 

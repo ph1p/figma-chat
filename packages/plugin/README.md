@@ -9,7 +9,7 @@ You can find it [**here**](https://www.figma.com/c/plugin/742073255743594050/Fig
 
 ### What does it look like?
 
-![presentation](https://user-images.githubusercontent.com/15351728/110795249-ea161680-8276-11eb-8820-0f96ef4bf445.gif)
+![preview](https://user-images.githubusercontent.com/15351728/140659857-f45affff-2d36-43ce-810f-c4c6f9b04017.gif)
 (And yes, I have chatted with myself)
 
 ### Encrypted? No login?
@@ -22,23 +22,6 @@ figma.root.setPluginData('roomName', '');
 ```
 
 All messages are en- and decrypted with the stored secret key and send to the server.
-
-### Todolist/Featurelist
-
-- [x] set custom server URL (`packages/server`)
-- [x] add leave and join message
-- [ ] add typing info
-- [x] notifications (first version)
-- [x] save local history
-- [x] create a shared history
-- [ ] users/instances can delete messages
-- [ ] regenerate new room name and secret key
-- [ ] create a random unique user name to detect returning users on server and inside a figma file
-- [x] remove all messages
-- [ ] add max message count to prevent a to large object inside the figma file
-- [x] pagination
-
-Feel free to open a feature request: https://github.com/ph1p/figma-chat/issues
 
 ### Development
 
@@ -63,6 +46,10 @@ yarn start:plugin
 - Click the "+" next to **Development**
 - Choose the manifest.json inside `packages/plugin/Figma Chat`
 - Ready to develop
+
+### Bugs / Features
+
+Feel free to open a feature request or a bug report: https://github.com/ph1p/figma-chat/issues
 
 ### Sound
 
