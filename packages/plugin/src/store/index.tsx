@@ -125,9 +125,6 @@ export class RootStore {
   @ignore
   isFocused = true;
 
-  @ignore
-  isMinimized = false;
-
   @observable.deep
   settings: Omit<StoreSettings, 'name'> = {
     url: DEFAULT_SERVER_URL,
@@ -144,10 +141,6 @@ export class RootStore {
       ...this.settings,
       [key]: value,
     };
-  }
-
-  setIsMinimized(isMinimized: boolean) {
-    this.isMinimized = isMinimized;
   }
 
   setIsFocused(isFocused: boolean) {
@@ -171,11 +164,6 @@ export class RootStore {
       this.notifications.findIndex((n) => n.id === id),
       1
     );
-  }
-
-  toggleMinimizeChat() {
-    this.isMinimized = !this.isMinimized;
-    EventEmitter.emit('minimize', this.isMinimized);
   }
 
   clearChatHistory(cb: () => void) {

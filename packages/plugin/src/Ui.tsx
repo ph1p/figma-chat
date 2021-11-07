@@ -2,12 +2,7 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom';
-import {
-  MemoryRouter as Router,
-  Navigate,
-  Route,
-  Routes,
-} from 'react-router-dom';
+import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import io, { Socket } from 'socket.io-client';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
@@ -16,10 +11,10 @@ import UserListView from '@fc/shared/components/UserList';
 import { SocketProvider } from '@fc/shared/utils/SocketProvider';
 import { ConnectionEnum } from '@fc/shared/utils/interfaces';
 
+import { Resizer } from './components/Resizer';
 import EventEmitter from './shared/EventEmitter';
 import { getStoreFromMain, StoreProvider, trunk, useStore } from './store';
 import ChatView from './views/Chat';
-import MinimizedView from './views/Minimized';
 import './style.css';
 import SettingsView from './views/Settings';
 
@@ -174,6 +169,7 @@ const App = observer(() => {
   return (
     <ThemeProvider theme={store.theme}>
       <AppWrapper>
+        <Resizer />
         <GlobalStyle />
 
         <SocketProvider socket={socket}>
@@ -182,10 +178,7 @@ const App = observer(() => {
               notifications={store.notifications}
               deleteNotification={store.deleteNotification}
             />
-            {/* <Header minimized={store.isMinimized} /> */}
-            {store.isMinimized && <Navigate replace to="/minimized" />}
             <Routes>
-              <Route path="/minimized" element={<MinimizedView />} />
               <Route
                 path="/user-list"
                 element={

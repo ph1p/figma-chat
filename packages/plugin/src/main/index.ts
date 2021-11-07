@@ -3,7 +3,6 @@ import { generateString } from '@fc/shared/utils/helpers';
 
 import EventEmitter from '../shared/EventEmitter';
 
-let isMinimized = false;
 let isFocused = true;
 let sendNotifications = false;
 let triggerSelectionEvent = true;
@@ -105,6 +104,16 @@ if (isReset) {
 
   let previousSelection = figma.currentPage.selection || [];
 
+  EventEmitter.on('resize', ({ width, height }) => {
+    if (width <= 333 && height >= 490) {
+      figma.ui.resize(width, 490);
+    } else if (width >= 333 && height <= 490) {
+      figma.ui.resize(333, height);
+    } else if (width <= 333 && height <= 490) {
+      figma.ui.resize(width, height);
+    }
+  });
+
   EventEmitter.on('remove message', (messageId: string) => {
     const messageHistory = JSON.parse(
       figma.root.getPluginData('history') || '[]'
@@ -142,14 +151,6 @@ if (isReset) {
     JSON.parse(figma.root.getPluginData('history') || '[]')
   );
 
-  EventEmitter.on('minimize', (flag) => {
-    isMinimized = flag;
-    sendNotifications = isMinimized;
-
-    // resize window
-    figma.ui.resize(flag ? 180 : 333, flag ? 108 : 490);
-  });
-
   EventEmitter.on('notify', (payload) => {
     figma.notify(payload);
   });
@@ -175,12 +176,10 @@ if (isReset) {
   });
 
   EventEmitter.on('focus', (payload) => {
-    if (!isMinimized) {
-      isFocused = payload;
+    isFocused = payload;
 
-      if (!isFocused) {
-        sendNotifications = true;
-      }
+    if (!isFocused) {
+      sendNotifications = true;
     }
   });
 

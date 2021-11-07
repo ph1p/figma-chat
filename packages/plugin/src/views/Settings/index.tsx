@@ -32,12 +32,6 @@ const SettingsView: FunctionComponent = observer(() => {
   }));
 
   useEffect(() => {
-    if (store.isMinimized) {
-      store.toggleMinimizeChat();
-    }
-  }, []);
-
-  useEffect(() => {
     settings.setUrl(store.settings.url);
     settings.setEnableNotificationTooltip(
       store.settings.enableNotificationTooltip

@@ -157,7 +157,8 @@ const Chat: FunctionComponent = observer(() => {
 
 const Wrapper = styled.div<{ hasSelection: boolean }>`
   display: grid;
-  grid-template-rows: 445px 35px;
+  grid-template-rows: 1fr 44px;
+  height: 100%;
 `;
 
 export default Chat;
