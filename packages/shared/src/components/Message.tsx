@@ -111,6 +111,7 @@ const Message: FunctionComponent<Props> = observer(
                       tagName="div"
                       options={{
                         defaultProtocol: 'https',
+                        target: '_blank',
                       }}
                     >
                       {text}
@@ -128,6 +129,7 @@ const Message: FunctionComponent<Props> = observer(
                   tagName="div"
                   options={{
                     defaultProtocol: 'https',
+                    target: '_blank',
                   }}
                 >
                   {text}
