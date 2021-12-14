@@ -44,7 +44,6 @@ export const Resizer = () => {
   };
 
   const onMouseMove = (e) => {
-    e.preventDefault();
     if (dragStartRef.current) {
       EventEmitter.emit('resize', {
         height:
