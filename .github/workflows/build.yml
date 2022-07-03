@@ -19,7 +19,7 @@ jobs:
 
         run: yarn cache clean --all
   install:
-    needs: needs
+    needs: cache
     runs-on: ubuntu-latest
 
     steps:
