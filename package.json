@@ -28,5 +28,6 @@
   "license": "ISC",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "packageManager": "yarn@3.2.1"
 }
