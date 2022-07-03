@@ -2,18 +2,21 @@ name: Build Figma-Chat
 
 on: [push]
 
+env:
+  YARN_ENABLE_IMMUTABLE_INSTALLS: false
+  YARN_CHECKSUM_BEHAVIOR: update
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
+      - uses: borales/actions-yarn@v3.0.0
 
-      - run: rm yarn.lock
-      - run: yarn cache clean --all
+      # - run: rm yarn.lock
       - run: yarn install
       - run: yarn lint
-      - run: yarn build:plugin && yarn build:server && yarn build:web
+      - run: yarn build:plugin
+      - run: yarn build:server
+      - run: yarn build:plugin && yarn yarn build:server && yarn yarn build:web
