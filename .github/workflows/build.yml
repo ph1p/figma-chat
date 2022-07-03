@@ -14,7 +14,7 @@ jobs:
           node-version: 16
 
       - name: yarn install
-        run: yarn install --mode=update-lockfile
+        run: yarn install --check-cache
 
       - name: yarn lint
         run: yarn lint
