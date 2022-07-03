@@ -13,10 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: install
 
-      # - run: rm yarn.lock
-      - run: yarn install
-      - run: yarn lint
-      - run: yarn build:plugin
-      - run: yarn build:server
-      - run: yarn build:plugin && yarn yarn build:server && yarn yarn build:web
+      - uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: lint
+
+      - uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: build:plugin
+
+      - uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: build:server
+
+      - uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: build:web
