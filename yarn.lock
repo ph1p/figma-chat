@@ -2922,7 +2922,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.30.3, @typescript-eslint/eslint-plugin@npm:^5.5.0":
+"@typescript-eslint/eslint-plugin@npm:^5.30.3, @typescript-eslint/eslint-plugin@npm:^5.30.4, @typescript-eslint/eslint-plugin@npm:^5.5.0":
   version: 5.30.4
   resolution: "@typescript-eslint/eslint-plugin@npm:5.30.4"
   dependencies:
@@ -2987,7 +2987,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.30.3, @typescript-eslint/parser@npm:^5.5.0":
+"@typescript-eslint/parser@npm:^5.30.3, @typescript-eslint/parser@npm:^5.30.4, @typescript-eslint/parser@npm:^5.5.0":
   version: 5.30.4
   resolution: "@typescript-eslint/parser@npm:5.30.4"
   dependencies:
@@ -11160,8 +11160,8 @@ __metadata:
   resolution: "server@workspace:packages/server"
   dependencies:
     "@types/express": ^4.17.13
-    "@typescript-eslint/eslint-plugin": ^5.30.3
-    "@typescript-eslint/parser": ^5.30.3
+    "@typescript-eslint/eslint-plugin": ^5.30.4
+    "@typescript-eslint/parser": ^5.30.4
     eslint: ^8.19.0
     eslint-config-prettier: ^8.5.0
     eslint-import-resolver-node: ^0.3.6
