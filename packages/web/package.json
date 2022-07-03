@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "private": true,
   "scripts": {
     "start": "PORT=3001 node scripts/start.js",
