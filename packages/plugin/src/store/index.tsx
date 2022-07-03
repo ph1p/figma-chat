@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, observable, toJS } from 'mobx';
+import { makeAutoObservable, observable, toJS } from 'mobx';
 import { AsyncTrunk, ignore } from 'mobx-sync';
 import React, { createRef } from 'react';
 import { createEncryptor } from 'simple-encryptor';

@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useCallback } from 'react';
-import { Route, Routes, useNavigate, useMatch } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CustomLink } from '@fc/shared/components/CustomLink';

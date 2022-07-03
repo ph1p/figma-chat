@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { darken, lighten, rgba } from 'polished';
+import { lighten, rgba } from 'polished';
 import React, { useRef, useCallback, FunctionComponent } from 'react';
 import styled from 'styled-components';
 

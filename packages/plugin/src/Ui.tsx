@@ -1,7 +1,6 @@
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
-import * as ReactDOM from 'react-dom/client';
 import { createRoot } from 'react-dom/client';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import io, { Socket } from 'socket.io-client';

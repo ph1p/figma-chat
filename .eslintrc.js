@@ -13,10 +13,11 @@ module.exports = {
     'prefer-arrow',
     'react',
     '@typescript-eslint',
-    'react-app',
     'import',
+    'unused-imports',
   ],
   rules: {
+    'unused-imports/no-unused-imports': 'error',
     'react-hooks/exhaustive-deps': 0,
     'import/order': [
       'error',
