@@ -143,7 +143,11 @@ const Message: FunctionComponent<Props> = observer(
                 </MessageTrash>
               ) : null}
               <MessageDate className={`${isLocalMessage ? 'me' : colorClass}`}>
-                {date && <TimeAgo date={date} formatter={formatter} />}
+                {date && (
+                  <>
+                    <TimeAgo date={date} formatter={formatter} />
+                  </>
+                )}
               </MessageDate>
             </MessageOptions>
           </div>

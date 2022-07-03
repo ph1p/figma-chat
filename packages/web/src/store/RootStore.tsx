@@ -1,6 +1,6 @@
 import { makeAutoObservable, toJS } from 'mobx';
 import { AsyncTrunk, ignore } from 'mobx-sync';
-import React, { FunctionComponent, createRef } from 'react';
+import React, { FunctionComponent, createRef, PropsWithChildren } from 'react';
 import { createEncryptor } from 'simple-encryptor';
 import { Socket } from 'socket.io-client';
 import { DefaultTheme } from 'styled-components';
@@ -219,11 +219,13 @@ export const trunk = new AsyncTrunk(rootStore, {
 
 const StoreContext = React.createContext<RootStore | null>(null);
 
-export const StoreProvider: FunctionComponent = (props) => {
+export const StoreProvider: FunctionComponent<PropsWithChildren> = (props) => {
   return (
-    <StoreContext.Provider value={rootStore}>
-      {props.children}
-    </StoreContext.Provider>
+    <>
+      <StoreContext.Provider value={rootStore}>
+        {props.children}
+      </StoreContext.Provider>
+    </>
   );
 };
 

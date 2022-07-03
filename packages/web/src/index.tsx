@@ -2,7 +2,7 @@ import './style.css';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom/client';
 import { useNavigate, BrowserRouter } from 'react-router-dom';
 import io, { Socket } from 'socket.io-client';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
@@ -145,14 +145,15 @@ trunk.init().then(() => {
     );
   });
 
-  ReactDOM.render(
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+
+  root.render(
     <React.StrictMode>
       <StoreProvider>
         <BrowserRouter>
           <InitApp />
         </BrowserRouter>
       </StoreProvider>
-    </React.StrictMode>,
-    document.getElementById('root')
+    </React.StrictMode>
   );
 });
