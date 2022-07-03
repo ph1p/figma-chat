@@ -12,7 +12,7 @@
     "build:web": "yarn workspace web build",
     "build:server": "yarn workspace server build",
     "lint": "yarn workspace plugin lint && yarn workspace web lint && yarn workspace shared lint && yarn workspace server lint",
-    "version": "npx conventional-changelog -p karma -i CHANGELOG.md -s -r 0 && git add ."
+    "version": "npx conventional-changelog-cli -p karma -i CHANGELOG.md -s -r 0 && git add ."
   },
   "author": "Philip Stapelfeldt <me@ph1p.dev>",
   "repository": {
