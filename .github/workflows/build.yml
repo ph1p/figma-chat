@@ -14,7 +14,7 @@ jobs:
           node-version: 16
 
       - name: yarn install
-        run: rm yarn.lock && yarn install
+        run: yarn install
 
       - name: yarn lint
         run: yarn lint
