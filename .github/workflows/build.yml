@@ -13,8 +13,11 @@ jobs:
         with:
           node-version: 16
 
+      - name: yarn cache clean --all
+        run: yarn cache clean --all
+
       - name: yarn install
-        run: yarn install
+        run: yarn
 
       - name: yarn lint
         run: yarn lint
