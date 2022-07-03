@@ -6,24 +6,53 @@ env:
   YARN_CHECKSUM_BEHAVIOR: update
 
 jobs:
-  build:
+  cache:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set Node.js 16
-        uses: actions/setup-node@main
+      - uses: actions/setup-node@main
         with:
           node-version: 16
 
       - name: yarn cache clean --all
+
         run: yarn cache clean --all
+  install:
+    needs: needs
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@main
+        with:
+          node-version: 16
 
       - name: yarn install
         run: yarn install
 
+  lint:
+    needs: install
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@main
+        with:
+          node-version: 16
+
       - name: yarn lint
         run: yarn lint
+
+  build:
+    needs: lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@main
+        with:
+          node-version: 16
 
       - name: yarn build
         run: yarn build:plugin && yarn build:server && yarn build:web
