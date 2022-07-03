@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "main": "../../release/server/server.js",
   "scripts": {
     "start": "NODE_ENV=production node ../../release/server/server.js",
