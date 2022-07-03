@@ -221,11 +221,9 @@ const StoreContext = React.createContext<RootStore | null>(null);
 
 export const StoreProvider: FunctionComponent<PropsWithChildren> = (props) => {
   return (
-    <>
-      <StoreContext.Provider value={rootStore}>
-        {props.children}
-      </StoreContext.Provider>
-    </>
+    <StoreContext.Provider value={rootStore}>
+      {props.children}
+    </StoreContext.Provider>
   );
 };
 
