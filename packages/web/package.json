@@ -38,7 +38,7 @@
     "socket.io-client": "^4.6.0",
     "stream-browserify": "^3.0.0",
     "styled-components": "^5.3.6",
-    "webpack": "^5.75.0"
+    "webpack": "^5.76.0"
   },
   "devDependencies": {
     "@testing-library/react": "^14.0.0",
