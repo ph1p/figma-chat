@@ -70,7 +70,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
         }}
         textMessage={props.textMessage}
       />
-      <ChatBarForm isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
+      <ChatBarForm isSettings={Boolean(isSettings)} isDevMode={store.figmaEditorType === 'dev'} onSubmit={sendMessage}>
         <ConnectionInfo isConnected={isConnected}>
           {isFailed ? 'connection failed 🙈' : 'connecting...'}
         </ConnectionInfo>
@@ -320,13 +320,14 @@ const ConnectionInfo = styled.div<{ isConnected: boolean }>`
   }
 `;
 
-const ChatBarForm = styled.form<{ isSettings: boolean }>`
+const ChatBarForm = styled.form<{ isSettings: boolean, isDevMode: boolean }>`
   padding: 0 9px;
   z-index: 3;
   margin: 0;
   transition: opacity 0.2s;
   position: relative;
   opacity: ${({ isSettings }) => (isSettings ? 0 : 1)};
+  padding-right: ${({ isDevMode }) => (isDevMode ? 70 : 0)};
 `;
 
 const ChatInputWrapper = styled.div`

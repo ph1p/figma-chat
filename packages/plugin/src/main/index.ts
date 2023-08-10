@@ -162,6 +162,7 @@ if (isReset) {
   });
 
   EventEmitter.answer('current-user', async () => currentUser);
+  EventEmitter.answer('figma-editor-type', async () => figma.editorType.toString());
 
   EventEmitter.answer('root-data', async () => {
     const { roomName, secret, history } = await main();

@@ -69,6 +69,7 @@ const App = observer(() => {
 
   useEffect(() => {
     EventEmitter.ask('current-user').then((user) => store.setCurrentUser(user));
+    EventEmitter.ask('figma-editor-type').then((figmaEditorType) => store.setFigmaEditorType(figmaEditorType));
 
     if (socket && store.status === ConnectionEnum.NONE) {
       socket.on('connect', () => {
@@ -169,7 +170,7 @@ const App = observer(() => {
   return (
     <ThemeProvider theme={store.theme}>
       <AppWrapper>
-        <Resizer />
+        {store.figmaEditorType !== 'dev' && <Resizer />}
         <GlobalStyle />
 
         <SocketProvider socket={socket}>

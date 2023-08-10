@@ -50,6 +50,9 @@ export class RootStore {
   selection = undefined;
 
   @ignore
+  figmaEditorType = '';
+
+  @ignore
   currentUser: CurrentUser = {
     id: '',
     name: '',
@@ -149,6 +152,10 @@ export class RootStore {
 
   setDarkTheme(isDarkTheme) {
     this.settings.isDarkTheme = isDarkTheme;
+  }
+
+  setFigmaEditorType(figmaEditorType) {
+    this.figmaEditorType = figmaEditorType;
   }
 
   addNotification(text: string, type?: string) {
