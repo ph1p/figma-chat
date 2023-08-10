@@ -47,7 +47,7 @@ const SettingsView: FunctionComponent = observer(() => {
   };
 
   return (
-    <Settings>
+    <Settings $isDevMode={store.figmaEditorType === 'dev'}>
       <Picker>
         <AvatarColorPicker />
       </Picker>
@@ -101,7 +101,7 @@ const SettingsView: FunctionComponent = observer(() => {
         </ServerUrl>
       </InputWrapper>
 
-      <Footer>
+      <Footer $isDevMode={store.figmaEditorType === 'dev'}>
         <ShortcutTiles>
           <Tile name="back" onClick={() => navigate('/')}>
             <BackIcon />
@@ -208,10 +208,12 @@ const ServerUrl = styled.div`
   }
 `;
 
-const Footer = styled.div`
+const Footer = styled.div<{$isDevMode: boolean}>`
   display: flex;
   justify-content: space-between;
   margin-bottom: 9px;
+  padding-right: ${({ $isDevMode }) => ($isDevMode ? 70 : 0)};
+  align-self: center;
 `;
 
 const Invite = styled.div`
@@ -315,13 +317,13 @@ const ShortcutTiles = styled.div`
   }
 `;
 
-const Settings = styled.div`
+const Settings = styled.div<{$isDevMode:boolean}>`
   position: relative;
   z-index: 1;
   padding: 0 9px;
   height: 100%;
   display: grid;
-  grid-template-rows: 242px 1fr 44px;
+  grid-template-rows: 242px 1fr ${p => p.$isDevMode ? 70 : 44}px;
 
   h4 {
     margin: 20px 0 15px;

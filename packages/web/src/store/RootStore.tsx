@@ -50,6 +50,9 @@ class RootStore {
   @ignore
   notifications: NotificationParams[] = [];
 
+  @ignore
+  figmaEditorType = '';
+
   constructor() {
     makeAutoObservable(this);
   }

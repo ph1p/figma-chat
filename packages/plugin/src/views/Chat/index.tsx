@@ -134,14 +134,13 @@ const Chat: FunctionComponent = observer(() => {
   };
 
   return (
-    <Wrapper hasSelection={store.selectionCount > 0}>
+    <Wrapper $hasSelection={store.selectionCount > 0} $isDevMode={store.figmaEditorType === 'dev'}>
       <Messages
         removeMessage={removeMessage}
         chatState={chatState}
         store={store}
         onClickSelection={onClickSelection}
       />
-
       <Chatbar
         sendMessage={sendMessage}
         setTextMessage={(text) => chatState.setTextMessage(text)}
@@ -155,9 +154,9 @@ const Chat: FunctionComponent = observer(() => {
   );
 });
 
-const Wrapper = styled.div<{ hasSelection: boolean }>`
+const Wrapper = styled.div<{ $hasSelection: boolean, $isDevMode: boolean }>`
   display: grid;
-  grid-template-rows: 1fr 44px;
+  grid-template-rows: 1fr ${(p) => p.$isDevMode ? '78px' : '44px'};
   height: 100%;
 `;
 

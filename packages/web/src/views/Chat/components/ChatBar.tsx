@@ -76,7 +76,7 @@ export const ChatBar: FunctionComponent = observer(() => {
         }}
         textMessage={messageText}
       />
-      <ChatBarForm isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
+      <ChatBarForm $isSettings={Boolean(isSettings)} onSubmit={sendMessage}>
         <ChatInputWrapper>
           <SettingsAndUsers>
             <CustomLink to="/settings">
@@ -114,7 +114,7 @@ export const ChatBar: FunctionComponent = observer(() => {
             )}
           </SettingsAndUsers>
 
-          <ChatInput isConnected={isConnected}>
+          <ChatInput $isConnected={isConnected}>
             <input
               ref={chatTextInput}
               type="input"
@@ -154,7 +154,7 @@ export const ChatBar: FunctionComponent = observer(() => {
               </EmojiList>
             </Tooltip>
 
-            <SendButton color={store.currentUser.color} onClick={sendMessage}>
+            <SendButton $color={store.currentUser.color} onClick={sendMessage}>
               <SendArrowIcon />
             </SendButton>
           </ChatInput>
@@ -245,13 +245,13 @@ const EmojiPickerStyled = styled.div`
   cursor: pointer;
 `;
 
-const ChatBarForm = styled.form<{ isSettings: boolean }>`
+const ChatBarForm = styled.form<{ $isSettings: boolean }>`
   padding: 0 9px;
   z-index: 3;
   margin: 0;
   transition: opacity 0.2s;
   position: relative;
-  opacity: ${({ isSettings }) => (isSettings ? 0 : 1)};
+  opacity: ${({ $isSettings }) => ($isSettings ? 0 : 1)};
 `;
 
 const ChatInputWrapper = styled.div`
@@ -259,14 +259,14 @@ const ChatInputWrapper = styled.div`
   position: relative;
 `;
 
-const ChatInput = styled.div<{ isConnected: boolean }>`
+const ChatInput = styled.div<{ $isConnected: boolean }>`
   display: grid;
   grid-template-columns: 1fr 18px auto auto;
   align-items: center;
   margin: 0;
   z-index: 3;
   transition: width 0.3s, opacity 0.3s;
-  opacity: ${({ isConnected }) => (isConnected ? 1 : 0)};
+  opacity: ${({ $isConnected }) => ($isConnected ? 1 : 0)};
   background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 94px;
   width: 100%;
@@ -305,13 +305,13 @@ const ChatInput = styled.div<{ isConnected: boolean }>`
   }
 `;
 
-const SendButton = styled.div`
+const SendButton = styled.div<{ $color: string }>`
   position: relative;
   display: flex;
   z-index: 3;
   cursor: pointer;
   margin: 0 4px;
-  background-color: ${({ color }) => color};
+  background-color: ${({ $color }) => $color};
   width: 27px;
   height: 27px;
   border-radius: 94px;

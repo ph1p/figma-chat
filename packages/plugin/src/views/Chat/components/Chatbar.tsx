@@ -70,8 +70,8 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
         }}
         textMessage={props.textMessage}
       />
-      <ChatBarForm isSettings={Boolean(isSettings)} isDevMode={store.figmaEditorType === 'dev'} onSubmit={sendMessage}>
-        <ConnectionInfo isConnected={isConnected}>
+      <ChatBarForm $isSettings={Boolean(isSettings)} $isDevMode={store.figmaEditorType === 'dev'} onSubmit={sendMessage}>
+        <ConnectionInfo $isConnected={isConnected}>
           {isFailed ? 'connection failed 🙈' : 'connecting...'}
         </ConnectionInfo>
 
@@ -113,7 +113,7 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
             )}
           </SettingsAndUsers>
 
-          <ChatInput isConnected={isConnected}>
+          <ChatInput $isConnected={isConnected}>
             <input
               ref={chatTextInput}
               type="input"
@@ -157,8 +157,8 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
             <SelectionCheckbox
               ref={selectionRef}
               color={store.currentUser.color}
-              checked={props.selectionIsChecked}
-              hasSelection={hasSelection}
+              $checked={props.selectionIsChecked}
+              $hasSelection={hasSelection}
               onMouseEnter={() => selectionTooltipRef.current.show()}
               onMouseLeave={() => selectionTooltipRef.current.hide()}
               onClick={() => {
@@ -179,43 +179,6 @@ const ChatBar: FunctionComponent<ChatProps> = (props) => {
   );
 };
 
-const GiphyHeader = styled.div`
-  display: flex;
-  padding: 4px 5px 12px;
-  .logo {
-    svg {
-      width: 70px;
-      height: 15px;
-    }
-  }
-  .searchterm {
-    color: #4c4c4c;
-    margin-left: 6px;
-  }
-`;
-const Giphy = styled.div`
-  position: absolute;
-  bottom: 54px;
-  left: 9px;
-  width: 315px;
-  height: 250px;
-  overflow: auto;
-  background-color: #000;
-  border-radius: 14px;
-  padding: 9px;
-  .overlay {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    cursor: pointer;
-    transition: all 0.3s;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-  }
-`;
 
 const Users = styled.div`
   display: flex;
@@ -298,7 +261,7 @@ const EmojiPickerStyled = styled.div`
   cursor: pointer;
 `;
 
-const ConnectionInfo = styled.div<{ isConnected: boolean }>`
+const ConnectionInfo = styled.div<{ $isConnected: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -312,7 +275,7 @@ const ConnectionInfo = styled.div<{ isConnected: boolean }>`
   color: ${(p) => p.theme.fontColor};
   font-weight: bold;
   transition: transform 0.2s;
-  transform: translateY(${({ isConnected }) => (isConnected ? 69 : 0)}px);
+  transform: translateY(${({ $isConnected }) => ($isConnected ? 69 : 0)}px);
   span {
     text-decoration: underline;
     cursor: pointer;
@@ -320,14 +283,14 @@ const ConnectionInfo = styled.div<{ isConnected: boolean }>`
   }
 `;
 
-const ChatBarForm = styled.form<{ isSettings: boolean, isDevMode: boolean }>`
-  padding: 0 9px;
+const ChatBarForm = styled.form<{ $isSettings: boolean, $isDevMode: boolean }>`
   z-index: 3;
   margin: 0;
   transition: opacity 0.2s;
   position: relative;
-  opacity: ${({ isSettings }) => (isSettings ? 0 : 1)};
-  padding-right: ${({ isDevMode }) => (isDevMode ? 70 : 0)};
+  opacity: ${({ $isSettings }) => ($isSettings ? 0 : 1)};
+  padding: 0 ${({ $isDevMode }) => ($isDevMode ? 70 : 9)} 0 9px;
+  align-self: ${({ $isDevMode }) => ($isDevMode ? 'center' : 'start')};
 `;
 
 const ChatInputWrapper = styled.div`
@@ -335,14 +298,14 @@ const ChatInputWrapper = styled.div`
   position: relative;
 `;
 
-const ChatInput = styled.div<{ isConnected: boolean }>`
+const ChatInput = styled.div<{ $isConnected: boolean }>`
   display: grid;
   grid-template-columns: 1fr 18px auto auto;
   align-items: center;
   margin: 0;
   z-index: 3;
   transition: width 0.3s, opacity 0.3s;
-  opacity: ${({ isConnected }) => (isConnected ? 1 : 0)};
+  opacity: ${({ $isConnected }) => ($isConnected ? 1 : 0)};
   background-color: ${(p) => p.theme.secondaryBackgroundColor};
   border-radius: 94px;
   width: 100%;
@@ -398,18 +361,18 @@ const SendButton = styled.div`
 `;
 
 const SelectionCheckbox = styled.div<{
-  hasSelection: boolean;
-  checked: boolean;
+  $hasSelection: boolean;
+  $checked: boolean;
 }>`
   animation-delay: 0.2s;
   transition: all 0.2s;
   border-radius: 100%;
   height: 26px;
-  margin-left: ${(p) => (p.hasSelection ? 8 : 0)}px;
-  width: ${(p) => (p.hasSelection ? 26 : 0)}px;
-  pointer-events: ${(p) => (p.hasSelection ? 'all' : 'none')};
-  opacity: ${(p) => (p.hasSelection ? 1 : 0)};
-  border: 1px solid ${(p) => (p.checked ? p.color : '#a2adc0')};
+  margin-left: ${(p) => (p.$hasSelection ? 8 : 0)}px;
+  width: ${(p) => (p.$hasSelection ? 26 : 0)}px;
+  pointer-events: ${(p) => (p.$hasSelection ? 'all' : 'none')};
+  opacity: ${(p) => (p.$hasSelection ? 1 : 0)};
+  border: 1px solid ${(p) => (p.$checked ? p.color : '#a2adc0')};
   overflow: hidden;
   display: flex;
   justify-items: center;
@@ -430,11 +393,11 @@ const SelectionCheckbox = styled.div<{
     padding: 0 2px;
     text-align: center;
     margin: 0 auto;
-    background-color: ${(p) => (p.checked ? p.color : '#a2adc0')};
+    background-color: ${(p) => (p.$checked ? p.color : '#a2adc0')};
     color: ${(p) => p.theme.secondaryBackgroundColor};
     font-weight: bold;
     font-size: 10px;
-    opacity: ${(p) => (p.checked ? 1 : 0.5)};
+    opacity: ${(p) => (p.$checked ? 1 : 0.5)};
 
     &::after {
       content: '';
@@ -443,8 +406,8 @@ const SelectionCheckbox = styled.div<{
       top: 0;
       left: -2px;
       right: -2px;
-      background-color: ${(p) => (p.checked ? p.color : '#a2adc0')};
-      box-shadow: 0 11px 0px ${(p) => (p.checked ? p.color : '#a2adc0')};
+      background-color: ${(p) => (p.$checked ? p.color : '#a2adc0')};
+      box-shadow: 0 11px 0px ${(p) => (p.$checked ? p.color : '#a2adc0')};
     }
     &::before {
       content: '';
@@ -453,8 +416,8 @@ const SelectionCheckbox = styled.div<{
       left: 0;
       top: -2px;
       bottom: -2px;
-      background-color: ${(p) => (p.checked ? p.color : '#a2adc0')};
-      box-shadow: 11px 0px 0px ${(p) => (p.checked ? p.color : '#a2adc0')};
+      background-color: ${(p) => (p.$checked ? p.color : '#a2adc0')};
+      box-shadow: 11px 0px 0px ${(p) => (p.$checked ? p.color : '#a2adc0')};
     }
     &:hover {
       border-color: rgba(255, 255, 255, 1);

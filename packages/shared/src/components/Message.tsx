@@ -71,10 +71,10 @@ const Message: FunctionComponent<Props> = observer(
 
     return (
       <animated.div style={styles}>
-        <MessageFlex isLocalMessage={isLocalMessage}>
+        <MessageFlex $isLocalMessage={isLocalMessage}>
           <div className="message">
             <MessageContainer
-              isGiphy={Boolean(giphy)}
+              $isGiphy={Boolean(giphy)}
               className={`${isLocalMessage ? 'me' : colorClass} ${
                 isSingleEmoji && 'emoji'
               }`}
@@ -117,7 +117,7 @@ const Message: FunctionComponent<Props> = observer(
                       {text}
                     </Linkify>
                   )}
-                  <SelectionButton isLocalMessage={isLocalMessage}>
+                  <SelectionButton $isLocalMessage={isLocalMessage}>
                     <HashIcon />
                     {pageName ? pageName + ' - ' : ''}
                     focus {selectionCount} element
@@ -136,7 +136,7 @@ const Message: FunctionComponent<Props> = observer(
                 </Linkify>
               )}
             </MessageContainer>
-            <MessageOptions isLocalMessage={isLocalMessage}>
+            <MessageOptions $isLocalMessage={isLocalMessage}>
               {isLocalMessage && messageId ? (
                 <MessageTrash onClick={() => removeMessage(messageId)}>
                   delete
@@ -185,27 +185,27 @@ const MessageDate = styled.div`
   font-weight: 600;
 `;
 
-const MessageOptions = styled.div<{ isLocalMessage: boolean }>`
+const MessageOptions = styled.div<{ $isLocalMessage: boolean }>`
   display: flex;
   flex-direction: row;
   opacity: 0;
   transition: all 0.3s;
-  transform: translateX(${({ isLocalMessage }) => (isLocalMessage ? 6 : -6)}px);
+  transform: translateX(${({ $isLocalMessage }) => ($isLocalMessage ? 6 : -6)}px);
   padding: 1px;
-  /* margin: ${({ isLocalMessage }) =>
-    isLocalMessage ? '0 6px 0 0' : '0 0 0 6px'}; */
+  /* margin: ${({ $isLocalMessage }) =>
+    $isLocalMessage ? '0 6px 0 0' : '0 0 0 6px'}; */
   align-items: start;
-  /* align-items: ${({ isLocalMessage }) =>
-    isLocalMessage ? 'end' : 'start'}; */
+  /* align-items: ${({ $isLocalMessage }) =>
+    $isLocalMessage ? 'end' : 'start'}; */
   ${MessageDate} {
     font-size: 9px;
     color: #fff;
     background-color: ${(p) => p.theme.secondaryFontColor};
     padding: 2px 7px;
     border-radius: 22px;
-    text-align: ${({ isLocalMessage }) => (isLocalMessage ? 'right' : 'left')};
-    margin: ${({ isLocalMessage }) =>
-      isLocalMessage ? '0 6px 0 0' : '0 0 0 6px'};
+    text-align: ${({ $isLocalMessage }) => ($isLocalMessage ? 'right' : 'left')};
+    margin: ${({ $isLocalMessage }) =>
+      $isLocalMessage ? '0 6px 0 0' : '0 0 0 6px'};
     ${Object.keys(EColors).map(
       (color) => css`
         &.${String(EColors[color as keyof typeof EColors])} {
@@ -247,11 +247,11 @@ const MessageTrash = styled.div`
   }
 `;
 
-const MessageFlex = styled.div<{ isLocalMessage: boolean }>`
+const MessageFlex = styled.div<{ $isLocalMessage: boolean }>`
   display: flex;
   justify-content: flex-end;
-  flex-direction: ${({ isLocalMessage }) =>
-    isLocalMessage ? 'row' : 'row-reverse'};
+  flex-direction: ${({ $isLocalMessage }) =>
+    $isLocalMessage ? 'row' : 'row-reverse'};
   &:hover {
     .message {
       ${MessageOptions} {
@@ -262,21 +262,21 @@ const MessageFlex = styled.div<{ isLocalMessage: boolean }>`
   }
   .message {
     margin: 0 0 10px 0;
-    text-align: ${({ isLocalMessage }) => (isLocalMessage ? 'right' : 'left')};
+    text-align: ${({ $isLocalMessage }) => ($isLocalMessage ? 'right' : 'left')};
     display: flex;
-    flex-direction: ${({ isLocalMessage }) =>
-      isLocalMessage ? 'row-reverse' : 'row'};
+    flex-direction: ${({ $isLocalMessage }) =>
+      $isLocalMessage ? 'row-reverse' : 'row'};
   }
 `;
 
-const SelectionButton = styled('button')<{ isLocalMessage: boolean }>`
+const SelectionButton = styled('button')<{ $isLocalMessage: boolean }>`
   cursor: pointer;
   width: 100%;
   font-size: 11px;
   background-color: transparent;
   border-color: ${(p) =>
-    p.isLocalMessage ? p.theme.fontColor : 'rgba(255, 255, 255, 0.4)'};
-  color: ${(p) => (p.isLocalMessage ? p.theme.fontColor : '#fff')};
+    p.$isLocalMessage ? p.theme.fontColor : 'rgba(255, 255, 255, 0.4)'};
+  color: ${(p) => (p.$isLocalMessage ? p.theme.fontColor : '#fff')};
   border-style: solid;
   border-radius: 9px;
   padding: 5px 10px;
@@ -286,22 +286,22 @@ const SelectionButton = styled('button')<{ isLocalMessage: boolean }>`
   svg {
     margin-right: 5px;
     path {
-      fill: ${(p) => (p.isLocalMessage ? p.theme.fontColor : '#fff')};
+      fill: ${(p) => (p.$isLocalMessage ? p.theme.fontColor : '#fff')};
     }
   }
   &:hover {
     border-color: transparent;
-    background-color: rgba(0, 0, 0, ${(p) => (p.isLocalMessage ? 0.1 : 0.2)});
+    background-color: rgba(0, 0, 0, ${(p) => (p.$isLocalMessage ? 0.1 : 0.2)});
   }
   &:active,
   &:focus {
     border-color: transparent;
     outline: none;
-    background-color: rgba(0, 0, 0, ${(p) => (p.isLocalMessage ? 0.2 : 0.3)});
+    background-color: rgba(0, 0, 0, ${(p) => (p.$isLocalMessage ? 0.2 : 0.3)});
   }
 `;
 
-const MessageContainer = styled.div<{ isGiphy: boolean }>`
+const MessageContainer = styled.div<{ $isGiphy: boolean }>`
   position: relative;
   background-color: #18a0fb;
   border-radius: 4px 14px 14px 14px;
@@ -315,10 +315,10 @@ const MessageContainer = styled.div<{ isGiphy: boolean }>`
   margin-bottom: 4px;
   max-width: 240px;
   text-align: left;
-  overflow: ${(p) => (p.isGiphy ? 'hidden' : 'initial')};
-  padding: ${(p) => (p.isGiphy ? 0 : '6px 10px')};
+  overflow: ${(p) => (p.$isGiphy ? 'hidden' : 'initial')};
+  padding: ${(p) => (p.$isGiphy ? 0 : '6px 10px')};
   ${(p) =>
-    p.isGiphy
+    p.$isGiphy
       ? css`
           ${MessageHeader} {
             position: absolute;

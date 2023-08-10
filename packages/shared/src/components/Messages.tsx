@@ -69,7 +69,7 @@ export const Messages: FunctionComponent<Props> = observer((props) => {
 
   return (
     <Wrapper ref={props.store.messagesRef} isWeb={props.isWeb}>
-      <ScrollWrapper>
+      <ScrollWrapper  $isDevMode={props.store.figmaEditorType === 'dev'}>
         {props.chatState.filteredMessages.map(
           (data: MessageData, i: number) => (
             <React.Fragment key={i}>
@@ -115,7 +115,7 @@ const Wrapper = styled.div<{ isWeb?: boolean }>`
       : ''}
 `;
 
-const ScrollWrapper = styled.div`
+const ScrollWrapper = styled.div<{$isDevMode: boolean}>`
   padding: 9px 9px 0;
   width: 100%;
   align-self: end;
@@ -124,7 +124,7 @@ const ScrollWrapper = styled.div`
     transition: opacity 0.3s;
     opacity: 1;
     position: fixed;
-    bottom: 30px;
+    bottom: ${(p) => p.$isDevMode ? 60 : 30};
     left: 14px;
     right: 14px;
     background: transparent;
