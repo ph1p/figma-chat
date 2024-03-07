@@ -24,7 +24,7 @@ const Notifications: FunctionComponent<Props> = (props: Props) => {
   if (props.notifications.length === 0) return null;
 
   return (
-    <NotificationsContainer isRoot={isRoot}>
+    <NotificationsContainer $isRoot={isRoot}>
       {props.notifications.map((data: NotificationParams, key) => (
         <Notification
           key={key}
@@ -36,7 +36,7 @@ const Notifications: FunctionComponent<Props> = (props: Props) => {
   );
 };
 
-const NotificationsContainer = styled.div<{ isRoot: boolean }>`
+const NotificationsContainer = styled.div<{ $isRoot: boolean }>`
   display: flex;
   flex-direction: column-reverse;
   position: absolute;

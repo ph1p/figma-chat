@@ -40,7 +40,6 @@ export const Resizer = () => {
     e.preventDefault();
     e.stopPropagation();
     setDragStart(false);
-    console.log('onMouseUp');
   };
 
   const onMouseMove = (e) => {

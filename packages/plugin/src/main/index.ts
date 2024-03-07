@@ -96,9 +96,9 @@ if (isReset) {
     node.type === 'INSTANCE' ||
     node.type === 'POLYGON';
 
-  const goToPage = (id) => {
-    if (figma.getNodeById(id)) {
-      figma.currentPage = figma.getNodeById(id) as PageNode;
+  const goToPage = async (id) => {
+    if (await figma.getNodeByIdAsync(id)) {
+      await figma.setCurrentPageAsync(await figma.getNodeByIdAsync(id) as PageNode);
     }
   };
 
@@ -224,7 +224,7 @@ if (isReset) {
   EventEmitter.on('cancel', () => {});
 
   // events
-  figma.on('selectionchange', () => {
+  figma.on('selectionchange', async () => {
     if (figma.currentPage.selection.length > 0) {
       for (const node of figma.currentPage.selection) {
         if (node.setRelaunchData && isValidShape(node)) {
@@ -241,7 +241,7 @@ if (isReset) {
           if (
             node.setRelaunchData &&
             isValidShape(node) &&
-            figma.getNodeById(node.id)
+            await figma.getNodeByIdAsync(node.id)
           ) {
             node.setRelaunchData({});
           }

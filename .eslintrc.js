@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: ['prettier'],
+  extends: ['prettier', 'plugin:@figma/figma-plugins/recommended'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: ['tsconfig.json', './packages/*/tsconfig.json'],
